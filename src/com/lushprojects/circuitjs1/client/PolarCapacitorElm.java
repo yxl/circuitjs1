@@ -1,5 +1,7 @@
 package com.lushprojects.circuitjs1.client;
 
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
 public class PolarCapacitorElm extends CapacitorElm {
     double maxNegativeVoltage;
 
@@ -14,17 +16,20 @@ public class PolarCapacitorElm extends CapacitorElm {
         maxNegativeVoltage = new Double(st.nextToken()).doubleValue();
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 209;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + maxNegativeVoltage;
     }
 
     Point plusPoint;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         double f = (dn / 2 - 4) / dn;
         int i;
@@ -40,7 +45,8 @@ public class PolarCapacitorElm extends CapacitorElm {
             plusPoint.y += 3;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         super.draw(g);
         g.setColor(Color.white);
         g.setFont(unitsFont);
@@ -48,29 +54,34 @@ public class PolarCapacitorElm extends CapacitorElm {
         g.drawString("+", plusPoint.x - w / 2, plusPoint.y);
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         super.getInfo(arr);
         arr[0] = "capacitor (polarized)";
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 2)
             return new EditInfo("Max Reverse Voltage", maxNegativeVoltage, 0, 0);
         return super.getEditInfo(n);
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 2 && ei.value >= 0)
             maxNegativeVoltage = ei.value;
         super.setEditValue(n, ei);
     }
 
-    void stepFinished() {
+    @Override
+    public void stepFinished() {
         if (getVoltageDiff() < 0 && getVoltageDiff() < -maxNegativeVoltage)
             sim.stop("capacitor exceeded max reverse voltage", this);
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'C';
     }
 }

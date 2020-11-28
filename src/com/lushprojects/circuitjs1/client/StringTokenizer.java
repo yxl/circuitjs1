@@ -195,6 +195,7 @@ public class StringTokenizer implements Enumeration<Object> {
      * @return true, if the next call of nextElement() will succeed
      * @see #hasMoreTokens()
      */
+    @Override
     public boolean hasMoreElements() {
         return hasMoreTokens();
     }
@@ -207,6 +208,7 @@ public class StringTokenizer implements Enumeration<Object> {
      * @throws NoSuchElementException if there are no more tokens
      * @see #nextToken()
      */
+    @Override
     public Object nextElement() throws NoSuchElementException {
         return nextToken();
     }

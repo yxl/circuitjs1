@@ -1,6 +1,8 @@
 package com.lushprojects.circuitjs1.client;
 
-class VaractorElm extends DiodeElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class VaractorElm extends DiodeElm {
     double baseCapacitance;
 
     public VaractorElm(int xx, int yy) {
@@ -15,11 +17,13 @@ class VaractorElm extends DiodeElm {
         baseCapacitance = new Double(st.nextToken()).doubleValue();
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 176;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         super.getInfo(arr);
         arr[0] = "varactor";
         arr[5] = "C = " + getUnitText(capacitance, "F");
@@ -33,26 +37,31 @@ class VaractorElm extends DiodeElm {
     Point[] plate1;
     Point[] plate2;
 
-    void setNodeVoltage(int n, double c) {
+    @Override
+    public void setNodeVoltage(int n, double c) {
         super.setNodeVoltage(n, c);
         capvoltdiff = volts[0] - volts[1];
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         super.calculateCurrent();
         current += capCurrent;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         super.reset();
         capvoltdiff = 0;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + capvoltdiff + " " + baseCapacitance;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         double platef = .6;
         Point[] pa = newPointArray(2);
@@ -68,7 +77,8 @@ class VaractorElm extends DiodeElm {
     }
 
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         // draw leads and diode arrow
         drawDiode(g);
 
@@ -88,13 +98,15 @@ class VaractorElm extends DiodeElm {
         drawPosts(g);
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         super.stamp();
         sim.stampVoltageSource(nodes[0], nodes[2], voltSource);
         sim.stampNonLinear(nodes[2]);
     }
 
-    void startIteration() {
+    @Override
+    public void startIteration() {
         super.startIteration();
         // capacitor companion model using trapezoidal approximation
         // (Thevenin equivalent) consists of a voltage source in
@@ -108,19 +120,22 @@ class VaractorElm extends DiodeElm {
         voltSourceValue = -capvoltdiff - capCurrent * compResistance;
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         super.doStep();
         sim.stampResistor(nodes[2], nodes[1], compResistance);
         sim.updateVoltageSource(nodes[0], nodes[2], voltSource,
                 voltSourceValue);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 1)
             return new EditInfo("Capacitance @ 0V (F)", baseCapacitance, 10, 1000);
         return super.getEditInfo(n);
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 1) {
             baseCapacitance = ei.value;
@@ -129,21 +144,25 @@ class VaractorElm extends DiodeElm {
         super.setEditValue(n, ei);
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 0;
     }
 
-    void setCurrent(int x, double c) {
+    @Override
+    public void setCurrent(int x, double c) {
         capCurrent = c;
     }
 
     double voltSourceValue;
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    int getInternalNodeCount() {
+    @Override
+    public int getInternalNodeCount() {
         return 1;
     }
 }

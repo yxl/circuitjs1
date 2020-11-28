@@ -20,8 +20,9 @@
 package com.lushprojects.circuitjs1.client;
 
 import com.google.gwt.user.client.Window;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
 
-class VoltageElm extends CircuitElm {
+public class VoltageElm extends CircuitElm {
     static final int FLAG_COS = 2;
     static final int FLAG_PULSE_DUTY = 4;
     int waveform;
@@ -76,11 +77,13 @@ class VoltageElm extends CircuitElm {
         reset();
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'v';
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         // set flag so we know if duty cycle is correct for pulse waveforms
         if (waveform == WF_PULSE)
             flags |= FLAG_PULSE_DUTY;
@@ -93,7 +96,8 @@ class VoltageElm extends CircuitElm {
         // VarRailElm adds text at the end
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         freqTimeZero = 0;
         curcount = 0;
     }
@@ -104,7 +108,8 @@ class VoltageElm extends CircuitElm {
         return 1 - (x - pi) * (2 / pi);
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         if (waveform == WF_DC)
             sim.stampVoltageSource(nodes[0], nodes[1], voltSource,
                     getVoltage());
@@ -112,13 +117,15 @@ class VoltageElm extends CircuitElm {
             sim.stampVoltageSource(nodes[0], nodes[1], voltSource);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         if (waveform != WF_DC)
             sim.updateVoltageSource(nodes[0], nodes[1], voltSource,
                     getVoltage());
     }
 
-    void stepFinished() {
+    @Override
+    public void stepFinished() {
         if (waveform == WF_NOISE)
             noiseValue = (sim.random.nextDouble() * 2 - 1) * maxVoltage + bias;
     }
@@ -151,12 +158,14 @@ class VoltageElm extends CircuitElm {
 
     final int circleSize = 17;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         calcLeads((waveform == WF_DC || waveform == WF_VAR) ? 8 : circleSize * 2);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setBbox(x, y, x2, y2);
         draw2Leads(g);
         if (waveform == WF_DC) {
@@ -184,7 +193,7 @@ class VoltageElm extends CircuitElm {
             Point plusPoint = interpPoint(point1, point2, (dn / 2 + circleSize + 4) / dn, 10 * dsign);
             plusPoint.y += 4;
             int w = (int) g.context.measureText(inds).getWidth();
-			g.drawString(inds, plusPoint.x - w / 2, plusPoint.y);
+            g.drawString(inds, plusPoint.x - w / 2, plusPoint.y);
         }
         updateDotCount();
         if (sim.dragElm != this) {
@@ -273,19 +282,23 @@ class VoltageElm extends CircuitElm {
         }
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    double getPower() {
+    @Override
+    public double getPower() {
         return -getVoltageDiff() * current;
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[1] - volts[0];
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         switch (waveform) {
             case WF_DC:
             case WF_VAR:
@@ -330,6 +343,7 @@ class VoltageElm extends CircuitElm {
         arr[i++] = "P = " + getUnitText(getPower(), "W");
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo(waveform == WF_DC ? "Voltage" :
@@ -362,6 +376,7 @@ class VoltageElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             maxVoltage = ei.value;

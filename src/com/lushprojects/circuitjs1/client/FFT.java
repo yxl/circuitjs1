@@ -19,13 +19,13 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class FFT {
+public class FFT {
     private final int size;
     private final int bits;
     private final double[] cosTable;
     private final double[] sinTable;
 
-    FFT(int n) {
+    public FFT(int n) {
         size = n;
         bits = (int) (Math.log(size) / Math.log(2));
         cosTable = new double[size / 2];
@@ -46,7 +46,7 @@ class FFT {
      * January 19, 1992
      * http://cnx.rice.edu/content/m12016/latest/
      */
-    void fft(double[] real, double[] imag) {
+    public void fft(double[] real, double[] imag) {
         int j = 0;
         int n2 = real.length / 2;
         for (int i = 1; i < real.length - 1; i++) {
@@ -87,11 +87,11 @@ class FFT {
         }
     }
 
-    int getSize() {
+    public int getSize() {
         return size;
     }
 
-    double magnitude(double real, double imag) {
+    public double magnitude(double real, double imag) {
         return Math.sqrt(real * real + imag * imag) / size;
     }
 }

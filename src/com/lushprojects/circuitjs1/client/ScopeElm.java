@@ -19,9 +19,11 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class ScopeElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.Scope;
 
-    Scope elmScope;
+public class ScopeElm extends CircuitElm {
+
+    public Scope elmScope;
 
     public ScopeElm(int xx, int yy) {
         super(xx, yy);
@@ -59,6 +61,7 @@ class ScopeElm extends CircuitElm {
             elmScope.setRect(r);
     }
 
+    @Override
     public void setPoints() {
         super.setPoints();
         setScopeRect();
@@ -73,6 +76,7 @@ class ScopeElm extends CircuitElm {
         elmScope.timeStep();
     }
 
+    @Override
     public void reset() {
         super.reset();
         elmScope.resetGraph(true);
@@ -82,14 +86,17 @@ class ScopeElm extends CircuitElm {
         elmScope = null;
     }
 
-    boolean canViewInScope() {
+    @Override
+    public boolean canViewInScope() {
         return false;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 403;
     }
 
+    @Override
     public String dump() {
         String dumpStr = super.dump();
         String sStr = elmScope.dump().replace(' ', '_');
@@ -97,7 +104,8 @@ class ScopeElm extends CircuitElm {
         return dumpStr + " " + sStr;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         g.setColor(needsHighlight() ? selectColor : whiteColor);
         g.context.save();
         g.context.setTransform(1, 0, 0, 1, 0, 0);
@@ -109,7 +117,8 @@ class ScopeElm extends CircuitElm {
 
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 0;
     }
 

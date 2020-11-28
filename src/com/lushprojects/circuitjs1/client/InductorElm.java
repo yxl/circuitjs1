@@ -19,9 +19,12 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class InductorElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class InductorElm extends CircuitElm {
     Inductor ind;
-    double inductance;
+    public double inductance;
 
     public InductorElm(int xx, int yy) {
         super(xx, yy);
@@ -39,20 +42,24 @@ class InductorElm extends CircuitElm {
         ind.setup(inductance, current, flags);
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'l';
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + inductance + " " + current;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         calcLeads(32);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         double v1 = volts[0];
         double v2 = volts[1];
         int i;
@@ -69,40 +76,48 @@ class InductorElm extends CircuitElm {
         drawPosts(g);
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         current = volts[0] = volts[1] = curcount = 0;
         ind.reset();
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         ind.stamp(nodes[0], nodes[1]);
     }
 
-    void startIteration() {
+    @Override
+    public void startIteration() {
         ind.startIteration(volts[0] - volts[1]);
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return ind.nonLinear();
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         double voltdiff = volts[0] - volts[1];
         current = ind.calculateCurrent(voltdiff);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         double voltdiff = volts[0] - volts[1];
         ind.doStep(voltdiff);
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "inductor";
         getBasicInfo(arr);
         arr[3] = "L = " + getUnitText(inductance, "H");
         arr[4] = "P = " + getUnitText(getPower(), "W");
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Inductance (H)", inductance, 0, 0);
@@ -115,6 +130,7 @@ class InductorElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0)
             inductance = ei.value;
@@ -127,7 +143,8 @@ class InductorElm extends CircuitElm {
         ind.setup(inductance, current, flags);
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'L';
     }
 

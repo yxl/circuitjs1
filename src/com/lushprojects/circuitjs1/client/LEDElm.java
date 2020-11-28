@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class LEDElm extends DiodeElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class LEDElm extends DiodeElm {
     double colorR, colorG, colorB, maxBrightnessCurrent;
     static String lastLEDModelName = "default-led";
 
@@ -52,18 +54,21 @@ class LEDElm extends DiodeElm {
         }
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 162;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + colorR + " " + colorG + " " + colorB + " " +
                 maxBrightnessCurrent;
     }
 
     Point ledLead1, ledLead2, ledCenter;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         int cr = 12;
         ledLead1 = interpPoint(point1, point2, .5 - cr / dn);
@@ -71,7 +76,8 @@ class LEDElm extends DiodeElm {
         ledCenter = interpPoint(point1, point2, .5);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         if (needsHighlight() || this == sim.dragElm) {
             super.draw(g);
             return;
@@ -103,7 +109,8 @@ class LEDElm extends DiodeElm {
         drawPosts(g);
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         super.getInfo(arr);
         if (model.oldStyle)
             arr[0] = "LED";
@@ -111,6 +118,7 @@ class LEDElm extends DiodeElm {
             arr[0] = CirSim.LS("LED") + " (" + modelName + ")";
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Red Value (0-1)", colorR, 0, 1).
@@ -126,6 +134,7 @@ class LEDElm extends DiodeElm {
         return super.getEditInfo(n - 4);
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             colorR = ei.value;
@@ -138,11 +147,13 @@ class LEDElm extends DiodeElm {
         super.setEditValue(n - 4, ei);
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'l';
     }
 
-    void setLastModelName(String n) {
+    @Override
+    public void setLastModelName(String n) {
         lastLEDModelName = n;
     }
 }

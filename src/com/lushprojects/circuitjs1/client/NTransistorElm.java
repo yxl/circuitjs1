@@ -19,17 +19,18 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class NTransistorElm extends TransistorElm {
+public class NTransistorElm extends TransistorElm {
     public NTransistorElm(int xx, int yy) {
         super(xx, yy, false);
     }
 
     @Override
-    Class getDumpClass() {
+    public Class<?> getDumpClass() {
         return TransistorElm.class;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'n';
     }
 

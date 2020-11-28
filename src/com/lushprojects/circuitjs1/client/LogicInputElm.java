@@ -19,7 +19,10 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class LogicInputElm extends SwitchElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class LogicInputElm extends SwitchElm {
     final int FLAG_TERNARY = 1;
     final int FLAG_NUMERIC = 2;
     double hiV, loV;
@@ -55,24 +58,29 @@ class LogicInputElm extends SwitchElm {
         return (flags & (FLAG_TERNARY | FLAG_NUMERIC)) != 0;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'L';
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + hiV + " " + loV;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 1;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         lead1 = interpPoint(point1, point2, 1 - 12 / dn);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         Font oldf = g.getFont();
         Font f = new Font("SansSerif", Font.BOLD, 20);
         g.setFont(f);
@@ -90,30 +98,36 @@ class LogicInputElm extends SwitchElm {
         g.setFont(oldf);
     }
 
-    Rectangle getSwitchRect() {
+    @Override
+    public Rectangle getSwitchRect() {
         return new Rectangle(x2 - 10, y2 - 10, 20, 20);
     }
 
-    void setCurrent(int vs, double c) {
+    @Override
+    public void setCurrent(int vs, double c) {
         current = -c;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         double v = (position == 0) ? loV : hiV;
         if (isTernary())
             v = position * 2.5;
         sim.stampVoltageSource(0, nodes[0], voltSource, v);
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[0];
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "logic input";
         arr[1] = (position == 0) ? "low" : "high";
         if (isNumeric())
@@ -122,10 +136,12 @@ class LogicInputElm extends SwitchElm {
         arr[2] = "I = " + getCurrentText(getCurrent());
     }
 
-    boolean hasGroundConnection(int n1) {
+    @Override
+    public boolean hasGroundConnection(int n1) {
         return true;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo("", 0, 0, 0);
@@ -149,6 +165,7 @@ class LogicInputElm extends SwitchElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             momentary = ei.checkbox.getState();
@@ -171,11 +188,13 @@ class LogicInputElm extends SwitchElm {
         }
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'i';
     }
 
-    double getCurrentIntoNode(int n) {
+    @Override
+    public double getCurrentIntoNode(int n) {
         return -current;
     }
 }

@@ -59,15 +59,15 @@ public abstract class CompositeElm extends CircuitElm {
     }
 
     public void loadComposite(StringTokenizer stIn, String model, int[] externalNodes) {
-        HashMap<Integer, CircuitNode> compNodeHash = new HashMap<Integer, CircuitNode>();
+        HashMap<Integer, CircuitNode> compNodeHash = new HashMap<>();
         StringTokenizer modelLinet = new StringTokenizer(model, "\r");
         CircuitNode cn;
         CircuitNodeLink cnLink;
         VoltageSourceRecord vsRecord;
 
-        compElmList = new Vector<CircuitElm>();
-        compNodeList = new Vector<CircuitNode>();
-        voltageSources = new Vector<VoltageSourceRecord>();
+        compElmList = new Vector<>();
+        compNodeList = new Vector<>();
+        voltageSources = new Vector<>();
 
         // Build compElmList and compNodeHash from input string
 
@@ -107,10 +107,10 @@ public abstract class CompositeElm extends CircuitElm {
 
         // Flatten compNodeHash in to compNodeList
         numPosts = externalNodes.length;
-        for (int i = 0; i < externalNodes.length; i++) { // External Nodes First
-            if (compNodeHash.containsKey(externalNodes[i])) {
-                compNodeList.add(compNodeHash.get(externalNodes[i]));
-                compNodeHash.remove(externalNodes[i]);
+        for (int externalNode : externalNodes) { // External Nodes First
+            if (compNodeHash.containsKey(externalNode)) {
+                compNodeList.add(compNodeHash.get(externalNode));
+                compNodeHash.remove(externalNode);
             } else
                 throw new IllegalArgumentException();
         }
@@ -143,11 +143,11 @@ public abstract class CompositeElm extends CircuitElm {
         posts = new Point[numPosts];
 
         // Enumerate voltage sources
-        for (int i = 0; i < compElmList.size(); i++) {
-            int cnt = compElmList.get(i).getVoltageSourceCount();
+        for (CircuitElm circuitElm : compElmList) {
+            int cnt = circuitElm.getVoltageSourceCount();
             for (int j = 0; j < cnt; j++) {
                 vsRecord = new VoltageSourceRecord();
-                vsRecord.elm = compElmList.get(i);
+                vsRecord.elm = circuitElm;
                 vsRecord.vsNumForElement = j;
                 voltageSources.add(vsRecord);
             }
@@ -157,11 +157,13 @@ public abstract class CompositeElm extends CircuitElm {
         flags |= FLAG_ESCAPE;
     }
 
+    @Override
     public boolean nonLinear() {
         return true; // Lets assume that any useful composite elements are
         // non-linear
     }
 
+    @Override
     public String dump() {
         String dumpStr = super.dump();
         dumpStr += dumpElements();
@@ -170,8 +172,8 @@ public abstract class CompositeElm extends CircuitElm {
 
     public String dumpElements() {
         String dumpStr = "";
-        for (int i = 0; i < compElmList.size(); i++) {
-            String tstring = compElmList.get(i).dump();
+        for (CircuitElm circuitElm : compElmList) {
+            String tstring = circuitElm.dump();
             tstring = tstring.replaceFirst("[A-Za-z0-9]+ 0 0 0 0 ", ""); // remove unused tint x1 y1 x2 y2 coords for internal components
             dumpStr += " " + CustomLogicModel.escape(tstring);
         }
@@ -197,15 +199,14 @@ public abstract class CompositeElm extends CircuitElm {
     }
 
     // are n1 and n2 connected internally somehow?
+    @Override
     public boolean getConnection(int n1, int n2) {
         Vector<CircuitNodeLink> cnLinks1 = compNodeList.get(n1).links;
         Vector<CircuitNodeLink> cnLinks2 = compNodeList.get(n2).links;
 
         // see if any elements are connected to both n1 and n2, then call getConnection() on those
-        for (int i = 0; i < cnLinks1.size(); i++) {
-            CircuitNodeLink link1 = cnLinks1.get(i);
-            for (int j = 0; j < cnLinks2.size(); j++) {
-                CircuitNodeLink link2 = cnLinks2.get(j);
+        for (CircuitNodeLink link1 : cnLinks1) {
+            for (CircuitNodeLink link2 : cnLinks2) {
                 if (link1.elm == link2.elm &&
                         link1.elm.getConnection(link1.num, link2.num))
                     return true;
@@ -215,30 +216,34 @@ public abstract class CompositeElm extends CircuitElm {
     }
 
     // is n1 connected to ground somehow?
+    @Override
     public boolean hasGroundConnection(int n1) {
         Vector<CircuitNodeLink> cnLinks;
         cnLinks = compNodeList.get(n1).links;
-        for (int i = 0; i < cnLinks.size(); i++) {
-            if (cnLinks.get(i).elm.hasGroundConnection(cnLinks.get(i).num))
+        for (CircuitNodeLink cnLink : cnLinks) {
+            if (cnLink.elm.hasGroundConnection(cnLink.num))
                 return true;
         }
         return false;
     }
 
+    @Override
     public void reset() {
-        for (int i = 0; i < compElmList.size(); i++)
-            compElmList.get(i).reset();
+        for (CircuitElm circuitElm : compElmList) circuitElm.reset();
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return numPosts;
     }
 
-    int getInternalNodeCount() {
+    @Override
+    public int getInternalNodeCount() {
         return numNodes - numPosts;
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return posts[n];
     }
 
@@ -251,17 +256,17 @@ public abstract class CompositeElm extends CircuitElm {
         posts[n].y = y;
     }
 
+    @Override
     public double getPower() {
         double power;
         power = 0;
-        for (int i = 0; i < compElmList.size(); i++)
-            power += compElmList.get(i).getPower();
+        for (CircuitElm circuitElm : compElmList) power += circuitElm.getPower();
         return power;
     }
 
+    @Override
     public void stamp() {
-        for (int i = 0; i < compElmList.size(); i++) {
-            CircuitElm ce = compElmList.get(i);
+        for (CircuitElm ce : compElmList) {
             // current sources need special stamp method
             if (ce instanceof CurrentElm)
                 ((CurrentElm) ce).stampCurrentSource(false);
@@ -270,53 +275,57 @@ public abstract class CompositeElm extends CircuitElm {
         }
     }
 
+    @Override
     public void startIteration() {
-        for (int i = 0; i < compElmList.size(); i++)
-            compElmList.get(i).startIteration();
+        for (CircuitElm circuitElm : compElmList) circuitElm.startIteration();
     }
 
+    @Override
     public void doStep() {
-        for (int i = 0; i < compElmList.size(); i++)
-            compElmList.get(i).doStep();
+        for (CircuitElm circuitElm : compElmList) circuitElm.doStep();
     }
 
+    @Override
     public void stepFinished() {
-        for (int i = 0; i < compElmList.size(); i++)
-            compElmList.get(i).stepFinished();
+        for (CircuitElm circuitElm : compElmList) circuitElm.stepFinished();
     }
 
+    @Override
     public void setNode(int p, int n) {
         // nodes[p] = n
         Vector<CircuitNodeLink> cnLinks;
         super.setNode(p, n);
         cnLinks = compNodeList.get(p).links;
-        for (int i = 0; i < cnLinks.size(); i++) {
-            cnLinks.get(i).elm.setNode(cnLinks.get(i).num, n);
+        for (CircuitNodeLink cnLink : cnLinks) {
+            cnLink.elm.setNode(cnLink.num, n);
         }
 
     }
 
+    @Override
     public void setNodeVoltage(int n, double c) {
         // volts[n] = c;
         Vector<CircuitNodeLink> cnLinks;
         super.setNodeVoltage(n, c);
         cnLinks = compNodeList.get(n).links;
-        for (int i = 0; i < cnLinks.size(); i++) {
-            cnLinks.get(i).elm.setNodeVoltage(cnLinks.get(i).num, c);
+        for (CircuitNodeLink cnLink : cnLinks) {
+            cnLink.elm.setNodeVoltage(cnLink.num, c);
         }
         volts[n] = c;
     }
 
+    @Override
     public boolean canViewInScope() {
         return false;
     }
 
+    @Override
     public void delete() {
-        for (int i = 0; i < compElmList.size(); i++)
-            compElmList.get(i).delete();
+        for (CircuitElm circuitElm : compElmList) circuitElm.delete();
         super.delete();
     }
 
+    @Override
     public int getVoltageSourceCount() {
         return voltageSources.size();
     }
@@ -324,7 +333,8 @@ public abstract class CompositeElm extends CircuitElm {
     // Find the component with the nth voltage
     // and set the
     // appropriate source in that component
-    void setVoltageSource(int n, int v) {
+    @Override
+    public void setVoltageSource(int n, int v) {
         // voltSource(n) = v;
         VoltageSourceRecord vsr;
         vsr = voltageSources.get(n);
@@ -334,19 +344,20 @@ public abstract class CompositeElm extends CircuitElm {
 
     @Override
     public void setCurrent(int vsn, double c) {
-        for (int i = 0; i < voltageSources.size(); i++)
-            if (voltageSources.get(i).vsNode == vsn) {
-                voltageSources.get(i).elm.setCurrent(vsn, c);
+        for (VoltageSourceRecord voltageSource : voltageSources)
+            if (voltageSource.vsNode == vsn) {
+                voltageSource.elm.setCurrent(vsn, c);
             }
 
     }
 
-    double getCurrentIntoNode(int n) {
+    @Override
+    public double getCurrentIntoNode(int n) {
         double c = 0;
         Vector<CircuitNodeLink> cnLinks;
         cnLinks = compNodeList.get(n).links;
-        for (int i = 0; i < cnLinks.size(); i++) {
-            c += cnLinks.get(i).elm.getCurrentIntoNode(cnLinks.get(i).num);
+        for (CircuitNodeLink cnLink : cnLinks) {
+            c += cnLink.elm.getCurrentIntoNode(cnLink.num);
         }
         return c;
     }

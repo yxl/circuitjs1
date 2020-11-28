@@ -20,10 +20,11 @@
 package com.lushprojects.circuitjs1.client;
 
 import com.google.gwt.user.client.ui.TextArea;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
 
 import java.util.HashMap;
 
-class SRAMElm extends ChipElm {
+public class SRAMElm extends ChipElm {
     int addressNodes, dataNodes, internalNodes;
     int addressBits, dataBits;
     HashMap<Integer, Integer> map;
@@ -31,14 +32,14 @@ class SRAMElm extends ChipElm {
     public SRAMElm(int xx, int yy) {
         super(xx, yy);
         addressBits = dataBits = 4;
-        map = new HashMap<Integer, Integer>();
+        map = new HashMap<>();
         setupPins();
     }
 
     public SRAMElm(int xa, int ya, int xb, int yb, int f,
                    StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
-        map = new HashMap<Integer, Integer>();
+        map = new HashMap<>();
         addressBits = Integer.parseInt(st.nextToken());
         dataBits = Integer.parseInt(st.nextToken());
         setupPins();
@@ -62,7 +63,8 @@ class SRAMElm extends ChipElm {
         }
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         String s = super.dump() + " " + addressBits + " " + dataBits;
 
         // dump contents
@@ -85,15 +87,18 @@ class SRAMElm extends ChipElm {
         return s;
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "Static RAM";
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = max(addressBits, dataBits) + 1;
         pins = new Pin[getPostCount()];
@@ -117,10 +122,12 @@ class SRAMElm extends ChipElm {
         allocNodes();
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 2 + addressBits + dataBits;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 2)
             return new EditInfo("# of Address Bits", addressBits, 1, 1).setDimensionless();
@@ -156,6 +163,7 @@ class SRAMElm extends ChipElm {
         return super.getEditInfo(n);
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n < 2)
             super.setEditValue(n, ei);
@@ -191,17 +199,20 @@ class SRAMElm extends ChipElm {
         }
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return dataBits;
     }
 
-    int getInternalNodeCount() {
+    @Override
+    public int getInternalNodeCount() {
         return dataBits;
     }
 
     int address;
 
-    void stamp() {
+    @Override
+    public void stamp() {
         int i;
         for (i = 0; i != dataBits; i++) {
             Pin p = pins[i + dataNodes];
@@ -211,7 +222,8 @@ class SRAMElm extends ChipElm {
         }
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         int i;
         boolean writeEnabled = volts[0] < 2.5;
         boolean outputEnabled = (volts[1] < 2.5) && !writeEnabled;
@@ -234,7 +246,8 @@ class SRAMElm extends ChipElm {
         }
     }
 
-    void stepFinished() {
+    @Override
+    public void stepFinished() {
         int i;
         int data = 0;
         boolean writeEnabled = volts[0] < 2.5;
@@ -248,7 +261,8 @@ class SRAMElm extends ChipElm {
         map.put(address, data);
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 413;
     }
 }

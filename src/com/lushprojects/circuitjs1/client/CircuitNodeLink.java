@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class CircuitNodeLink {
-    int num;
-    CircuitElm elm;
+public class CircuitNodeLink {
+    public int num;
+    public CircuitElm elm;
 }

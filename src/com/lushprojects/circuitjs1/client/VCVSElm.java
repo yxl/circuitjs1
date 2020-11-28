@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class VCVSElm extends VCCSElm {
+public class VCVSElm extends VCCSElm {
     public VCVSElm(int xa, int ya, int xb, int yb, int f,
                    StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
@@ -38,7 +38,8 @@ class VCVSElm extends VCCSElm {
 //	    setupPins();
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = inputCount > 2 ? inputCount : 2;
         pins = new Pin[inputCount + 2];
@@ -52,17 +53,20 @@ class VCVSElm extends VCCSElm {
         exprState = new ExprState(inputCount);
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "VCVS";
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         int vn = pins[inputCount].voltSource + sim.nodeList.size();
         sim.stampNonLinear(vn);
         sim.stampVoltageSource(nodes[inputCount + 1], nodes[inputCount], pins[inputCount].voltSource);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         int i;
         // converged yet?
         double limitStep = getLimitStep();
@@ -109,23 +113,28 @@ class VCVSElm extends VCCSElm {
             lastVolts[i] = volts[i];
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return inputCount + 2;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 212;
     }
 
-    boolean hasCurrentOutput() {
+    @Override
+    public boolean hasCurrentOutput() {
         return false;
     }
 
-    void setCurrent(int vn, double c) {
+    @Override
+    public void setCurrent(int vn, double c) {
         if (pins[inputCount].voltSource == vn) {
             pins[inputCount].current = c;
             pins[inputCount + 1].current = -c;

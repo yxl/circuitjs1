@@ -1,19 +1,20 @@
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Label;
+import com.lushprojects.circuitjs1.client.*;
 
 // values with sliders
 public class Adjustable implements Command {
-    CircuitElm elm;
-    double minValue, maxValue;
-    String sliderText;
+    public CircuitElm elm;
+    public double minValue, maxValue;
+    public String sliderText;
 
     // index of value in getEditInfo() list that this slider controls
-    int editItem;
+    public int editItem;
 
-    Label label;
-    Scrollbar slider;
+    public Label label;
+    public Scrollbar slider;
     boolean settingValue;
 
     Adjustable(CircuitElm ce, int item) {
@@ -24,7 +25,7 @@ public class Adjustable implements Command {
     }
 
     // undump
-    Adjustable(StringTokenizer st, CirSim sim) {
+    public Adjustable(StringTokenizer st, CirSim sim) {
         int e = new Integer(st.nextToken()).intValue();
         if (e == -1)
             return;
@@ -35,7 +36,7 @@ public class Adjustable implements Command {
         sliderText = CustomLogicModel.unescape(st.nextToken());
     }
 
-    void createSlider(CirSim sim) {
+    public void createSlider(CirSim sim) {
         double value = elm.getEditInfo(editItem).value;
         createSlider(sim, value);
     }
@@ -54,6 +55,7 @@ public class Adjustable implements Command {
         settingValue = false;
     }
 
+    @Override
     public void execute() {
         CircuitElm.sim.analyzeFlag = true;
         if (settingValue)
@@ -68,12 +70,12 @@ public class Adjustable implements Command {
         return minValue + (maxValue - minValue) * slider.getValue() / 100;
     }
 
-    void deleteSlider(CirSim sim) {
+    public void deleteSlider(CirSim sim) {
         sim.removeWidgetFromVerticalPanel(label);
         sim.removeWidgetFromVerticalPanel(slider);
     }
 
-    String dump() {
+    public String dump() {
         return CircuitElm.sim.locateElm(elm) + " " + editItem + " " + minValue + " " + maxValue + " " + CustomLogicModel.escape(sliderText);
     }
 }

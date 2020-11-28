@@ -17,12 +17,11 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.*;
+import com.lushprojects.circuitjs1.client.CirSim;
 
 import java.util.Date;
 
@@ -46,11 +45,7 @@ public class ExportAsImageDialog extends DialogBox {
         a.getElement().setAttribute("Download", fname);
         vp.add(a);
         vp.add(okButton = new Button(CirSim.LS("OK")));
-        okButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                closeDialog();
-            }
-        });
+        okButton.addClickHandler(event -> closeDialog());
         this.center();
     }
 

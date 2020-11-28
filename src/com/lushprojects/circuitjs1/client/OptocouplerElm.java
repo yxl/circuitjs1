@@ -25,6 +25,7 @@ public class OptocouplerElm extends CompositeElm {
         initOptocoupler();
     }
 
+    @Override
     public String dump() {
         return dumpWithMask(0);
     }
@@ -44,16 +45,19 @@ public class OptocouplerElm extends CompositeElm {
         curCounts = new double[4];
     }
 
+    @Override
     public void reset() {
         super.reset();
         curCounts = new double[4];
     }
 
+    @Override
     public boolean getConnection(int n1, int n2) {
         return n1 / 2 == n2 / 2;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         g.setColor(needsHighlight() ? selectColor : lightGrayColor);
         drawThickPolygon(g, rectPointsX, rectPointsY, 4);
 
@@ -89,7 +93,8 @@ public class OptocouplerElm extends CompositeElm {
 
     Point[] stubs;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
 
         // adapted from ChipElm
@@ -138,7 +143,8 @@ public class OptocouplerElm extends CompositeElm {
         return 407;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "optocoupler";
         arr[1] = "Iin = " + getCurrentText(getCurrentIntoNode(0));
         arr[2] = "Iout = " + getCurrentText(getCurrentIntoNode(2));

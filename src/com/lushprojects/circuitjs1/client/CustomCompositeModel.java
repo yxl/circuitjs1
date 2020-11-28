@@ -1,57 +1,41 @@
 package com.lushprojects.circuitjs1.client;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
 
 // model for subcircuits
-
-class ExtListEntry {
-    ExtListEntry(String s, int n) {
-        name = s;
-        node = n;
-        side = ChipElm.SIDE_W;
-    }
-
-    ExtListEntry(String s, int n, int p, int sd) {
-        name = s;
-        node = n;
-        pos = p;
-        side = sd;
-    }
-
-    String name;
-    int node, pos, side;
-}
 
 public class CustomCompositeModel implements Comparable<CustomCompositeModel> {
 
     static HashMap<String, CustomCompositeModel> modelMap;
 
-    int flags, sizeX, sizeY;
-    String name;
-    String nodeList;
-    Vector<ExtListEntry> extList;
-    String elmDump;
+    public int flags, sizeX, sizeY;
+    public String name;
+    public String nodeList;
+    public Vector<ExtListEntry> extList;
+    public String elmDump;
     boolean dumped;
 
-    void setName(String n) {
+    public void setName(String n) {
         modelMap.remove(name);
         name = n;
         modelMap.put(name, this);
     }
 
-    static CustomCompositeModel getModelWithName(String name) {
+    public static CustomCompositeModel getModelWithName(String name) {
         if (modelMap == null) {
-            modelMap = new HashMap<String, CustomCompositeModel>();
+            modelMap = new HashMap<>();
 
             // create default stub model
-            Vector<ExtListEntry> extList = new Vector<ExtListEntry>();
+            Vector<ExtListEntry> extList = new Vector<>();
             extList.add(new ExtListEntry("gnd", 1));
             CustomCompositeModel d = createModel("default", "0", "GroundElm 1", extList);
             d.sizeX = d.sizeY = 1;
             modelMap.put(d.name, d);
         }
-        CustomCompositeModel lm = modelMap.get(name);
-        return lm;
+        return modelMap.get(name);
     }
 
     static CustomCompositeModel createModel(String name, String elmDump, String nodeList, Vector<ExtListEntry> extList) {
@@ -64,21 +48,19 @@ public class CustomCompositeModel implements Comparable<CustomCompositeModel> {
         return lm;
     }
 
-    static void clearDumpedFlags() {
+    public static void clearDumpedFlags() {
         if (modelMap == null)
             return;
-        Iterator it = modelMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, CustomCompositeModel> pair = (Map.Entry) it.next();
+        for (Map.Entry<String, CustomCompositeModel> stringCustomCompositeModelEntry : modelMap.entrySet()) {
+            Map.Entry<String, CustomCompositeModel> pair = stringCustomCompositeModelEntry;
             pair.getValue().dumped = false;
         }
     }
 
     static Vector<CustomCompositeModel> getModelList() {
-        Vector<CustomCompositeModel> vector = new Vector<CustomCompositeModel>();
-        Iterator it = modelMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, CustomCompositeModel> pair = (Map.Entry) it.next();
+        Vector<CustomCompositeModel> vector = new Vector<>();
+        for (Map.Entry<String, CustomCompositeModel> stringCustomCompositeModelEntry : modelMap.entrySet()) {
+            Map.Entry<String, CustomCompositeModel> pair = stringCustomCompositeModelEntry;
             CustomCompositeModel dm = pair.getValue();
             vector.add(dm);
         }
@@ -86,14 +68,15 @@ public class CustomCompositeModel implements Comparable<CustomCompositeModel> {
         return vector;
     }
 
+    @Override
     public int compareTo(CustomCompositeModel dm) {
         return name.compareTo(dm.name);
     }
 
-    CustomCompositeModel() {
+    public CustomCompositeModel() {
     }
 
-    static void undumpModel(StringTokenizer st) {
+    public static void undumpModel(StringTokenizer st) {
         String name = CustomLogicModel.unescape(st.nextToken());
         CustomCompositeElm.lastModelName = name;
         CustomCompositeModel model = getModelWithName(name);
@@ -111,7 +94,7 @@ public class CustomCompositeModel implements Comparable<CustomCompositeModel> {
         sizeY = Integer.parseInt(st.nextToken());
         int extCount = Integer.parseInt(st.nextToken());
         int i;
-        extList = new Vector<ExtListEntry>();
+        extList = new Vector<>();
         for (i = 0; i != extCount; i++) {
             String s = CustomLogicModel.unescape(st.nextToken());
             int n = Integer.parseInt(st.nextToken());
@@ -139,7 +122,7 @@ public class CustomCompositeModel implements Comparable<CustomCompositeModel> {
         return arr.split(",");
     }
 
-    String dump() {
+    public String dump() {
         dumped = true;
         String str = ". " + CustomLogicModel.escape(name) + " 0 " + sizeX + " " + sizeY + " " + extList.size() + " ";
         int i;

@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class InverterElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class InverterElm extends CircuitElm {
     double slewRate; // V/ns
     double highVoltage;
 
@@ -45,17 +47,20 @@ class InverterElm extends CircuitElm {
         }
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + slewRate + " " + highVoltage;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'I';
     }
 
     Point center;
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         drawPosts(g);
         draw2Leads(g);
         g.setColor(needsHighlight() ? selectColor : lightGrayColor);
@@ -70,7 +75,8 @@ class InverterElm extends CircuitElm {
     Polygon gatePoly;
     Point pcircle;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         int hs = 16;
         int ww = 16;
@@ -96,37 +102,44 @@ class InverterElm extends CircuitElm {
         setBbox(point1, point2, hs);
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampVoltageSource(0, nodes[1], voltSource);
     }
 
     double lastOutputVoltage;
 
-    void startIteration() {
+    @Override
+    public void startIteration() {
         lastOutputVoltage = volts[1];
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         double out = volts[0] > highVoltage * .5 ? 0 : highVoltage;
         double maxStep = slewRate * sim.timeStep * 1e9;
         out = Math.max(Math.min(lastOutputVoltage + maxStep, out), lastOutputVoltage - maxStep);
         sim.updateVoltageSource(0, nodes[1], voltSource, out);
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[0];
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "inverter";
         arr[1] = "Vi = " + getVoltageText(volts[0]);
         arr[2] = "Vo = " + getVoltageText(volts[1]);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Slew Rate (V/ns)", slewRate, 0, 0);
@@ -135,6 +148,7 @@ class InverterElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             slewRate = ei.value;
@@ -144,20 +158,23 @@ class InverterElm extends CircuitElm {
 
     // there is no current path through the inverter input, but there
     // is an indirect path through the output to ground.
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         return false;
     }
 
-    boolean hasGroundConnection(int n1) {
+    @Override
+    public boolean hasGroundConnection(int n1) {
         return (n1 == 1);
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return '1';
     }
 
     @Override
-    double getCurrentIntoNode(int n) {
+    public double getCurrentIntoNode(int n) {
         if (n == 1)
             return current;
         return 0;

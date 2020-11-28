@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class XorGateElm extends OrGateElm {
+public class XorGateElm extends OrGateElm {
     public XorGateElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -29,15 +29,18 @@ class XorGateElm extends OrGateElm {
         super(xa, ya, xb, yb, f, st);
     }
 
-    String getGateName() {
+    @Override
+    public String getGateName() {
         return "XOR gate";
     }
 
-    String getGateText() {
+    @Override
+    public String getGateText() {
         return "=1";
     }
 
-    boolean calcFunction() {
+    @Override
+    public boolean calcFunction() {
         int i;
         boolean f = false;
         for (i = 0; i != inputCount; i++)
@@ -45,11 +48,13 @@ class XorGateElm extends OrGateElm {
         return f;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 154;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return '4';
     }
 }

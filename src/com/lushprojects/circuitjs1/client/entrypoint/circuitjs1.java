@@ -21,8 +21,6 @@ package com.lushprojects.circuitjs1.client.entrypoint;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.*;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window;
@@ -76,7 +74,7 @@ public class circuitjs1 implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        localizationMap = new HashMap<String, String>();
+        localizationMap = new HashMap<>();
 
         loadLocale();
     }
@@ -168,14 +166,10 @@ public class circuitjs1 implements EntryPoint {
         CirSim.localizationMap = localizationMap;
         mysim.init();
 
-        Window.addResizeHandler(new ResizeHandler() {
+        Window.addResizeHandler(event -> {
+            mysim.setCanvasSize();
+            mysim.setiFrameHeight();
 
-            @Override
-            public void onResize(ResizeEvent event) {
-                mysim.setCanvasSize();
-                mysim.setiFrameHeight();
-
-            }
         });
 	    
 	    /*

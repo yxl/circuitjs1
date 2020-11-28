@@ -19,7 +19,10 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class TransformerElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class TransformerElm extends CircuitElm {
     double inductance, ratio, couplingCoef;
     Point[] ptEnds;
     Point[] ptCoil;
@@ -60,7 +63,8 @@ class TransformerElm extends CircuitElm {
         polarity = ((flags & FLAG_REVERSE) != 0) ? -1 : 1;
     }
 
-    void drag(int xx, int yy) {
+    @Override
+    public void drag(int xx, int yy) {
         xx = sim.snapGrid(xx);
         yy = sim.snapGrid(yy);
         width = max(32, abs(yy - y));
@@ -71,11 +75,13 @@ class TransformerElm extends CircuitElm {
         setPoints();
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'T';
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + inductance + " " + ratio + " " +
                 current[0] + " " + current[1] + " " + couplingCoef;
     }
@@ -84,7 +90,8 @@ class TransformerElm extends CircuitElm {
         return (flags & Inductor.FLAG_BACK_EULER) == 0;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int i;
         for (i = 0; i != 4; i++) {
             setVoltageColor(g, volts[i]);
@@ -111,7 +118,8 @@ class TransformerElm extends CircuitElm {
         setBbox(ptEnds[0], ptEnds[polarity == 1 ? 3 : 1], 0);
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         point2.y = point1.y;
         ptEnds = newPointArray(4);
@@ -145,15 +153,18 @@ class TransformerElm extends CircuitElm {
             dots = null;
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return ptEnds[n];
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 4;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         // need to set current-source values here in case one of the nodes is node 0.  In that case
         // calculateCurrent() may get called (from setNodeVoltage()) when analyzing circuit, before
         // startIteration() gets called
@@ -163,7 +174,8 @@ class TransformerElm extends CircuitElm {
 
     double a1, a2, a3, a4;
 
-    void stamp() {
+    @Override
+    public void stamp() {
         // equations for transformer:
         //   v1 = L1 di1/dt + M  di2/dt
         //   v2 = M  di1/dt + L2 di2/dt
@@ -211,7 +223,8 @@ class TransformerElm extends CircuitElm {
         sim.stampRightSide(nodes[3]);
     }
 
-    void startIteration() {
+    @Override
+    public void startIteration() {
         double voltdiff1 = volts[0] - volts[2];
         double voltdiff2 = volts[1] - volts[3];
         if (isTrapezoidal()) {
@@ -225,12 +238,14 @@ class TransformerElm extends CircuitElm {
 
     double curSourceValue1, curSourceValue2;
 
-    void doStep() {
+    @Override
+    public void doStep() {
         sim.stampCurrentSource(nodes[0], nodes[2], curSourceValue1);
         sim.stampCurrentSource(nodes[1], nodes[3], curSourceValue2);
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         double voltdiff1 = volts[0] - volts[2];
         double voltdiff2 = volts[1] - volts[3];
         current[0] = voltdiff1 * a1 + voltdiff2 * a2 + curSourceValue1;
@@ -238,13 +253,14 @@ class TransformerElm extends CircuitElm {
     }
 
     @Override
-    double getCurrentIntoNode(int n) {
+    public double getCurrentIntoNode(int n) {
         if (n < 2)
             return -current[n];
         return current[n - 2];
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "transformer";
         arr[1] = "L = " + getUnitText(inductance, "H");
         arr[2] = "Ratio = 1:" + ratio;
@@ -254,12 +270,14 @@ class TransformerElm extends CircuitElm {
         arr[6] = "I2 = " + getCurrentText(current[1]);
     }
 
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         if (comparePair(n1, n2, 0, 2))
             return true;
         return comparePair(n1, n2, 1, 3);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Primary Inductance (H)", inductance, .01, 5);
@@ -283,6 +301,7 @@ class TransformerElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0)
             inductance = ei.value;
@@ -306,7 +325,8 @@ class TransformerElm extends CircuitElm {
         }
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'T';
     }
 }

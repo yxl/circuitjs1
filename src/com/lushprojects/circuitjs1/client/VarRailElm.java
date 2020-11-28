@@ -22,8 +22,10 @@ package com.lushprojects.circuitjs1.client;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.user.client.ui.Label;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.Scrollbar;
 
-class VarRailElm extends RailElm implements MouseWheelHandler {
+public class VarRailElm extends RailElm implements MouseWheelHandler {
     Scrollbar slider;
     Label label;
     String sliderText;
@@ -45,11 +47,13 @@ class VarRailElm extends RailElm implements MouseWheelHandler {
         createSlider();
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + sliderText.replaceAll("\\+", "%2B");
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 172;
     }
 
@@ -63,17 +67,20 @@ class VarRailElm extends RailElm implements MouseWheelHandler {
 //	    sim.verticalPanel.validate();
     }
 
-    double getVoltage() {
+    @Override
+    public double getVoltage() {
         frequency = slider.getValue() * (maxVoltage - bias) / 100. + bias;
         return frequency;
     }
 
-    void delete() {
+    @Override
+    public void delete() {
         sim.removeWidgetFromVerticalPanel(label);
         sim.removeWidgetFromVerticalPanel(slider);
         super.delete();
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Min Voltage", bias, -20, 20);
@@ -87,6 +94,7 @@ class VarRailElm extends RailElm implements MouseWheelHandler {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             bias = ei.value;
@@ -99,16 +107,19 @@ class VarRailElm extends RailElm implements MouseWheelHandler {
         }
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 0;
     }
 
-    void setMouseElm(boolean v) {
+    @Override
+    public void setMouseElm(boolean v) {
         super.setMouseElm(v);
         if (slider != null)
             slider.draw();
     }
 
+    @Override
     public void onMouseWheel(MouseWheelEvent e) {
         if (slider != null)
             slider.onMouseWheel(e);

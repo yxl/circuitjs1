@@ -1,5 +1,7 @@
 package com.lushprojects.circuitjs1.client;
 
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
 public class OTAElm extends CompositeElm {
 
     private static final String modelString = "RailElm 4\rRailElm 10\rNTransistorElm 1 2 3\rNTransistorElm 3 1 4\rNTransistorElm 3 3 4\rNTransistorElm 5 6 2\rNTransistorElm 7 8 2\rPTransistorElm 9 6 10\rPTransistorElm 9 9 10\rPTransistorElm 6 12 9\rPTransistorElm 11 8 10\rPTransistorElm 11 11 10\rPTransistorElm 8 13 11\rNTransistorElm 14 14 4\rNTransistorElm 14 12 4\rNTransistorElm 12 13 14\rNTransistorElm 15 15 5\rNTransistorElm 15 15 7";
@@ -51,16 +53,19 @@ public class OTAElm extends CompositeElm {
         ((RailElm) compElmList.get(1)).maxVoltage = posVolt;
     }
 
+    @Override
     public void reset() {
         super.reset();
         curCount0 = curCount1 = curCount2 = curCount3 = 0;
     }
 
+    @Override
     public boolean getConnection(int n1, int n2) {
         return false;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setBbox(point1, point2, 3 * opheight / 2);
         setVoltageColor(g, volts[0]);
         drawThickLine(g, in1p[0], in1p[1]);
@@ -95,7 +100,8 @@ public class OTAElm extends CompositeElm {
         drawPosts(g);
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         int ww = opwidth;
         int wtot = ww * 2 + 2 * circDiam - circOverlap;
@@ -157,12 +163,14 @@ public class OTAElm extends CompositeElm {
         return 402;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "OTA (LM13700 style)";
         arr[1] = "Iabc = " + getCurrentText(-getCurrentIntoNode(3));
         arr[2] = "V+ - V- = " + getVoltageText(volts[0] - volts[1]);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Positive Supply Voltage (5-20V)", posVolt, 5, 20);
@@ -171,6 +179,7 @@ public class OTAElm extends CompositeElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             posVolt = ei.value;

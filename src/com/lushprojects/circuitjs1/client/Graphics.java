@@ -23,7 +23,7 @@ import com.google.gwt.canvas.dom.client.Context2d;
 
 public class Graphics {
 
-    Context2d context;
+    public Context2d context;
     int currentFontSize;
     Font currentFont = null;
     Color lastColor;
@@ -135,7 +135,7 @@ public class Graphics {
         return currentFont;
     }
 
-    static int distanceSq(int x1, int y1, int x2, int y2) {
+    public static int distanceSq(int x1, int y1, int x2, int y2) {
         x2 -= x1;
         y2 -= y1;
         return x2 * x2 + y2 * y2;

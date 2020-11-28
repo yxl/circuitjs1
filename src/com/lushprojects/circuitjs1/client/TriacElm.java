@@ -27,7 +27,9 @@ package com.lushprojects.circuitjs1.client;
 // 2,1 = resistor
 // MT1 and MT2 are nodes 1 and 0 (instead of 0 and 1) so that MT1 will be at the bottom when drawn bottom-to-top
 
-class TriacElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class TriacElm extends CircuitElm {
     final int mt1node = 1;
     final int mt2node = 0;
     final int gnode = 2;
@@ -66,22 +68,26 @@ class TriacElm extends CircuitElm {
         diode30.setupForDefaultModel();
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         volts[mt1node] = volts[mt2node] = volts[gnode] = 0;
         diode03.reset();
         diode30.reset();
         curcount_1 = curcount_2 = curcount_g = 0;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 206;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + triggerI + " " + holdingI + " " + cresistance + " " + state;
     }
 
@@ -97,7 +103,8 @@ class TriacElm extends CircuitElm {
     Point[] plate1;
     Point[] plate2;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         int dir = 0;
         if (abs(dx) > abs(dy)) {
@@ -144,7 +151,8 @@ class TriacElm extends CircuitElm {
 
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         double v1 = volts[0];
         double v2 = volts[1];
         setBbox(point1, point2, 6);
@@ -187,12 +195,13 @@ class TriacElm extends CircuitElm {
         drawPosts(g);
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return (n == 0) ? point1 : (n == 1) ? point2 : gate[1];
     }
 
     @Override
-    double getCurrentIntoNode(int n) {
+    public double getCurrentIntoNode(int n) {
         if (n == 0)
             return -i2;
         if (n == 1)
@@ -200,17 +209,20 @@ class TriacElm extends CircuitElm {
         return -ig;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 3;
     }
 
-    int getInternalNodeCount() {
+    @Override
+    public int getInternalNodeCount() {
         return 1;
     }
 
     double aresistance;
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampNonLinear(nodes[mt1node]);
         sim.stampNonLinear(nodes[mt2node]);
         sim.stampNonLinear(nodes[gnode]);
@@ -220,7 +232,8 @@ class TriacElm extends CircuitElm {
         diode30.stamp(nodes[mtinode], nodes[mt2node]);
     }
 
-    void startIteration() {
+    @Override
+    public void startIteration() {
         if (Math.abs(i2) < holdingI)
             state = false;
         if (Math.abs(ig) > triggerI)
@@ -228,13 +241,15 @@ class TriacElm extends CircuitElm {
         aresistance = (state) ? .01 : 10e5;
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         diode03.doStep(volts[mt2node] - volts[mtinode]);
         diode30.doStep(volts[mtinode] - volts[mt2node]);
         sim.stampResistor(nodes[mtinode], nodes[mt1node], aresistance);
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "TRIAC";
         arr[1] = (state) ? "on" : "off";
         arr[2] = "Vmt2mt1 = " + getVoltageText(volts[mt2node] - volts[mt1node]);
@@ -244,16 +259,19 @@ class TriacElm extends CircuitElm {
         arr[6] = "P = " + getUnitText(getPower(), "W");
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         i2 = (volts[mtinode] - volts[mt1node]) / aresistance;
         ig = -(volts[mt1node] - volts[gnode]) / cresistance;
         i1 = -i2 - ig;
     }
 
-    double getPower() {
+    @Override
+    public double getPower() {
         return (volts[mt2node] - volts[mt1node]) * i2 + (volts[gnode] - volts[mt1node]) * ig;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Trigger Current (A)", triggerI, 0, 0);
@@ -264,6 +282,7 @@ class TriacElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0)
             triggerI = ei.value;

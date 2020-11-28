@@ -17,12 +17,11 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.*;
+import com.lushprojects.circuitjs1.client.CirSim;
 
 public class ExportAsTextDialog extends DialogBox {
 
@@ -61,23 +60,17 @@ public class ExportAsTextDialog extends DialogBox {
         hp.add(okButton = new Button(CirSim.LS("OK")));
         hp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
         hp.add(importButton = new Button(CirSim.LS("Re-Import")));
-        okButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                closeDialog();
-            }
-        });
-        importButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                String s;
-                sim.pushUndo();
-                closeDialog();
+        okButton.addClickHandler(event -> closeDialog());
+        importButton.addClickHandler(event -> {
+            String s1;
+            sim.pushUndo();
+            closeDialog();
 //				s=textBox.getHTML();
 //				s=s.replace("<br>", "\r");
-                s = textArea.getText();
-                if (s != null) {
-                    sim.readCircuit(s);
-                    sim.allowSave(false);
-                }
+            s1 = textArea.getText();
+            if (s1 != null) {
+                sim.readCircuit(s1);
+                sim.allowSave(false);
             }
         });
         this.center();

@@ -19,7 +19,10 @@
 
 package com.lushprojects.circuitjs1.client;
 
-abstract class ChipElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public abstract class ChipElm extends CircuitElm {
     int csize, cspc, cspc2;
     int bits;
     final int FLAG_SMALL = 1;
@@ -68,7 +71,8 @@ abstract class ChipElm extends CircuitElm {
 
     abstract void setupPins();
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         drawChip(g);
     }
 
@@ -123,14 +127,15 @@ abstract class ChipElm extends CircuitElm {
     }
 
     int[] rectPointsX;
-	int[] rectPointsY;
+    int[] rectPointsY;
     int[] clockPointsX;
-	int[] clockPointsY;
-    Pin[] pins;
-    int sizeX, sizeY;
+    int[] clockPointsY;
+    public Pin[] pins;
+    public int sizeX, sizeY;
     boolean lastClock;
 
-    void drag(int xx, int yy) {
+    @Override
+    public void drag(int xx, int yy) {
         yy = sim.snapGrid(yy);
         if (xx < x) {
             xx = x;
@@ -142,7 +147,8 @@ abstract class ChipElm extends CircuitElm {
         setPoints();
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         clockPointsX = null;
         if (x2 - x > sizeX * cspc2 && this == sim.dragElm)
             setSize(2);
@@ -177,7 +183,7 @@ abstract class ChipElm extends CircuitElm {
     }
 
     // see if we can move pin to position xp, yp, and return the new position
-    boolean getPinPos(int xp, int yp, int pin, int[] pos) {
+    public boolean getPinPos(int xp, int yp, int pin, int[] pos) {
         int x0 = x + cspc2;
         int y0 = y;
         int xr = x0 - cspc;
@@ -215,13 +221,16 @@ abstract class ChipElm extends CircuitElm {
         return true;
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return pins[n].post;
     }
 
-    abstract int getVoltageSourceCount(); // output count
+    @Override
+    public abstract int getVoltageSourceCount(); // output count
 
-    void setVoltageSource(int j, int vs) {
+    @Override
+    public void setVoltageSource(int j, int vs) {
         int i;
         for (i = 0; i != getPostCount(); i++) {
             Pin p = pins[i];
@@ -233,7 +242,8 @@ abstract class ChipElm extends CircuitElm {
         System.out.println("setVoltageSource failed for " + this);
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         int i;
         for (i = 0; i != getPostCount(); i++) {
             Pin p = pins[i];
@@ -245,7 +255,8 @@ abstract class ChipElm extends CircuitElm {
     void execute() {
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         int i;
         for (i = 0; i != getPostCount(); i++) {
             Pin p = pins[i];
@@ -261,7 +272,8 @@ abstract class ChipElm extends CircuitElm {
         }
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         int i;
         for (i = 0; i != getPostCount(); i++) {
             pins[i].value = false;
@@ -271,7 +283,8 @@ abstract class ChipElm extends CircuitElm {
         lastClock = false;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         String s = super.dump();
         if (needsBits())
             s += " " + bits;
@@ -283,7 +296,8 @@ abstract class ChipElm extends CircuitElm {
         return s;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = getChipName();
         int i, a = 1;
         for (i = 0; i != getPostCount(); i++) {
@@ -303,7 +317,8 @@ abstract class ChipElm extends CircuitElm {
         }
     }
 
-    void setCurrent(int x, double c) {
+    @Override
+    public void setCurrent(int x, double c) {
         int i;
         for (i = 0; i != getPostCount(); i++)
             if (pins[i].output && pins[i].voltSource == x)
@@ -314,18 +329,22 @@ abstract class ChipElm extends CircuitElm {
         return "chip";
     }
 
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         return false;
     }
 
-    boolean hasGroundConnection(int n1) {
+    @Override
+    public boolean hasGroundConnection(int n1) {
         return pins[n1].output;
     }
 
-    double getCurrentIntoNode(int n) {
+    @Override
+    public double getCurrentIntoNode(int n) {
         return pins[n].current;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo("", 0, -1, -1);
@@ -340,6 +359,7 @@ abstract class ChipElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0) {
             if (ei.checkbox.getState())
@@ -357,12 +377,12 @@ abstract class ChipElm extends CircuitElm {
         }
     }
 
-    static final int SIDE_N = 0;
-    static final int SIDE_S = 1;
-    static final int SIDE_W = 2;
-    static final int SIDE_E = 3;
+    public static final int SIDE_N = 0;
+    public static final int SIDE_S = 1;
+    public static final int SIDE_W = 2;
+    public static final int SIDE_E = 3;
 
-    class Pin {
+    public class Pin {
         Pin(int p, int s, String t) {
             pos = p;
             side = s;
@@ -370,10 +390,10 @@ abstract class ChipElm extends CircuitElm {
         }
 
         Point post, stub;
-        Point textloc;
-        int pos, side, voltSource, bubbleX, bubbleY;
+        public Point textloc;
+        public int pos, side, voltSource, bubbleX, bubbleY;
         String text;
-        boolean lineOver, bubble, clock, output, value, state, selected;
+        public boolean lineOver, bubble, clock, output, value, state, selected;
         double curcount, current;
 
         void setPoint(int px, int py, int dx, int dy, int dax, int day,

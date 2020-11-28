@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class NandGateElm extends AndGateElm {
+public class NandGateElm extends AndGateElm {
     public NandGateElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -29,19 +29,23 @@ class NandGateElm extends AndGateElm {
         super(xa, ya, xb, yb, f, st);
     }
 
-    boolean isInverting() {
+    @Override
+    public boolean isInverting() {
         return true;
     }
 
-    String getGateName() {
+    @Override
+    public String getGateName() {
         return "NAND gate";
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 151;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return '@';
     }
 }

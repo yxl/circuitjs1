@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class SevenSegDecoderElm extends ChipElm {
+public class SevenSegDecoderElm extends ChipElm {
 
     private static final boolean[][] symbols = {
             {true, true, true, true, true, true, false},//0
@@ -53,11 +53,13 @@ class SevenSegDecoderElm extends ChipElm {
         super(xa, ya, xb, yb, f, st);
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "Seven Segment LED Decoder";
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 3;
         sizeY = 7;
         pins = new Pin[getPostCount()];
@@ -83,15 +85,18 @@ class SevenSegDecoderElm extends ChipElm {
         pins[6].output = true;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 11;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 7;
     }
 
-    void execute() {
+    @Override
+    public void execute() {
         int input = 0;
         if (pins[7].value) input += 8;
         if (pins[8].value) input += 4;
@@ -103,7 +108,8 @@ class SevenSegDecoderElm extends ChipElm {
         }
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 197;
     }
 

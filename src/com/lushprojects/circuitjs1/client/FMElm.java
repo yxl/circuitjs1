@@ -21,7 +21,9 @@ package com.lushprojects.circuitjs1.client;
 
 // contributed by Edward Calver
 
-class FMElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class FMElm extends CircuitElm {
     static final int FLAG_COS = 2;
     double carrierfreq, signalfreq, maxVoltage, freqTimeZero, deviation;
     double lasttime = 0;
@@ -49,11 +51,13 @@ class FMElm extends CircuitElm {
         reset();
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 201;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + carrierfreq + " " + signalfreq + " " + maxVoltage + " " + deviation;
     }
     /*void setCurrent(double c) {
@@ -61,20 +65,24 @@ class FMElm extends CircuitElm {
       System.out.print("v current set to " + c + "\n");
       }*/
 
-    void reset() {
+    @Override
+    public void reset() {
         freqTimeZero = 0;
         curcount = 0;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 1;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampVoltageSource(0, nodes[0], voltSource);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage());
     }
 
@@ -89,7 +97,8 @@ class FMElm extends CircuitElm {
 
     final int circleSize = 17;
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setBbox(point1, point2, circleSize);
         setVoltageColor(g, volts[0]);
         drawThickLine(g, point1, lead1);
@@ -120,28 +129,34 @@ class FMElm extends CircuitElm {
     }
 
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         lead1 = interpPoint(point1, point2, 1 - circleSize / dn);
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[0];
     }
 
-    boolean hasGroundConnection(int n1) {
+    @Override
+    public boolean hasGroundConnection(int n1) {
         return true;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    double getPower() {
+    @Override
+    public double getPower() {
         return -getVoltageDiff() * current;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
 
         arr[0] = "FM Source";
         arr[1] = "I = " + getCurrentText(getCurrent());
@@ -153,6 +168,7 @@ class FMElm extends CircuitElm {
         arr[6] = "Vmax = " + getVoltageText(maxVoltage);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Max Voltage", maxVoltage, -20, 20);
@@ -166,6 +182,7 @@ class FMElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             maxVoltage = ei.value;

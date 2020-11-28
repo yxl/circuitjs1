@@ -19,7 +19,10 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class OutputElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class OutputElm extends CircuitElm {
     final int FLAG_VALUE = 1;
     int scale;
 
@@ -38,24 +41,29 @@ class OutputElm extends CircuitElm {
         }
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + scale;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'O';
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 1;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         lead1 = new Point();
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         boolean selected = needsHighlight();
         Font f = new Font("SansSerif", selected ? Font.BOLD : 0, 14);
         g.setFont(f);
@@ -76,15 +84,18 @@ class OutputElm extends CircuitElm {
         drawPosts(g);
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[0];
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "output";
         arr[1] = "V = " + getVoltageText(volts[0]);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo("", 0, -1, -1);
@@ -105,6 +116,7 @@ class OutputElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             flags = (ei.checkbox.getState()) ?

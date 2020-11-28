@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class StopTriggerElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class StopTriggerElm extends CircuitElm {
     double triggerVoltage;
     boolean triggered, stopped;
     double delay, triggerTime;
@@ -38,28 +40,34 @@ class StopTriggerElm extends CircuitElm {
         delay = Double.parseDouble(st.nextToken());
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + triggerVoltage + " " + type + " " + delay;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         triggered = false;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 408;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 1;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         lead1 = new Point();
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         boolean selected = needsHighlight() || stopped;
         Font f = new Font("SansSerif", selected ? Font.BOLD : 0, 14);
         g.setFont(f);
@@ -75,7 +83,8 @@ class StopTriggerElm extends CircuitElm {
         drawPosts(g);
     }
 
-    void stepFinished() {
+    @Override
+    public void stepFinished() {
         stopped = false;
         if (!triggered && ((type == 0 && volts[0] >= triggerVoltage) || (type == 1 && volts[0] <= triggerVoltage))) {
             triggered = true;
@@ -88,21 +97,23 @@ class StopTriggerElm extends CircuitElm {
         }
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[0];
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "stop trigger";
         arr[1] = "V = " + getVoltageText(volts[0]);
         arr[2] = "Vtrigger = " + getVoltageText(triggerVoltage);
         arr[3] = (triggered) ? ("stopping in " + getUnitText(triggerTime + delay - sim.t, "s")) : (stopped) ? "stopped" : "waiting";
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
-            EditInfo ei = new EditInfo("Voltage", triggerVoltage);
-            return ei;
+            return new EditInfo("Voltage", triggerVoltage);
         }
         if (n == 1) {
             EditInfo ei = new EditInfo("Trigger Type", type, -1, -1);
@@ -113,12 +124,12 @@ class StopTriggerElm extends CircuitElm {
             return ei;
         }
         if (n == 2) {
-            EditInfo ei = new EditInfo("Delay (s)", delay);
-            return ei;
+            return new EditInfo("Delay (s)", delay);
         }
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             triggerVoltage = ei.value;

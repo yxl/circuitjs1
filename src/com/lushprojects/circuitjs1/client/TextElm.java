@@ -19,9 +19,12 @@
 
 package com.lushprojects.circuitjs1.client;
 
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
 import java.util.Vector;
 
-class TextElm extends GraphicElm {
+public class TextElm extends GraphicElm {
     String text;
     Vector<String> lines;
     int size;
@@ -32,7 +35,7 @@ class TextElm extends GraphicElm {
     public TextElm(int xx, int yy) {
         super(xx, yy);
         text = "hello";
-        lines = new Vector<String>();
+        lines = new Vector<>();
         lines.add(text);
         size = 24;
     }
@@ -56,7 +59,7 @@ class TextElm extends GraphicElm {
 
     void split() {
         int i;
-        lines = new Vector<String>();
+        lines = new Vector<>();
         StringBuffer sb = new StringBuffer(text);
         for (i = 0; i < sb.length(); i++) {
             char c = sb.charAt(i);
@@ -74,24 +77,28 @@ class TextElm extends GraphicElm {
         lines.add(sb.toString());
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         flags |= FLAG_ESCAPE;
         return super.dump() + " " + size + " " + CustomLogicModel.escape(text);
         //return super.dump() + " " + size + " " + text;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'x';
     }
 
-    void drag(int xx, int yy) {
+    @Override
+    public void drag(int xx, int yy) {
         x = xx;
         y = yy;
         x2 = xx + 16;
         y2 = yy;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         //Graphics2D g2 = (Graphics2D)g;
         //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
         //	RenderingHints.VALUE_ANTIALIAS_ON);
@@ -130,6 +137,7 @@ class TextElm extends GraphicElm {
         g.setFont(oldfont);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo("Text", 0, -1, -1);
@@ -153,6 +161,7 @@ class TextElm extends GraphicElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0) {
             text = ei.textf.getText();
@@ -174,16 +183,18 @@ class TextElm extends GraphicElm {
         }
     }
 
-    boolean isCenteredText() {
+    @Override
+    public boolean isCenteredText() {
         return (flags & FLAG_CENTER) != 0;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = text;
     }
 
     @Override
-    int getShortcut() {
+    public int getShortcut() {
         return 't';
     }
 }

@@ -1,9 +1,8 @@
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import com.lushprojects.circuitjs1.client.CirSim;
 
 public class ImportFromDropboxDialog extends DialogBox {
 
@@ -36,7 +35,7 @@ public class ImportFromDropboxDialog extends DialogBox {
             xhr.addEventListener("load", function reqListener() {
                 //			console.log(xhr.responseText);
                 var text = xhr.responseText;
-                @com.lushprojects.circuitjs1.client.ImportFromDropboxDialog::doLoadCallback(Ljava/lang/String;)(text);
+                @com.lushprojects.circuitjs1.client.ui.ImportFromDropboxDialog::doLoadCallback(Ljava/lang/String;)(text);
             });
             xhr.open("GET", link, false);
             xhr.send();
@@ -69,11 +68,9 @@ public class ImportFromDropboxDialog extends DialogBox {
             vp.add(new Label(CirSim.LS("To open a file in your dropbox account using the chooser click below.")));
             chooserButton = new Button(CirSim.LS("Open Dropbox Chooser"));
             vp.add(chooserButton);
-            chooserButton.addClickHandler(new ClickHandler() {
-                public void onClick(ClickEvent event) {
-                    closeDialog();
-                    importFromDropbox = new ImportFromDropbox(sim);
-                }
+            chooserButton.addClickHandler(event -> {
+                closeDialog();
+                importFromDropbox = new ImportFromDropbox(sim);
             });
             la = new Label(CirSim.LS("To open a shared Dropbox file from a Dropbox link paste the link below..."));
         } else {
@@ -92,21 +89,15 @@ public class ImportFromDropboxDialog extends DialogBox {
         vp.add(hp);
         hp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
         importButton = new Button(CirSim.LS("Import From Dropbox Link"));
-        importButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                closeDialog();
-                doImportDropboxLink(ta.getText(), true);
-            }
+        importButton.addClickHandler(event -> {
+            closeDialog();
+            doImportDropboxLink(ta.getText(), true);
         });
         hp.add(importButton);
         hp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
         cancelButton = new Button(CirSim.LS("Cancel"));
         hp.add(cancelButton);
-        cancelButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                closeDialog();
-            }
-        });
+        cancelButton.addClickHandler(event -> closeDialog());
         this.center();
     }
 

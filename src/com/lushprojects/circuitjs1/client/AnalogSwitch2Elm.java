@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class AnalogSwitch2Elm extends AnalogSwitchElm {
+public class AnalogSwitch2Elm extends AnalogSwitchElm {
     public AnalogSwitch2Elm(int xx, int yy) {
         super(xx, yy);
     }
@@ -34,7 +34,8 @@ class AnalogSwitch2Elm extends AnalogSwitchElm {
     Point[] swpoles;
     Point ctlPoint;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         calcLeads(32);
         swposts = newPointArray(2);
@@ -44,11 +45,13 @@ class AnalogSwitch2Elm extends AnalogSwitchElm {
         ctlPoint = interpPoint(point1, point2, .5, openhs);
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 4;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setBbox(point1, point2, openhs);
 
         // draw first lead
@@ -74,28 +77,33 @@ class AnalogSwitch2Elm extends AnalogSwitchElm {
         drawPosts(g);
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return (n == 0) ? point1 : (n == 3) ? ctlPoint : swposts[n - 1];
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 160;
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         if (open)
             current = (volts[0] - volts[2]) / r_on;
         else
             current = (volts[0] - volts[1]) / r_on;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampNonLinear(nodes[0]);
         sim.stampNonLinear(nodes[1]);
         sim.stampNonLinear(nodes[2]);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         open = (volts[3] < 2.5);
         if ((flags & FLAG_INVERT) != 0)
             open = !open;
@@ -108,16 +116,19 @@ class AnalogSwitch2Elm extends AnalogSwitchElm {
         }
     }
 
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         return n1 != 3 && n2 != 3;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "analog switch (SPDT)";
         arr[1] = "I = " + getCurrentDText(getCurrent());
     }
 
-    double getCurrentIntoNode(int n) {
+    @Override
+    public double getCurrentIntoNode(int n) {
         if (n == 0)
             return -current;
         int position = (open) ? 1 : 0;

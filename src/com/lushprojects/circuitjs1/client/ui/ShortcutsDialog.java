@@ -17,13 +17,11 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
+import com.lushprojects.circuitjs1.client.CheckboxMenuItem;
+import com.lushprojects.circuitjs1.client.CirSim;
 
 import java.util.Vector;
 
@@ -46,7 +44,7 @@ public class ShortcutsDialog extends DialogBox {
         sp.setHeight("400px");
         sp.setAlwaysShowScrollBars(true);
         setText(CirSim.LS("Edit Shortcuts"));
-        textBoxes = new Vector<TextBox>();
+        textBoxes = new Vector<>();
 
         FlexTable table = new FlexTable();
         sp.add(table);
@@ -59,11 +57,7 @@ public class ShortcutsDialog extends DialogBox {
             TextBox text = new TextBox();
             text.setText(item.getShortcut());
             text.setMaxLength(1);
-            text.addChangeHandler(new ChangeHandler() {
-                public void onChange(ChangeEvent ev) {
-                    checkForDuplicates();
-                }
-            });
+            text.addChangeHandler(ev -> checkForDuplicates());
             table.setWidget(i, 1, text);
             textBoxes.add(text);
         }
@@ -76,32 +70,26 @@ public class ShortcutsDialog extends DialogBox {
         hp.add(okButton = new Button(CirSim.LS("OK")));
         hp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
         hp.add(cancelButton = new Button(CirSim.LS("Cancel")));
-        okButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                int i;
-                if (checkForDuplicates())
-                    return;
-                // clear existing shortcuts
-                for (i = 0; i != sim.shortcuts.length; i++)
-                    sim.shortcuts[i] = null;
-                // load new ones
-                for (i = 0; i != textBoxes.size(); i++) {
-                    String str = textBoxes.get(i).getText();
-                    CheckboxMenuItem item = sim.mainMenuItems.get(i);
-                    item.setShortcut(str);
-                    if (str.length() > 0)
-                        sim.shortcuts[str.charAt(0)] = sim.mainMenuItemNames.get(i);
-                }
-                // save to local storage
-                sim.saveShortcuts();
-                closeDialog();
+        okButton.addClickHandler(event -> {
+            int i1;
+            if (checkForDuplicates())
+                return;
+            // clear existing shortcuts
+            for (i1 = 0; i1 != sim.shortcuts.length; i1++)
+                sim.shortcuts[i1] = null;
+            // load new ones
+            for (i1 = 0; i1 != textBoxes.size(); i1++) {
+                String str = textBoxes.get(i1).getText();
+                CheckboxMenuItem item = sim.mainMenuItems.get(i1);
+                item.setShortcut(str);
+                if (str.length() > 0)
+                    sim.shortcuts[str.charAt(0)] = sim.mainMenuItemNames.get(i1);
             }
+            // save to local storage
+            sim.saveShortcuts();
+            closeDialog();
         });
-        cancelButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                closeDialog();
-            }
-        });
+        cancelButton.addClickHandler(event -> closeDialog());
         this.center();
     }
 

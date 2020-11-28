@@ -17,10 +17,8 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
@@ -32,7 +30,7 @@ public class AboutBox extends PopupPanel {
     VerticalPanel vp;
     Button okButton;
 
-    AboutBox(String version) {
+    public AboutBox(String version) {
         super();
 
         // Add versionString variable to SessionStorage for iFrame in AboutBox
@@ -46,11 +44,7 @@ public class AboutBox extends PopupPanel {
 
 
         vp.add(okButton = new Button("OK"));
-        okButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                close();
-            }
-        });
+        okButton.addClickHandler(event -> close());
         center();
         show();
     }

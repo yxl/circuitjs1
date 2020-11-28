@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class JfetElm extends MosfetElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class JfetElm extends MosfetElm {
     Diode diode;
     double gateCurrent;
 
@@ -38,7 +40,8 @@ class JfetElm extends MosfetElm {
         diode.setupForDefaultModel();
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         super.reset();
         diode.reset();
     }
@@ -48,7 +51,8 @@ class JfetElm extends MosfetElm {
     Point gatePt;
     double curcountg, curcounts, curcountd;
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setBbox(point1, point2, hs);
         setVoltageColor(g, volts[1]);
         drawThickLine(g, src[0], src[1]);
@@ -74,7 +78,8 @@ class JfetElm extends MosfetElm {
         drawPosts(g);
     }
 
-    double getCurrentIntoNode(int n) {
+    @Override
+    public double getCurrentIntoNode(int n) {
         if (n == 0)
             return -gateCurrent;
         if (n == 1)
@@ -82,7 +87,8 @@ class JfetElm extends MosfetElm {
         return -ids;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
 
         // find the coordinates of the various points we need to draw
@@ -107,7 +113,8 @@ class JfetElm extends MosfetElm {
             arrowPoly = calcArrow(point1, gatePt, 8, 3);
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         super.stamp();
         if (pnp < 0)
             diode.stamp(nodes[1], nodes[0]);
@@ -115,52 +122,62 @@ class JfetElm extends MosfetElm {
             diode.stamp(nodes[0], nodes[1]);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         super.doStep();
         diode.doStep(pnp * (volts[0] - volts[1]));
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         gateCurrent = pnp * diode.calculateCurrent(pnp * (volts[0] - volts[1]));
     }
 
-    boolean showBulk() {
+    @Override
+    public boolean showBulk() {
         return false;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'j';
     }
 
     // these values are taken from Hayes+Horowitz p155
-    double getDefaultThreshold() {
+    @Override
+    public double getDefaultThreshold() {
         return -4;
     }
 
-    double getDefaultBeta() {
+    @Override
+    public double getDefaultBeta() {
         return .00125;
     }
 
-    double getBackwardCompatibilityBeta() {
+    @Override
+    public double getBackwardCompatibilityBeta() {
         return getDefaultBeta();
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         getFetInfo(arr, "JFET");
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n < 2)
             return super.getEditInfo(n);
         return null;
     }
 
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         return true;
     }
 
     @Override
-    String getScopeText(int v) {
+    public String getScopeText(int v) {
         return CirSim.LS(((pnp == -1) ? "p-" : "n-") + "JFET");
     }
 }

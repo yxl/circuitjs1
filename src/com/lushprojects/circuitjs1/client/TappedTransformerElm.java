@@ -19,7 +19,10 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class TappedTransformerElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class TappedTransformerElm extends CircuitElm {
     double inductance, ratio, couplingCoef;
     Point[] ptEnds;
     Point[] ptCoil;
@@ -64,16 +67,19 @@ class TappedTransformerElm extends CircuitElm {
         a = new double[9];
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 169;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + inductance + " " + ratio + " " +
                 current[0] + " " + current[1] + " " + current[2] + " " + couplingCoef;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int i;
         for (i = 0; i != 5; i++) {
             setVoltageColor(g, volts[i]);
@@ -109,7 +115,8 @@ class TappedTransformerElm extends CircuitElm {
         setBbox(ptEnds[0], ptEnds[4], 0);
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         int hs = 32;
         ptEnds = newPointArray(5);
@@ -135,15 +142,18 @@ class TappedTransformerElm extends CircuitElm {
         }
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return ptEnds[n];
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 5;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         current[0] = current[1] = current[2] = current[3] = volts[0] = volts[1] = volts[2] =
                 volts[3] = volts[4] = curcount[0] = curcount[1] = curcount[2] = 0;
         // need to set current-source values here in case one of the nodes is node 0.  In that case
@@ -154,7 +164,8 @@ class TappedTransformerElm extends CircuitElm {
 
     double[] a;
 
-    void stamp() {
+    @Override
+    public void stamp() {
         // equations for transformer:
         //   v1 = L1 di1/dt + M1 di2/dt + M1 di3/dt
         //   v2 = M1 di1/dt + L2 di2/dt + M2 di3/dt
@@ -214,7 +225,8 @@ class TappedTransformerElm extends CircuitElm {
         return (flags & Inductor.FLAG_BACK_EULER) == 0;
     }
 
-    void startIteration() {
+    @Override
+    public void startIteration() {
         voltdiff[0] = volts[0] - volts[1];
         voltdiff[1] = volts[2] - volts[3];
         voltdiff[2] = volts[3] - volts[4];
@@ -230,13 +242,15 @@ class TappedTransformerElm extends CircuitElm {
     double[] curSourceValue;
     double[] voltdiff;
 
-    void doStep() {
+    @Override
+    public void doStep() {
         sim.stampCurrentSource(nodes[0], nodes[1], curSourceValue[0]);
         sim.stampCurrentSource(nodes[2], nodes[3], curSourceValue[1]);
         sim.stampCurrentSource(nodes[3], nodes[4], curSourceValue[2]);
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         voltdiff[0] = volts[0] - volts[1];
         voltdiff[1] = volts[2] - volts[3];
         voltdiff[2] = volts[3] - volts[4];
@@ -250,7 +264,8 @@ class TappedTransformerElm extends CircuitElm {
         current[3] = current[1] - current[2];
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "transformer";
         arr[1] = "L = " + getUnitText(inductance, "H");
         arr[2] = "Ratio = " + ratio;
@@ -261,7 +276,7 @@ class TappedTransformerElm extends CircuitElm {
     }
 
     @Override
-    double getCurrentIntoNode(int n) {
+    public double getCurrentIntoNode(int n) {
         if (n == 0)
             return -current[0];
         if (n == 1)
@@ -273,7 +288,8 @@ class TappedTransformerElm extends CircuitElm {
         return current[2];
     }
 
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         if (comparePair(n1, n2, 0, 1))
             return true;
         if (comparePair(n1, n2, 2, 3))
@@ -283,6 +299,7 @@ class TappedTransformerElm extends CircuitElm {
         return comparePair(n1, n2, 2, 4);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Primary Inductance (H)", inductance, .01, 5);
@@ -299,6 +316,7 @@ class TappedTransformerElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0)
             inductance = ei.value;

@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
 
 public class ScrollValuePopup extends PopupPanel implements MouseOutHandler, MouseWheelHandler,
         MouseDownHandler {
@@ -46,7 +47,7 @@ public class ScrollValuePopup extends PopupPanel implements MouseOutHandler, Mou
     CirSim sim;
 
 
-    ScrollValuePopup(final int x, final int y, int dy, CircuitElm e, CirSim s) {
+    public ScrollValuePopup(final int x, final int y, int dy, CircuitElm e, CirSim s) {
         super();
         myElm = e;
         deltaY = 0;
@@ -73,12 +74,10 @@ public class ScrollValuePopup extends PopupPanel implements MouseOutHandler, Mou
         this.addDomHandler(this, MouseWheelEvent.getType());
         this.addDomHandler(this, MouseDownEvent.getType());
 //		this.addDomHandler(this, KeyPressEvent.getType());
-        setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-            public void setPosition(int offsetWidth, int offsetHeight) {
-                int left = Math.max(0, (x - offsetWidth / 4));
-                int top = Math.max(0, y - 7 * offsetHeight / 12);
-                setPopupPosition(left, top);
-            }
+        setPopupPositionAndShow((offsetWidth, offsetHeight) -> {
+            int left = Math.max(0, (x - offsetWidth / 4));
+            int top = Math.max(0, y - 7 * offsetHeight / 12);
+            setPopupPosition(left, top);
         });
     }
 
@@ -144,6 +143,7 @@ public class ScrollValuePopup extends PopupPanel implements MouseOutHandler, Mou
         }
     }
 
+    @Override
     public void onMouseOut(MouseOutEvent e) {
         close(true);
     }
@@ -158,11 +158,13 @@ public class ScrollValuePopup extends PopupPanel implements MouseOutHandler, Mou
         this.hide();
     }
 
+    @Override
     public void onMouseWheel(MouseWheelEvent e) {
         e.preventDefault();
         doDeltaY(e.getDeltaY());
     }
 
+    @Override
     public void onMouseDown(MouseDownEvent e) {
         close(e.getNativeButton() == NativeEvent.BUTTON_LEFT || e.getNativeButton() == NativeEvent.BUTTON_MIDDLE);
     }

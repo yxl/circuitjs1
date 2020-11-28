@@ -19,7 +19,10 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class MonostableElm extends ChipElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class MonostableElm extends ChipElm {
 
     //Used to detect rising edge
     private boolean prevInputValue = false;
@@ -39,11 +42,13 @@ class MonostableElm extends ChipElm {
         delay = new Double(st.nextToken()).doubleValue();
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "Monostable";
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = 2;
         pins = new Pin[getPostCount()];
@@ -56,15 +61,18 @@ class MonostableElm extends ChipElm {
         pins[2].lineOver = true;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 3;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 2;
     }
 
-    void execute() {
+    @Override
+    public void execute() {
 
         if (pins[0].value && prevInputValue != pins[0].value && (retriggerable || !triggered)) {
             lastRisingEdge = sim.t;
@@ -81,14 +89,17 @@ class MonostableElm extends ChipElm {
         prevInputValue = pins[0].value;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + retriggerable + " " + delay;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 194;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 2) {
             EditInfo ei = new EditInfo("", 0, -1, -1);
@@ -96,12 +107,12 @@ class MonostableElm extends ChipElm {
             return ei;
         }
         if (n == 3) {
-            EditInfo ei = new EditInfo("Period (s)", delay, 0.001, 0.1);
-            return ei;
+            return new EditInfo("Period (s)", delay, 0.001, 0.1);
         }
         return super.getEditInfo(n);
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 2) {
             retriggerable = ei.checkbox.getState();

@@ -19,7 +19,10 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class CounterElm extends ChipElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class CounterElm extends ChipElm {
     boolean invertreset;
     int modulus;
     final int FLAG_UP_DOWN = 4;
@@ -40,19 +43,23 @@ class CounterElm extends ChipElm {
         pins[1].bubble = invertreset;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + invertreset + " " + modulus;
     }
 
-    boolean needsBits() {
+    @Override
+    public boolean needsBits() {
         return true;
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "Counter";
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = bits > 2 ? bits : 2;
         pins = new Pin[getPostCount()];
@@ -71,10 +78,12 @@ class CounterElm extends ChipElm {
         allocNodes();
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return (hasUpDown()) ? bits + 3 : bits + 2;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo("", 0, -1, -1);
@@ -103,6 +112,7 @@ class CounterElm extends ChipElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0) {
             if (ei.checkbox.getState())
@@ -141,11 +151,13 @@ class CounterElm extends ChipElm {
         return (flags & FLAG_UP_DOWN) != 0;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return bits;
     }
 
-    void execute() {
+    @Override
+    public void execute() {
         if (pins[0].value && !lastClock) {
             int i;
             int value = 0;
@@ -178,7 +190,8 @@ class CounterElm extends ChipElm {
         lastClock = pins[0].value;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 164;
     }
 }

@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class NorGateElm extends OrGateElm {
+public class NorGateElm extends OrGateElm {
     public NorGateElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -29,19 +29,23 @@ class NorGateElm extends OrGateElm {
         super(xa, ya, xb, yb, f, st);
     }
 
-    String getGateName() {
+    @Override
+    public String getGateName() {
         return "NOR gate";
     }
 
-    boolean isInverting() {
+    @Override
+    public boolean isInverting() {
         return true;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 153;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return '#';
     }
 }

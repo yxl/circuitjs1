@@ -17,17 +17,17 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import com.lushprojects.circuitjs1.client.*;
 import com.lushprojects.circuitjs1.client.ChipElm.Pin;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -40,12 +40,12 @@ public class EditCompositeModelDialog extends DialogBox implements MouseDownHand
     Context2d context;
     CustomCompositeModel model;
 
-    void setModel(CustomCompositeModel m) {
+    public void setModel(CustomCompositeModel m) {
         model = m;
     }
 
-    boolean createModel() {
-        HashSet<Integer> nodeSet = new HashSet<Integer>();
+    public boolean createModel() {
+        HashSet<Integer> nodeSet = new HashSet<>();
         model = CirSim.theSim.getCircuitAsComposite();
         if (model == null)
             return false;
@@ -53,11 +53,7 @@ public class EditCompositeModelDialog extends DialogBox implements MouseDownHand
             Window.alert(CirSim.LS("Device has no external inputs/outputs!"));
             return false;
         }
-        Collections.sort(model.extList, new Comparator<ExtListEntry>() {
-            public int compare(ExtListEntry a, ExtListEntry b) {
-                return a.name.toLowerCase().compareTo(b.name.toLowerCase());
-            }
-        });
+        Collections.sort(model.extList, (a, b) -> a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         int i;
         int postCount = model.extList.size();
 
@@ -84,7 +80,7 @@ public class EditCompositeModelDialog extends DialogBox implements MouseDownHand
 
     TextBox modelNameTextBox = null;
 
-    void createDialog() {
+    public void createDialog() {
         Button okButton;
         Anchor a;
         vp = new VerticalPanel();
@@ -117,30 +113,14 @@ public class EditCompositeModelDialog extends DialogBox implements MouseDownHand
         hp.add(new Label(CirSim.LS("Width")));
         Button b;
         hp.add(b = new Button("+"));
-        b.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                adjustChipSize(1, 0);
-            }
-        });
+        b.addClickHandler(event -> adjustChipSize(1, 0));
         hp.add(b = new Button("-"));
-        b.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                adjustChipSize(-1, 0);
-            }
-        });
+        b.addClickHandler(event -> adjustChipSize(-1, 0));
         hp.add(new Label(CirSim.LS("Height")));
         hp.add(b = new Button("+"));
-        b.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                adjustChipSize(0, 1);
-            }
-        });
+        b.addClickHandler(event -> adjustChipSize(0, 1));
         hp.add(b = new Button("-"));
-        b.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                adjustChipSize(0, -1);
-            }
-        });
+        b.addClickHandler(event -> adjustChipSize(0, -1));
         vp.add(hp);
 
         canvas.addMouseDownHandler(this);
@@ -159,26 +139,20 @@ public class EditCompositeModelDialog extends DialogBox implements MouseDownHand
         Button cancelButton;
         if (model.name == null) {
             hp.add(cancelButton = new Button(CirSim.LS("Cancel")));
-            cancelButton.addClickHandler(new ClickHandler() {
-                public void onClick(ClickEvent event) {
-                    closeDialog();
-                }
-            });
+            cancelButton.addClickHandler(event -> closeDialog());
         }
-        okButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                if (modelNameTextBox != null) {
-                    String name = modelNameTextBox.getText();
-                    if (name.length() == 0) {
-                        Window.alert(CirSim.LS("Please enter a model name."));
-                        return;
-                    }
-                    model.setName(CustomCompositeElm.lastModelName = name);
+        okButton.addClickHandler(event -> {
+            if (modelNameTextBox != null) {
+                String name = modelNameTextBox.getText();
+                if (name.length() == 0) {
+                    Window.alert(CirSim.LS("Please enter a model name."));
+                    return;
                 }
-                CirSim.theSim.updateModels();
-                CirSim.theSim.needAnalyze(); // will get singular matrix if we don't do this
-                closeDialog();
+                model.setName(CustomCompositeElm.lastModelName = name);
             }
+            CirSim.theSim.updateModels();
+            CirSim.theSim.needAnalyze(); // will get singular matrix if we don't do this
+            closeDialog();
         });
         this.center();
     }
@@ -235,16 +209,17 @@ public class EditCompositeModelDialog extends DialogBox implements MouseDownHand
 
     boolean dragging;
 
+    @Override
     public void onMouseOver(MouseOverEvent event) {
         // TODO Auto-generated method stub
-
     }
 
+    @Override
     public void onMouseOut(MouseOutEvent event) {
         // TODO Auto-generated method stub
-
     }
 
+    @Override
     public void onMouseUp(MouseUpEvent event) {
         // TODO Auto-generated method stub
         dragging = false;
@@ -252,6 +227,7 @@ public class EditCompositeModelDialog extends DialogBox implements MouseDownHand
 
     int selectedPin;
 
+    @Override
     public void onMouseMove(MouseMoveEvent event) {
         if (dragging) {
             if (selectedPin < 0)
@@ -285,6 +261,7 @@ public class EditCompositeModelDialog extends DialogBox implements MouseDownHand
         }
     }
 
+    @Override
     public void onMouseDown(MouseDownEvent event) {
         // TODO Auto-generated method stub
         dragging = true;

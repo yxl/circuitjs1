@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class CCCSElm extends VCCSElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class CCCSElm extends VCCSElm {
     public CCCSElm(int xa, int ya, int xb, int yb, int f,
                    StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
@@ -36,7 +38,8 @@ class CCCSElm extends VCCSElm {
 //	    setupPins();
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = 2;
         pins = new Pin[3];
@@ -49,11 +52,13 @@ class CCCSElm extends VCCSElm {
         exprState = new ExprState(1);
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "CCCS";
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         // voltage source (0V) between C+ and C- so we can measure current
         int vn1 = pins[1].voltSource;
         sim.stampVoltageSource(nodes[0], nodes[1], vn1, 0);
@@ -64,7 +69,8 @@ class CCCSElm extends VCCSElm {
 
     double lastCurrent;
 
-    void doStep() {
+    @Override
+    public void doStep() {
         // no current path?  give up
         if (broken) {
             pins[inputCount].current = 0;
@@ -112,35 +118,42 @@ class CCCSElm extends VCCSElm {
         lastCurrent = cur;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 4;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 215;
     }
 
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         if (comparePair(0, 1, n1, n2))
             return true;
         return comparePair(2, 3, n1, n2);
     }
 
-    boolean hasCurrentOutput() {
+    @Override
+    public boolean hasCurrentOutput() {
         return true;
     }
 
-    void setCurrent(int vn, double c) {
+    @Override
+    public void setCurrent(int vn, double c) {
         if (pins[1].voltSource == vn) {
             pins[0].current = -c;
             pins[1].current = c;
         }
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         // can't set number of inputs
         if (n == 1)

@@ -20,7 +20,7 @@
 package com.lushprojects.circuitjs1.client;
 
 
-class Font {
+public class Font {
     static final int BOLD = 1;
 
     String fontname;

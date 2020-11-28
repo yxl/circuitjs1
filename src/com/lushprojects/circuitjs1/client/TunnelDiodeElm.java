@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class TunnelDiodeElm extends CircuitElm {
+public class TunnelDiodeElm extends CircuitElm {
     public TunnelDiodeElm(int xx, int yy) {
         super(xx, yy);
         setup();
@@ -31,14 +31,16 @@ class TunnelDiodeElm extends CircuitElm {
         setup();
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
     void setup() {
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 175;
     }
 
@@ -46,7 +48,8 @@ class TunnelDiodeElm extends CircuitElm {
     Polygon poly;
     Point[] cathode;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         calcLeads(16);
         cathode = newPointArray(4);
@@ -57,7 +60,8 @@ class TunnelDiodeElm extends CircuitElm {
         poly = createPolygon(pa[0], pa[1], lead2);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setBbox(point1, point2, hs);
 
         double v1 = volts[0];
@@ -80,7 +84,8 @@ class TunnelDiodeElm extends CircuitElm {
         drawPosts(g);
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         lastvoltdiff = volts[0] = volts[1] = curcount = 0;
     }
 
@@ -96,7 +101,8 @@ class TunnelDiodeElm extends CircuitElm {
         return vnew;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampNonLinear(nodes[0]);
         sim.stampNonLinear(nodes[1]);
     }
@@ -108,7 +114,8 @@ class TunnelDiodeElm extends CircuitElm {
     static final double pvpp = .525;
     static final double piv = 370e-6;
 
-    void doStep() {
+    @Override
+    public void doStep() {
         double voltdiff = volts[0] - volts[1];
         if (Math.abs(voltdiff - lastvoltdiff) > .01)
             sim.converged = false;
@@ -131,7 +138,8 @@ class TunnelDiodeElm extends CircuitElm {
         sim.stampCurrentSource(nodes[0], nodes[1], nc);
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         double voltdiff = volts[0] - volts[1];
         double i0 = piv * Math.exp(-pvv);
         current = pip * Math.exp(-pvpp / pvt) * (Math.exp(voltdiff / pvt) - 1) +
@@ -139,7 +147,8 @@ class TunnelDiodeElm extends CircuitElm {
                 piv * Math.exp(voltdiff - pvv) - i0;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "tunnel diode";
         arr[1] = "I = " + getCurrentText(getCurrent());
         arr[2] = "Vd = " + getVoltageText(getVoltageDiff());

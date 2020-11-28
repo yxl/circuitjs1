@@ -20,7 +20,7 @@
 package com.lushprojects.circuitjs1.client;
 
 
-class PhaseCompElm extends ChipElm {
+public class PhaseCompElm extends ChipElm {
     public PhaseCompElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -30,11 +30,13 @@ class PhaseCompElm extends ChipElm {
         super(xa, ya, xb, yb, f, st);
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "phase comparator";
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = 2;
         pins = new Pin[3];
@@ -44,11 +46,13 @@ class PhaseCompElm extends ChipElm {
         pins[2].output = true;
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         int vn = sim.nodeList.size() + pins[2].voltSource;
         sim.stampNonLinear(vn);
         sim.stampNonLinear(0);
@@ -57,7 +61,8 @@ class PhaseCompElm extends ChipElm {
 
     boolean ff1, ff2;
 
-    void doStep() {
+    @Override
+    public void doStep() {
         boolean v1 = volts[0] > 2.5;
         boolean v2 = volts[1] > 2.5;
         if (v1 && !pins[0].value)
@@ -79,15 +84,18 @@ class PhaseCompElm extends ChipElm {
         pins[1].value = v2;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 3;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 161;
     }
 }

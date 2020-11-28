@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class RailElm extends VoltageElm {
+public class RailElm extends VoltageElm {
     public RailElm(int xx, int yy) {
         super(xx, yy, WF_DC);
         numHandles = 1;
@@ -40,15 +40,18 @@ class RailElm extends VoltageElm {
 
     final int FLAG_CLOCK = 1;
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'R';
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 1;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         lead1 = interpPoint(point1, point2, 1 - circleSize / dn);
     }
@@ -57,7 +60,8 @@ class RailElm extends VoltageElm {
         return null;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         String rt = getRailText();
         double w = rt == null ? circleSize : g.context.measureText(rt).getWidth() / 2;
         if (w > dn * .8)
@@ -99,27 +103,32 @@ class RailElm extends VoltageElm {
         drawCenteredText(g, s, x2, y2, true);
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[0];
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         if (waveform == WF_DC)
             sim.stampVoltageSource(0, nodes[0], voltSource, getVoltage());
         else
             sim.stampVoltageSource(0, nodes[0], voltSource);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         if (waveform != WF_DC)
             sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage());
     }
 
-    boolean hasGroundConnection(int n1) {
+    @Override
+    public boolean hasGroundConnection(int n1) {
         return true;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'V';
     }
 

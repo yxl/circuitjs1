@@ -1,5 +1,7 @@
 package com.lushprojects.circuitjs1.client;
 
+import com.lushprojects.circuitjs1.client.ui.Scope;
+
 public class OhmMeterElm extends CurrentElm {
     public OhmMeterElm(int xx, int yy) {
         super(xx, yy);
@@ -10,16 +12,19 @@ public class OhmMeterElm extends CurrentElm {
         super(xa, ya, xb, yb, f, st);
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 216;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         calcLeads(26);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int cr = 12;
         draw2Leads(g);
         setVoltageColor(g, (volts[0] + volts[1]) / 2);
@@ -38,15 +43,18 @@ public class OhmMeterElm extends CurrentElm {
         drawPosts(g);
     }
 
-    double getScopeValue(int x) {
+    @Override
+    public double getScopeValue(int x) {
         return (x == Scope.VAL_R) ? getVoltageDiff() / current : super.getScopeValue(x);
     }
 
-    int getScopeUnits(int x) {
+    @Override
+    public int getScopeUnits(int x) {
         return (x == Scope.VAL_R) ? Scope.UNITS_OHMS : super.getScopeUnits(x);
     }
 
-    boolean canShowValueInScope(int x) {
+    @Override
+    public boolean canShowValueInScope(int x) {
         return x == Scope.VAL_R;
     }
 
@@ -60,7 +68,8 @@ public class OhmMeterElm extends CurrentElm {
         currentValue = ei.value;
     }
     */
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "ohmmeter";
         if (current == 0)
             arr[1] = "R = \u221e";

@@ -17,11 +17,11 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
+import com.lushprojects.circuitjs1.client.CirSim;
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
 
 public class ImportFromTextDialog extends DialogBox {
 
@@ -48,29 +48,23 @@ public class ImportFromTextDialog extends DialogBox {
         hp = new HorizontalPanel();
         vp.add(hp);
         hp.add(okButton = new Button(CirSim.LS("OK")));
-        okButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                String s;
-                sim.pushUndo();
-                closeDialog();
+        okButton.addClickHandler(event -> {
+            String s;
+            sim.pushUndo();
+            closeDialog();
 //				s=textBox.getHTML();
 //				s=s.replace("<br>", "\r");
-                s = textArea.getText();
-                int flags = 0;
-                if (subCheck.getState())
-                    flags |= CirSim.RC_SUBCIRCUITS | CirSim.RC_RETAIN;
-                if (s != null) {
-                    sim.readCircuit(s, flags);
-                    sim.allowSave(false);
-                }
+            s = textArea.getText();
+            int flags = 0;
+            if (subCheck.getState())
+                flags |= CirSim.RC_SUBCIRCUITS | CirSim.RC_RETAIN;
+            if (s != null) {
+                sim.readCircuit(s, flags);
+                sim.allowSave(false);
             }
         });
         hp.add(cancelButton = new Button(CirSim.LS("Cancel")));
-        cancelButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                closeDialog();
-            }
-        });
+        cancelButton.addClickHandler(event -> closeDialog());
         this.center();
         show();
     }

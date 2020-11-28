@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class DACElm extends ChipElm {
+public class DACElm extends ChipElm {
     public DACElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -29,15 +29,18 @@ class DACElm extends ChipElm {
         super(xa, ya, xb, yb, f, st);
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "DAC";
     }
 
-    boolean needsBits() {
+    @Override
+    public boolean needsBits() {
         return true;
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = bits > 2 ? bits : 2;
         pins = new Pin[getPostCount()];
@@ -50,7 +53,8 @@ class DACElm extends ChipElm {
         allocNodes();
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         int ival = 0;
         int i;
         for (i = 0; i != bits; i++)
@@ -61,15 +65,18 @@ class DACElm extends ChipElm {
         sim.updateVoltageSource(0, nodes[bits], pins[bits].voltSource, v);
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return bits + 2;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 166;
     }
 }

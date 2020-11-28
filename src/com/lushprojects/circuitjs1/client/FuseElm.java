@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class FuseElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class FuseElm extends CircuitElm {
     double resistance;
     double heat;
     double i2t;
@@ -42,21 +44,25 @@ class FuseElm extends CircuitElm {
         blown = new Boolean(st.nextToken()).booleanValue();
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + resistance + " " + i2t + " " + heat + " " + blown;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 404;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         super.reset();
         heat = 0;
         blown = false;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         int llen = 16;
         calcLeads(llen);
@@ -87,7 +93,8 @@ class FuseElm extends CircuitElm {
         return Color.white;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int segments = 16;
         int i;
         int hs = 6;
@@ -113,20 +120,24 @@ class FuseElm extends CircuitElm {
         drawPosts(g);
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         current = (volts[0] - volts[1]) / (blown ? blownResistance : resistance);
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampNonLinear(nodes[0]);
         sim.stampNonLinear(nodes[1]);
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    void startIteration() {
+    @Override
+    public void startIteration() {
         double i = getCurrent();
 
         // accumulate heat
@@ -141,11 +152,13 @@ class FuseElm extends CircuitElm {
             blown = true;
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         sim.stampResistor(nodes[0], nodes[1], blown ? blownResistance : resistance);
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = blown ? "fuse (blown)" : "fuse";
         getBasicInfo(arr);
         arr[3] = "R = " + getUnitText(resistance, CirSim.ohmString);
@@ -154,6 +167,7 @@ class FuseElm extends CircuitElm {
             arr[5] = ((int) (heat * 100 / i2t)) + "% " + CirSim.LS("melted");
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("I2t", i2t, 0, 0);
@@ -162,6 +176,7 @@ class FuseElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0)
             i2t = ei.value;

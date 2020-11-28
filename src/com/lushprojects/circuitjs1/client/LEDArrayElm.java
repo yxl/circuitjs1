@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class LEDArrayElm extends ChipElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class LEDArrayElm extends ChipElm {
     public LEDArrayElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -37,15 +39,18 @@ class LEDArrayElm extends ChipElm {
         setPoints();
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + sizeX + " " + sizeY;
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "LED array";
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         if (sizeX == 0 || sizeY == 0) {
             sizeX = sizeY = 8;
             allocNodes();
@@ -63,7 +68,8 @@ class LEDArrayElm extends ChipElm {
     double[] currents;
     double[] brightness;
 
-    void stamp() {
+    @Override
+    public void stamp() {
         super.stamp();
 
         // create grid of diodes
@@ -78,7 +84,8 @@ class LEDArrayElm extends ChipElm {
         currents = new double[diodes.length];
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         super.doStep();
 
         int ix, iy, i = 0;
@@ -87,11 +94,13 @@ class LEDArrayElm extends ChipElm {
                 diodes[i].doStep(volts[sizeX + iy] - volts[ix]);
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         drawChip(g);
         int ix, iy;
         for (ix = 0; ix != sizeX; ix++)
@@ -102,7 +111,8 @@ class LEDArrayElm extends ChipElm {
             }
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         // calculate diode currents
         int ix, iy, i = 0;
         for (ix = 0; ix != sizeX; ix++)
@@ -118,7 +128,8 @@ class LEDArrayElm extends ChipElm {
         }
     }
 
-    void stepFinished() {
+    @Override
+    public void stepFinished() {
         // stop for huge currents that make simulator act weird
         int i;
         for (i = 0; i != currents.length; i++)
@@ -148,21 +159,25 @@ class LEDArrayElm extends ChipElm {
         g.setColor(cc);
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return sizeX + sizeY;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 0;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 405;
     }
 
     // this is true but it causes strange behavior with unconnected pins so we don't do it
 //	boolean getConnection(int n1, int n2) { return true; }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 2)
             return new EditInfo("Grid Width", sizeX).setDimensionless();
@@ -171,6 +186,7 @@ class LEDArrayElm extends ChipElm {
         return super.getEditInfo(n);
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 2 && ei.value >= 2 && ei.value <= 16) {
             sizeX = (int) ei.value;
@@ -190,7 +206,8 @@ class LEDArrayElm extends ChipElm {
     }
 
     // default getInfo doesn't work because the pins are unlabeled
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = getChipName();
         return;
     }

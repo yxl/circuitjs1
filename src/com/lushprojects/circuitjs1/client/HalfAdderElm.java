@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class HalfAdderElm extends ChipElm {
+public class HalfAdderElm extends ChipElm {
     boolean hasReset() {
         return false;
     }
@@ -33,11 +33,13 @@ class HalfAdderElm extends ChipElm {
         super(xa, ya, xb, yb, f, st);
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "Half Adder";
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = 2;
         pins = new Pin[getPostCount()];
@@ -51,21 +53,25 @@ class HalfAdderElm extends ChipElm {
 
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 4;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 2;
     }
 
-    void execute() {
+    @Override
+    public void execute() {
 
         pins[0].value = pins[2].value ^ pins[3].value;
         pins[1].value = pins[2].value && pins[3].value;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 195;
     }
 

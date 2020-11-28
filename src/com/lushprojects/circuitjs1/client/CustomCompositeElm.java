@@ -2,6 +2,8 @@ package com.lushprojects.circuitjs1.client;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.lushprojects.circuitjs1.client.ui.EditCompositeModelDialog;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
 
 import java.util.Vector;
 
@@ -13,7 +15,7 @@ public class CustomCompositeElm extends CompositeElm {
     int postCount;
     int inputCount, outputCount;
     CustomCompositeModel model;
-    static String lastModelName = "default";
+    public static String lastModelName = "default";
 
     public CustomCompositeElm(int xx, int yy) {
         super(xx, yy);
@@ -33,6 +35,7 @@ public class CustomCompositeElm extends CompositeElm {
         updateModels(st);
     }
 
+    @Override
     public String dump() {
         // insert model name before the elements
         String s = super.dumpWithMask(0);
@@ -41,12 +44,12 @@ public class CustomCompositeElm extends CompositeElm {
         return s;
     }
 
-    String dumpModel() {
+    @Override
+    public String dumpModel() {
         String modelStr = "";
 
         // dump models of all children
-        for (int i = 0; i < compElmList.size(); i++) {
-            CircuitElm ce = compElmList.get(i);
+        for (CircuitElm ce : compElmList) {
             String m = ce.dumpModel();
             if (m != null && !m.isEmpty()) {
                 if (!modelStr.isEmpty())
@@ -65,7 +68,8 @@ public class CustomCompositeElm extends CompositeElm {
         return modelStr;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int i;
         for (i = 0; i != postCount; i++) {
             chip.volts[i] = volts[i];
@@ -76,7 +80,8 @@ public class CustomCompositeElm extends CompositeElm {
         boundingBox = chip.boundingBox;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         chip = new CustomCompositeChipElm(x, y);
         chip.x2 = x2;
         chip.y2 = y2;
@@ -95,6 +100,7 @@ public class CustomCompositeElm extends CompositeElm {
             setPost(i, chip.getPost(i));
     }
 
+    @Override
     public void updateModels() {
         updateModels(null);
     }
@@ -115,12 +121,14 @@ public class CustomCompositeElm extends CompositeElm {
         setPoints();
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return postCount;
     }
 
     Vector<CustomCompositeModel> models;
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo(EditInfo.makeLink("subcircuits.html", "Model Name"), 0, -1, -1);
@@ -143,6 +151,7 @@ public class CustomCompositeElm extends CompositeElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0) {
             model = models.get(ei.choice.getSelectedIndex());
@@ -165,11 +174,13 @@ public class CustomCompositeElm extends CompositeElm {
         }
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 410;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         super.getInfo(arr);
         arr[0] = "subcircuit (" + model.name + ")";
         int i;

@@ -19,18 +19,19 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class OpAmpSwapElm extends OpAmpElm {
+public class OpAmpSwapElm extends OpAmpElm {
     public OpAmpSwapElm(int xx, int yy) {
         super(xx, yy);
         flags |= FLAG_SWAP;
     }
 
     @Override
-    Class getDumpClass() {
+    public Class<?> getDumpClass() {
         return OpAmpElm.class;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'A';
     }
 }

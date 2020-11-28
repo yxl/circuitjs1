@@ -19,11 +19,15 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class TransistorElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.Scope;
+
+public class TransistorElm extends CircuitElm {
     // node 0 = base
     // node 1 = collector
     // node 2 = emitter
-    int pnp;
+    public int pnp;
     double beta;
     double fgain, inv_fgain;
     double gmin;
@@ -59,20 +63,24 @@ class TransistorElm extends CircuitElm {
         noDiagonal = true;
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         volts[0] = volts[1] = volts[2] = 0;
         lastvbc = lastvbe = curcount_c = curcount_e = curcount_b = 0;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 't';
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + pnp + " " + (volts[0] - volts[1]) + " " +
                 (volts[0] - volts[2]) + " " + beta;
     }
@@ -81,7 +89,8 @@ class TransistorElm extends CircuitElm {
 
     Polygon rectPoly, arrowPoly;
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setBbox(point1, point2, 16);
         setPowerColor(g, true);
         // draw collector
@@ -122,15 +131,18 @@ class TransistorElm extends CircuitElm {
         drawPosts(g);
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return (n == 0) ? point1 : (n == 1) ? coll[0] : emit[0];
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 3;
     }
 
-    double getPower() {
+    @Override
+    public double getPower() {
         return (volts[0] - volts[2]) * ib + (volts[1] - volts[2]) * ic;
     }
 
@@ -139,7 +151,8 @@ class TransistorElm extends CircuitElm {
     Point[] emit;
     Point base;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         int hs = 16;
         if ((flags & FLAG_FLIP) != 0)
@@ -200,13 +213,15 @@ class TransistorElm extends CircuitElm {
         return (vnew);
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampNonLinear(nodes[0]);
         sim.stampNonLinear(nodes[1]);
         sim.stampNonLinear(nodes[2]);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         double vbc = volts[0] - volts[1]; // typically negative
         double vbe = volts[0] - volts[2]; // typically positive
         if (Math.abs(vbc - lastvbc) > .01 || // .01
@@ -271,7 +286,7 @@ class TransistorElm extends CircuitElm {
     }
 
     @Override
-    String getScopeText(int x) {
+    public String getScopeText(int x) {
         String t = "";
         switch (x) {
             case Scope.VAL_IB:
@@ -299,7 +314,8 @@ class TransistorElm extends CircuitElm {
         return CirSim.LS("transistor") + ", " + t;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = CirSim.LS("transistor") + " (" + ((pnp == -1) ? "PNP)" : "NPN)") + " \u03b2=" + showFormat.format(beta);
         double vbc = volts[0] - volts[1];
         double vbe = volts[0] - volts[2];
@@ -317,7 +333,8 @@ class TransistorElm extends CircuitElm {
         arr[7] = "P = " + getUnitText(getPower(), "W");
     }
 
-    double getScopeValue(int x) {
+    @Override
+    public double getScopeValue(int x) {
         switch (x) {
             case Scope.VAL_IB:
                 return ib;
@@ -337,7 +354,8 @@ class TransistorElm extends CircuitElm {
         return 0;
     }
 
-    int getScopeUnits(int x) {
+    @Override
+    public int getScopeUnits(int x) {
         switch (x) {
             case Scope.VAL_IB:
             case Scope.VAL_IC:
@@ -350,6 +368,7 @@ class TransistorElm extends CircuitElm {
         }
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Beta/hFE", beta, 10, 1000).
@@ -362,6 +381,7 @@ class TransistorElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0) {
             beta = ei.value;
@@ -381,17 +401,20 @@ class TransistorElm extends CircuitElm {
         setup();
     }
 
-    void stepFinished() {
+    @Override
+    public void stepFinished() {
         // stop for huge currents that make simulator act weird
         if (Math.abs(ic) > 1e12 || Math.abs(ib) > 1e12)
             sim.stop("max current exceeded", this);
     }
 
-    boolean canViewInScope() {
+    @Override
+    public boolean canViewInScope() {
         return true;
     }
 
-    double getCurrentIntoNode(int n) {
+    @Override
+    public double getCurrentIntoNode(int n) {
         if (n == 0)
             return -ib;
         if (n == 1)

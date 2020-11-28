@@ -19,7 +19,10 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class LampElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.Scope;
+
+public class LampElm extends CircuitElm {
     double resistance;
     final double roomTemp = 300;
     double temp, nom_pow, nom_v, warmTime, coolTime;
@@ -45,12 +48,14 @@ class LampElm extends CircuitElm {
         coolTime = new Double(st.nextToken()).doubleValue();
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + temp + " " + nom_pow + " " + nom_v +
                 " " + warmTime + " " + coolTime;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 181;
     }
 
@@ -59,7 +64,8 @@ class LampElm extends CircuitElm {
     Point bulb;
     int bulbR;
 
-    void reset() {
+    @Override
+    public void reset() {
         super.reset();
         temp = roomTemp;
 
@@ -70,7 +76,8 @@ class LampElm extends CircuitElm {
 
     final int filament_len = 24;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         int llen = 16;
         calcLeads(llen);
@@ -107,7 +114,8 @@ class LampElm extends CircuitElm {
         return Color.white;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         double v1 = volts[0];
         double v2 = volts[1];
         setBbox(point1, point2, 4);
@@ -141,23 +149,27 @@ class LampElm extends CircuitElm {
         drawPosts(g);
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         current = (volts[0] - volts[1]) / resistance;
         if (resistance == 0)
             current = 0;
 //	    sim.console("lampcc " + current + " " + resistance);
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampNonLinear(nodes[0]);
         sim.stampNonLinear(nodes[1]);
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    void startIteration() {
+    @Override
+    public void startIteration() {
         // based on http://www.intusoft.com/nlpdf/nl11.pdf
         double nom_r = nom_v * nom_v / nom_pow;
         // this formula doesn't work for values over 5390
@@ -175,11 +187,13 @@ class LampElm extends CircuitElm {
 //	    sim.console("lampsi " + temp + " " + capc + " " + nom_pow);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         sim.stampResistor(nodes[0], nodes[1], resistance);
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "lamp";
         getBasicInfo(arr);
         arr[3] = "R = " + getUnitText(resistance, CirSim.ohmString);
@@ -187,6 +201,7 @@ class LampElm extends CircuitElm {
         arr[5] = "T = " + ((int) temp) + " K";
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         // ohmString doesn't work here on linux
         if (n == 0)
@@ -200,6 +215,7 @@ class LampElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0)
             nom_pow = ei.value;
@@ -211,15 +227,18 @@ class LampElm extends CircuitElm {
             coolTime = ei.value;
     }
 
-    double getScopeValue(int x) {
+    @Override
+    public double getScopeValue(int x) {
         return (x == Scope.VAL_R) ? resistance : super.getScopeValue(x);
     }
 
-    int getScopeUnits(int x) {
+    @Override
+    public int getScopeUnits(int x) {
         return (x == Scope.VAL_R) ? Scope.UNITS_OHMS : super.getScopeUnits(x);
     }
 
-    boolean canShowValueInScope(int x) {
+    @Override
+    public boolean canShowValueInScope(int x) {
         return x == Scope.VAL_R;
     }
 

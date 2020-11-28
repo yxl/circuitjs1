@@ -36,21 +36,25 @@ public class DarlingtonElm extends CompositeElm {
         noDiagonal = true;
     }
 
+    @Override
     public void reset() {
         super.reset();
         curcount_c = curcount_e = curcount_b = 0;
     }
 
+    @Override
     public int getDumpType() {
         return 400;
     }
 
+    @Override
     public String dump() {
         return super.dump() + " " + pnp;
     }
 
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setBbox(point1, point2, 16);
         setPowerColor(g, true);
         // draw collector
@@ -97,7 +101,8 @@ public class DarlingtonElm extends CompositeElm {
     }
 
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = CirSim.LS("darlington pair") + " (" + ((pnp == -1) ? "PNP)" : "NPN)");
         double vbc = volts[0] - volts[1];
         double vbe = volts[0] - volts[2];
@@ -109,7 +114,8 @@ public class DarlingtonElm extends CompositeElm {
         arr[5] = "Vce = " + getVoltageText(vce);
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         int hs = 16;
         int hs2 = hs * dsign * pnp;

@@ -21,7 +21,9 @@ package com.lushprojects.circuitjs1.client;
 
 // contributed by Edward Calver
 
-class DeMultiplexerElm extends ChipElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class DeMultiplexerElm extends ChipElm {
     int selectBitCount;
     int outputCount;
     int qPin;
@@ -45,15 +47,18 @@ class DeMultiplexerElm extends ChipElm {
         }
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "demultiplexer";
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + selectBitCount;
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         if (selectBitCount == 0)
             selectBitCount = 2;
         outputCount = 1 << selectBitCount;
@@ -73,15 +78,18 @@ class DeMultiplexerElm extends ChipElm {
         pins[qPin] = new Pin(0, SIDE_W, "Q");
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return qPin + 1;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return outputCount;
     }
 
-    void execute() {
+    @Override
+    public void execute() {
         int val = 0;
         int i;
         for (i = 0; i != selectBitCount; i++)
@@ -92,6 +100,7 @@ class DeMultiplexerElm extends ChipElm {
         pins[val].value = pins[qPin].value;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n < 2)
             return super.getEditInfo(n);
@@ -100,6 +109,7 @@ class DeMultiplexerElm extends ChipElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n < 2) {
             super.setEditValue(n, ei);
@@ -112,7 +122,8 @@ class DeMultiplexerElm extends ChipElm {
         }
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 185;
     }
 

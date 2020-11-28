@@ -2,6 +2,7 @@ package com.lushprojects.circuitjs1.client;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Anchor;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
 
 import java.util.Date;
 
@@ -21,29 +22,35 @@ public class DataRecorderElm extends CircuitElm {
         setDataCount(Integer.parseInt(st.nextToken()));
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + dataCount;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 210;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 1;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         dataPtr = 0;
         dataFull = false;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         lead1 = new Point();
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         boolean selected = (needsHighlight());
         Font f = new Font("SansSerif", selected ? Font.BOLD : 0, 14);
         g.setFont(f);
@@ -59,17 +66,20 @@ public class DataRecorderElm extends CircuitElm {
         drawPosts(g);
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[0];
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "data export";
         arr[1] = "V = " + getVoltageText(volts[0]);
         arr[2] = (dataFull ? dataCount : dataPtr) + "/" + dataCount;
     }
 
-    void stepFinished() {
+    @Override
+    public void stepFinished() {
         data[dataPtr++] = volts[0];
         if (dataPtr >= dataCount) {
             dataPtr = 0;
@@ -98,10 +108,10 @@ public class DataRecorderElm extends CircuitElm {
             return url;
         }-*/;
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
-            EditInfo ei = new EditInfo("# of Data Points", dataCount, -1, -1).setDimensionless();
-            return ei;
+            return new EditInfo("# of Data Points", dataCount, -1, -1).setDimensionless();
         }
         if (n == 1) {
             EditInfo ei = new EditInfo("", 0, -1, -1);
@@ -126,6 +136,7 @@ public class DataRecorderElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0) {
             setDataCount((int) ei.value);

@@ -19,8 +19,11 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class CapacitorElm extends CircuitElm {
-    double capacitance;
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class CapacitorElm extends CircuitElm {
+    public double capacitance;
     double compResistance, voltdiff;
     Point[] plate1;
     Point[] plate2;
@@ -42,35 +45,40 @@ class CapacitorElm extends CircuitElm {
         return (flags & FLAG_BACK_EULER) == 0;
     }
 
-    void setNodeVoltage(int n, double c) {
+    @Override
+    public void setNodeVoltage(int n, double c) {
         super.setNodeVoltage(n, c);
         voltdiff = volts[0] - volts[1];
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         super.reset();
         current = curcount = curSourceValue = 0;
         // put small charge on caps when reset to start oscillators
         voltdiff = 1e-3;
     }
 
-    void shorted() {
+    public void shorted() {
         super.reset();
         voltdiff = current = curcount = curSourceValue = 0;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'c';
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + capacitance + " " + voltdiff;
     }
 
     // used for PolarCapacitorElm
     Point[] platePoints;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         double f = (dn / 2 - 4) / dn;
         // calc leads
@@ -83,7 +91,8 @@ class CapacitorElm extends CircuitElm {
         interpPoint2(point1, point2, plate2[0], plate2[1], 1 - f, 12);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int hs = 12;
         setBbox(point1, point2, hs);
 
@@ -119,7 +128,8 @@ class CapacitorElm extends CircuitElm {
         }
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         if (sim.dcAnalysisFlag) {
             // when finding DC operating point, replace cap with a 100M resistor
             sim.stampResistor(nodes[0], nodes[1], 1e8);
@@ -141,14 +151,16 @@ class CapacitorElm extends CircuitElm {
         sim.stampRightSide(nodes[1]);
     }
 
-    void startIteration() {
+    @Override
+    public void startIteration() {
         if (isTrapezoidal())
             curSourceValue = -voltdiff / compResistance - current;
         else
             curSourceValue = -voltdiff / compResistance;
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         double voltdiff = volts[0] - volts[1];
         if (sim.dcAnalysisFlag) {
             current = voltdiff / 1e8;
@@ -163,13 +175,15 @@ class CapacitorElm extends CircuitElm {
 
     double curSourceValue;
 
-    void doStep() {
+    @Override
+    public void doStep() {
         if (sim.dcAnalysisFlag)
             return;
         sim.stampCurrentSource(nodes[0], nodes[1], curSourceValue);
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "capacitor";
         getBasicInfo(arr);
         arr[3] = "C = " + getUnitText(capacitance, "F");
@@ -179,10 +193,11 @@ class CapacitorElm extends CircuitElm {
     }
 
     @Override
-    String getScopeText(int v) {
+    public String getScopeText(int v) {
         return CirSim.LS("capacitor") + ", " + getUnitText(capacitance, "F");
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Capacitance (F)", capacitance, 0, 0);
@@ -194,6 +209,7 @@ class CapacitorElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0)
             capacitance = ei.value;
@@ -205,7 +221,8 @@ class CapacitorElm extends CircuitElm {
         }
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'c';
     }
 

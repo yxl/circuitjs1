@@ -22,7 +22,9 @@ package com.lushprojects.circuitjs1.client;
     
 */
 
-class TestPointElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class TestPointElm extends CircuitElm {
     int meter;
     final int TP_VOL = 0;
     final int TP_RMS = 1;
@@ -60,20 +62,24 @@ class TestPointElm extends CircuitElm {
         meter = new Integer(st.nextToken()).intValue(); //get meter type from saved dump
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 368;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 1;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         lead1 = new Point();
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + meter;
     }
 
@@ -103,7 +109,8 @@ class TestPointElm extends CircuitElm {
         return "";
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         boolean selected = needsHighlight();
         Font f = new Font("SansSerif", selected ? Font.BOLD : 0, 14);
         g.setFont(f);
@@ -157,7 +164,8 @@ class TestPointElm extends CircuitElm {
     }
 
 
-    void stepFinished() {
+    @Override
+    public void stepFinished() {
         count++;//how many counts are in a cycle    
         total += volts[0] * volts[0]; //sum of squares
 
@@ -269,15 +277,18 @@ class TestPointElm extends CircuitElm {
         $wnd.alert(msg);
     }-*/;
 
-    double getScopeValue(int x) {
+    @Override
+    public double getScopeValue(int x) {
         return selectedValue;
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[0];
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "Test Point";
         switch (meter) {
             case TP_VOL:
@@ -318,6 +329,7 @@ class TestPointElm extends CircuitElm {
 //        g.fillRect(x-3, y-3, 7, 7);
 //    }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo("Value", selectedValue, -1, -1);
@@ -339,6 +351,7 @@ class TestPointElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0) {
             meter = ei.choice.getSelectedIndex();

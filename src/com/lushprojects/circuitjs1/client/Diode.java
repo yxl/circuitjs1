@@ -56,7 +56,7 @@ class Diode {
         setup(DiodeModel.getDefaultModel());
     }
 
-    void reset() {
+    public void reset() {
         lastvoltdiff = 0;
     }
 

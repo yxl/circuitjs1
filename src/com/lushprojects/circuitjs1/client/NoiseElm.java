@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class NoiseElm extends RailElm {
+public class NoiseElm extends RailElm {
     public NoiseElm(int xx, int yy) {
         super(xx, yy, WF_NOISE);
     }
@@ -32,7 +32,8 @@ class NoiseElm extends RailElm {
 
     // dump this class as a RailElm.  The 'n' dump type is still used in CirSim.createCe to read old files
 //	int getDumpType() { return 'n'; }
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 0;
     }
 }

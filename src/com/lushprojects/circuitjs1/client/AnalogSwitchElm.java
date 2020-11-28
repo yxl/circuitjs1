@@ -19,7 +19,10 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class AnalogSwitchElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class AnalogSwitchElm extends CircuitElm {
     final int FLAG_INVERT = 1;
     double resistance, r_on, r_off;
 
@@ -42,11 +45,13 @@ class AnalogSwitchElm extends CircuitElm {
 
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + r_on + " " + r_off;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 159;
     }
 
@@ -54,7 +59,8 @@ class AnalogSwitchElm extends CircuitElm {
 
     Point ps, point3, lead3;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         calcLeads(32);
         ps = new Point();
@@ -63,7 +69,8 @@ class AnalogSwitchElm extends CircuitElm {
         lead3 = interpPoint(point1, point2, .5, -openhs / 2);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int openhs = 16;
         int hs = (open) ? openhs : 0;
         setBbox(point1, point2, openhs);
@@ -82,21 +89,25 @@ class AnalogSwitchElm extends CircuitElm {
         drawPosts(g);
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         current = (volts[0] - volts[1]) / resistance;
     }
 
     // we need this to be able to change the matrix for each step
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampNonLinear(nodes[0]);
         sim.stampNonLinear(nodes[1]);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         open = (volts[2] < 2.5);
         if ((flags & FLAG_INVERT) != 0)
             open = !open;
@@ -104,7 +115,8 @@ class AnalogSwitchElm extends CircuitElm {
         sim.stampResistor(nodes[0], nodes[1], resistance);
     }
 
-    void drag(int xx, int yy) {
+    @Override
+    public void drag(int xx, int yy) {
         xx = sim.snapGrid(xx);
         yy = sim.snapGrid(yy);
         if (abs(x - xx) < abs(y - yy))
@@ -120,15 +132,18 @@ class AnalogSwitchElm extends CircuitElm {
         setPoints();
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 3;
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return (n == 0) ? point1 : (n == 1) ? point2 : point3;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "analog switch";
         arr[1] = open ? "open" : "closed";
         arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
@@ -138,10 +153,12 @@ class AnalogSwitchElm extends CircuitElm {
 
     // we have to just assume current will flow either way, even though that
     // might cause singular matrix errors
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         return n1 != 2 && n2 != 2;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo("", 0, -1, -1);
@@ -156,6 +173,7 @@ class AnalogSwitchElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             flags = (ei.checkbox.getState()) ?
@@ -167,7 +185,8 @@ class AnalogSwitchElm extends CircuitElm {
             r_off = ei.value;
     }
 
-    double getCurrentIntoNode(int n) {
+    @Override
+    public double getCurrentIntoNode(int n) {
         if (n == 2)
             return 0;
         if (n == 0)

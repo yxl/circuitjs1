@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class SevenSegElm extends ChipElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class SevenSegElm extends ChipElm {
     // base segment count not including decimal point or colon
     int baseSegmentCount;
 
@@ -61,17 +63,20 @@ class SevenSegElm extends ChipElm {
         diodeDirection = 0;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + baseSegmentCount + " " + extraSegment + " " + diodeDirection;
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return segmentCount + "-segment display";
     }
 
     Color darkred;
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         if (pinCount == 0)
             return;
         darkred = new Color(30, 0, 0);
@@ -192,7 +197,8 @@ class SevenSegElm extends ChipElm {
 
     Diode[] diodes;
 
-    void stamp() {
+    @Override
+    public void stamp() {
         super.stamp();
 
         if (diodeDirection == 0)
@@ -210,7 +216,8 @@ class SevenSegElm extends ChipElm {
         }
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         super.doStep();
 
         if (diodeDirection == 0)
@@ -221,11 +228,13 @@ class SevenSegElm extends ChipElm {
             diodes[i].doStep(diodeDirection * (volts[i] - volts[commonPin]));
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return diodeDirection != 0;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         drawChip(g);
         g.setColor(Color.red);
         int spx = cspc * 2;
@@ -265,7 +274,8 @@ class SevenSegElm extends ChipElm {
         }
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         if (diodeDirection == 0) {
             // no current
             int i;
@@ -283,7 +293,8 @@ class SevenSegElm extends ChipElm {
         }
     }
 
-    void stepFinished() {
+    @Override
+    public void stepFinished() {
         // stop for huge currents that make simulator act weird
         if (commonPin > 0 && Math.abs(pins[commonPin].current) > 1e12)
             sim.stop("max current exceeded", this);
@@ -307,18 +318,22 @@ class SevenSegElm extends ChipElm {
         g.setColor(cc);
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return pinCount;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 0;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 157;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 2) {
             EditInfo ei = new EditInfo("Segments", 0, -1, -1);
@@ -350,6 +365,7 @@ class SevenSegElm extends ChipElm {
         return super.getEditInfo(n);
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 2) {
             int ix = ei.choice.getSelectedIndex();

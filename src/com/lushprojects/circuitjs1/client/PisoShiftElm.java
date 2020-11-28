@@ -21,7 +21,7 @@ package com.lushprojects.circuitjs1.client;
 
 // contributed by Edward Calver
 
-class PisoShiftElm extends ChipElm {
+public class PisoShiftElm extends ChipElm {
     boolean hasReset() {
         return false;
     }
@@ -39,11 +39,13 @@ class PisoShiftElm extends ChipElm {
     boolean clockstate = false;
     boolean modestate = false;
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "PISO shift register";
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 10;
         sizeY = 3;
         pins = new Pin[getPostCount()];
@@ -66,15 +68,18 @@ class PisoShiftElm extends ChipElm {
 
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 11;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    void execute() {
+    @Override
+    public void execute() {
         if (pins[0].value && !modestate) {
             modestate = true;
             data = 0;
@@ -95,7 +100,8 @@ class PisoShiftElm extends ChipElm {
         if (!pins[1].value) clockstate = false;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 186;
     }
 

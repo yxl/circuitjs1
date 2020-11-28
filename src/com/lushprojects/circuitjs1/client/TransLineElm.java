@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class TransLineElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class TransLineElm extends CircuitElm {
     double delay, imped;
     double[] voltageL;
     double[] voltageR;
@@ -45,23 +47,28 @@ class TransLineElm extends CircuitElm {
         reset();
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 171;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 4;
     }
 
-    int getInternalNodeCount() {
+    @Override
+    public int getInternalNodeCount() {
         return 2;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + delay + " " + imped + " " + width + " " + 0.;
     }
 
-    void drag(int xx, int yy) {
+    @Override
+    public void drag(int xx, int yy) {
         xx = sim.snapGrid(xx);
         yy = sim.snapGrid(yy);
         int w1 = max(sim.gridSize, abs(yy - y));
@@ -81,7 +88,8 @@ class TransLineElm extends CircuitElm {
     Point[] posts;
     Point[] inner;
 
-    void reset() {
+    @Override
+    public void reset() {
         if (sim.timeStep == 0)
             return;
         lenSteps = (int) (delay / sim.timeStep);
@@ -96,7 +104,8 @@ class TransLineElm extends CircuitElm {
         super.reset();
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         int ds = (dy == 0) ? sign(dx) : -sign(dy);
         Point p3 = interpPoint(point1, point2, 0, -width * ds);
@@ -115,7 +124,8 @@ class TransLineElm extends CircuitElm {
         inner = new Point[]{p7, p8, p5, p6};
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setBbox(posts[0], posts[3], 0);
         int segments = (int) (dn / 2);
         int ix0 = ptr - 1 + lenSteps;
@@ -158,28 +168,32 @@ class TransLineElm extends CircuitElm {
     int voltSource1, voltSource2;
     double current1, current2, curCount1, curCount2;
 
-    void setVoltageSource(int n, int v) {
+    @Override
+    public void setVoltageSource(int n, int v) {
         if (n == 0)
             voltSource1 = v;
         else
             voltSource2 = v;
     }
 
-    void setCurrent(int v, double c) {
+    @Override
+    public void setCurrent(int v, double c) {
         if (v == voltSource1)
             current1 = c;
         else
             current2 = c;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampVoltageSource(nodes[4], nodes[0], voltSource1);
         sim.stampVoltageSource(nodes[5], nodes[1], voltSource2);
         sim.stampResistor(nodes[2], nodes[4], imped);
         sim.stampResistor(nodes[3], nodes[5], imped);
     }
 
-    void startIteration() {
+    @Override
+    public void startIteration() {
         // calculate voltages, currents sent over wire
         if (voltageL == null) {
             sim.stop("Transmission line delay too large!", this);
@@ -194,7 +208,8 @@ class TransLineElm extends CircuitElm {
         ptr = (ptr + 1) % lenSteps;
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         if (voltageL == null) {
             sim.stop("Transmission line delay too large!", this);
             return;
@@ -207,20 +222,24 @@ class TransLineElm extends CircuitElm {
         }
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return posts[n];
     }
 
     //double getVoltageDiff() { return volts[0]; }
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 2;
     }
 
-    boolean hasGroundConnection(int n1) {
+    @Override
+    public boolean hasGroundConnection(int n1) {
         return false;
     }
 
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         return false;
 	/*if (comparePair(n1, n2, 0, 1))
 	  return true;
@@ -229,7 +248,8 @@ class TransLineElm extends CircuitElm {
 	  return false;*/
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "transmission line";
         arr[1] = getUnitText(imped, CirSim.ohmString);
         // use velocity factor for RG-58 cable (65%)
@@ -237,6 +257,7 @@ class TransLineElm extends CircuitElm {
         arr[3] = "delay = " + getUnitText(delay, "s");
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Delay (s)", delay, 0, 0);
@@ -245,6 +266,7 @@ class TransLineElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0) {
             delay = ei.value;
@@ -256,7 +278,8 @@ class TransLineElm extends CircuitElm {
         }
     }
 
-    double getCurrentIntoNode(int n) {
+    @Override
+    public double getCurrentIntoNode(int n) {
         if (n == 0)
             return current1;
         if (n == 2)

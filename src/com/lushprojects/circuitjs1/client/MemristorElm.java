@@ -19,7 +19,10 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class MemristorElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.Scope;
+
+public class MemristorElm extends CircuitElm {
     double r_on, r_off, dopeWidth, totalWidth, mobility, resistance;
 
     public MemristorElm(int xx, int yy) {
@@ -47,25 +50,29 @@ class MemristorElm extends CircuitElm {
         resistance = 100;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'm';
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + r_on + " " + r_off + " " + dopeWidth + " " +
                 totalWidth + " " + mobility + " " + current;
     }
 
     Point ps3, ps4;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         calcLeads(32);
         ps3 = new Point();
         ps4 = new Point();
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int segments = 6;
         int i;
         int ox = 0;
@@ -98,19 +105,23 @@ class MemristorElm extends CircuitElm {
         drawPosts(g);
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         current = (volts[0] - volts[1]) / resistance;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         dopeWidth = 0;
     }
 
-    void startIteration() {
+    @Override
+    public void startIteration() {
         double wd = dopeWidth / totalWidth;
         dopeWidth += sim.timeStep * mobility * r_on * current / totalWidth;
         if (dopeWidth < 0)
@@ -120,34 +131,41 @@ class MemristorElm extends CircuitElm {
         resistance = r_on * wd + r_off * (1 - wd);
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampNonLinear(nodes[0]);
         sim.stampNonLinear(nodes[1]);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         sim.stampResistor(nodes[0], nodes[1], resistance);
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "memristor";
         getBasicInfo(arr);
         arr[3] = "R = " + getUnitText(resistance, CirSim.ohmString);
         arr[4] = "P = " + getUnitText(getPower(), "W");
     }
 
-    double getScopeValue(int x) {
+    @Override
+    public double getScopeValue(int x) {
         return (x == Scope.VAL_R) ? resistance : super.getScopeValue(x);
     }
 
-    int getScopeUnits(int x) {
+    @Override
+    public int getScopeUnits(int x) {
         return (x == Scope.VAL_R) ? Scope.UNITS_OHMS : super.getScopeUnits(x);
     }
 
-    boolean canShowValueInScope(int x) {
+    @Override
+    public boolean canShowValueInScope(int x) {
         return x == Scope.VAL_R;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Min Resistance (ohms)", r_on, 0, 0);
@@ -162,6 +180,7 @@ class MemristorElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             r_on = ei.value;

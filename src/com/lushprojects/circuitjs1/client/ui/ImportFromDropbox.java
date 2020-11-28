@@ -1,4 +1,6 @@
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
+
+import com.lushprojects.circuitjs1.client.CirSim;
 
 public class ImportFromDropbox {
 
@@ -45,7 +47,7 @@ public class ImportFromDropbox {
                             xhr.addEventListener("load", function reqListener() {
                                 //			        	console.log(xhr.responseText);
                                 var text = xhr.responseText;
-                                @com.lushprojects.circuitjs1.client.ImportFromDropbox::doLoadCallback(Ljava/lang/String;)(text);
+                                @com.lushprojects.circuitjs1.client.ui.ImportFromDropbox::doLoadCallback(Ljava/lang/String;)(text);
                             });
                         }
                         xhr.open("GET", files[0].link, false);

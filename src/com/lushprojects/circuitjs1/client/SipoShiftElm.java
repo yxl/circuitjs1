@@ -21,7 +21,7 @@ package com.lushprojects.circuitjs1.client;
 
 // contributed by Edward Calver
 
-class SipoShiftElm extends ChipElm {
+public class SipoShiftElm extends ChipElm {
     boolean hasReset() {
         return false;
     }
@@ -38,11 +38,13 @@ class SipoShiftElm extends ChipElm {
     short data = 0;//This has to be a short because there's no unsigned byte and it's screwing with my code
     boolean clockstate = false;
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "SIPO shift register";
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 9;
         sizeY = 3;
         pins = new Pin[getPostCount()];
@@ -70,15 +72,18 @@ class SipoShiftElm extends ChipElm {
 
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 10;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 8;
     }
 
-    void execute() {
+    @Override
+    public void execute() {
 
         if (pins[1].value && !clockstate) {
             clockstate = true;
@@ -97,7 +102,8 @@ class SipoShiftElm extends ChipElm {
         if (!pins[1].value) clockstate = false;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 189;
     }
 

@@ -27,7 +27,10 @@ package com.lushprojects.circuitjs1.client;
 // 3n+1 = coil
 // 3n+2 = end of coil resistor
 
-class RelayElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class RelayElm extends CircuitElm {
     double inductance;
     Inductor ind;
     double r_on, r_off, onCurrent;
@@ -92,17 +95,20 @@ class RelayElm extends CircuitElm {
         }
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 178;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + poleCount + " " +
                 inductance + " " + coilCurrent + " " +
                 r_on + " " + r_off + " " + onCurrent + " " + coilR;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int i, p;
         for (i = 0; i != 2; i++) {
             setVoltageColor(g, volts[nCoil1 + i]);
@@ -159,7 +165,8 @@ class RelayElm extends CircuitElm {
         adjustBbox(swpoles[poleCount - 1][0], swposts[poleCount - 1][1]); // XXX
     }
 
-    double getCurrentIntoNode(int n) {
+    @Override
+    public double getCurrentIntoNode(int n) {
         if (n < 3 * poleCount) {
             int p = n / 3;
             int k = n % 3;
@@ -174,7 +181,8 @@ class RelayElm extends CircuitElm {
         return coilCurrent;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         setupPoles();
         allocNodes();
@@ -213,21 +221,25 @@ class RelayElm extends CircuitElm {
         lines = newPointArray(poleCount * 2);
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         if (n < 3 * poleCount)
             return swposts[n / 3][n % 3];
         return coilPosts[n - 3 * poleCount];
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 2 + poleCount * 3;
     }
 
-    int getInternalNodeCount() {
+    @Override
+    public int getInternalNodeCount() {
         return 1;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         super.reset();
         ind.reset();
         coilCurrent = coilCurCount = 0;
@@ -238,7 +250,8 @@ class RelayElm extends CircuitElm {
 
     double a1, a2, a3, a4;
 
-    void stamp() {
+    @Override
+    public void stamp() {
         // inductor from coil post 1 to internal node
         ind.stamp(nodes[nCoil1], nodes[nCoil3]);
         // resistor from internal node to coil post 2
@@ -249,7 +262,8 @@ class RelayElm extends CircuitElm {
             sim.stampNonLinear(nodes[nSwitch0 + i]);
     }
 
-    void startIteration() {
+    @Override
+    public void startIteration() {
         ind.startIteration(volts[nCoil1] - volts[nCoil3]);
 
         // magic value to balance operate speed with reset speed semi-realistically
@@ -271,11 +285,13 @@ class RelayElm extends CircuitElm {
     }
 
     // we need this to be able to change the matrix for each step
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         double voltdiff = volts[nCoil1] - volts[nCoil3];
         ind.doStep(voltdiff);
         int p;
@@ -287,7 +303,8 @@ class RelayElm extends CircuitElm {
         }
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         double voltdiff = volts[nCoil1] - volts[nCoil3];
         coilCurrent = ind.calculateCurrent(voltdiff);
 
@@ -303,7 +320,8 @@ class RelayElm extends CircuitElm {
         }
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = i_position == 0 ? "relay (off)" :
                 i_position == 1 ? "relay (on)" : "relay";
         int i;
@@ -315,6 +333,7 @@ class RelayElm extends CircuitElm {
                 getVoltageDText(volts[nCoil1] - volts[nCoil2]);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Inductance (H)", inductance, 0, 0);
@@ -338,6 +357,7 @@ class RelayElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0) {
             inductance = ei.value;
@@ -364,11 +384,13 @@ class RelayElm extends CircuitElm {
         }
     }
 
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         return (n1 / 3 == n2 / 3);
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'R';
     }
 }

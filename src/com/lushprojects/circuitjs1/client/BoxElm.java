@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class BoxElm extends GraphicElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class BoxElm extends GraphicElm {
 
     public BoxElm(int xx, int yy) {
         super(xx, yy);
@@ -36,24 +38,29 @@ class BoxElm extends GraphicElm {
         setBbox(x, y, x2, y2);
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump();
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'b';
     }
 
-    void drag(int xx, int yy) {
+    @Override
+    public void drag(int xx, int yy) {
         x2 = xx;
         y2 = yy;
     }
 
-    boolean creationFailed() {
+    @Override
+    public boolean creationFailed() {
         return Math.abs(x2 - x) < 32 || Math.abs(y2 - y) < 32;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         //g.setColor(needsHighlight() ? selectColor : lightGrayColor);
         g.setColor(needsHighlight() ? selectColor : Color.GRAY);
         setBbox(x, y, x2, y2);
@@ -69,18 +76,21 @@ class BoxElm extends GraphicElm {
         g.setLineDash(0, 0);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
     }
 
     @Override
-    int getShortcut() {
+    public int getShortcut() {
         return 0;
     }
 }

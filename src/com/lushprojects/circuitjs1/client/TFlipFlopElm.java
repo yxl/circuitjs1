@@ -19,7 +19,10 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class TFlipFlopElm extends ChipElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class TFlipFlopElm extends ChipElm {
     final int FLAG_RESET = 2;
     final int FLAG_SET = 4;
 
@@ -41,11 +44,13 @@ class TFlipFlopElm extends ChipElm {
         pins[2].value = !pins[1].value;
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "T flip-flop";
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = 3;
         pins = new Pin[getPostCount()];
@@ -66,21 +71,25 @@ class TFlipFlopElm extends ChipElm {
         }
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 4 + (hasReset() ? 1 : 0) + (hasSet() ? 1 : 0);
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 2;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         super.reset();
         volts[2] = 5;
         pins[2].value = true;
     }
 
-    void execute() {
+    @Override
+    public void execute() {
         if (pins[3].value && !lastClock) {
             if (pins[0].value) //if T = 1
             {
@@ -99,10 +108,12 @@ class TFlipFlopElm extends ChipElm {
         lastClock = pins[3].value;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 193;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 2) {
             EditInfo ei = new EditInfo("", 0, -1, -1);
@@ -117,6 +128,7 @@ class TFlipFlopElm extends ChipElm {
         return super.getEditInfo(n);
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 2) {
             if (ei.checkbox.getState())

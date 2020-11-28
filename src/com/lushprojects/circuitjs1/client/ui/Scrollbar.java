@@ -17,7 +17,7 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -27,17 +27,19 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.lushprojects.circuitjs1.client.CirSim;
+import com.lushprojects.circuitjs1.client.CircuitElm;
 
 
 public class Scrollbar extends Composite implements
         ClickHandler, MouseDownHandler, MouseMoveHandler, MouseUpHandler, MouseOutHandler, MouseOverHandler,
         MouseWheelHandler, TouchStartHandler, TouchCancelHandler, TouchEndHandler, TouchMoveHandler {
 
-    static int HORIZONTAL = 1;
-    static int HMARGIN = 2;
-    static int SCROLLHEIGHT = 14;
-    static int BARWIDTH = 3;
-    static int BARMARGIN = 3;
+    public static int HORIZONTAL = 1;
+    public static int HMARGIN = 2;
+    public static int SCROLLHEIGHT = 14;
+    public static int BARWIDTH = 3;
+    public static int BARMARGIN = 3;
 
     Canvas can;
     VerticalPanel pan;
@@ -93,7 +95,7 @@ public class Scrollbar extends Composite implements
         this.command = cmd;
     }
 
-    void draw() {
+    public void draw() {
         if (enabled)
             g.setStrokeStyle("#000000");
         else
@@ -148,6 +150,7 @@ public class Scrollbar extends Composite implements
         return v;
     }
 
+    @Override
     public void onMouseDown(MouseDownEvent e) {
 //		GWT.log("Down");
         dragging = false;
@@ -180,6 +183,7 @@ public class Scrollbar extends Composite implements
         }
     }
 
+    @Override
     public void onMouseMove(MouseMoveEvent e) {
 //		GWT.log("Move");
         e.preventDefault();
@@ -197,6 +201,7 @@ public class Scrollbar extends Composite implements
         }
     }
 
+    @Override
     public void onMouseUp(MouseUpEvent e) {
 //		GWT.log("Up");
         e.preventDefault();
@@ -210,6 +215,7 @@ public class Scrollbar extends Composite implements
         }
     }
 
+    @Override
     public void onMouseOut(MouseOutEvent e) {
 //		GWT.log("Out");
 //		e.preventDefault();
@@ -219,18 +225,21 @@ public class Scrollbar extends Composite implements
             CircuitElm.sim.setMouseElm(null);
     }
 
+    @Override
     public void onMouseOver(MouseOverEvent e) {
 
         if (enabled && attachedElm != null)
             CircuitElm.sim.setMouseElm(attachedElm);
     }
 
+    @Override
     public void onMouseWheel(MouseWheelEvent e) {
         e.preventDefault();
         if (enabled)
             setValue(val + e.getDeltaY() / 3);
     }
 
+    @Override
     public void onClick(ClickEvent e) {
 //		GWT.log("Click");
         e.preventDefault();
@@ -276,6 +285,7 @@ public class Scrollbar extends Composite implements
         draw();
     }
 
+    @Override
     public void onTouchMove(TouchMoveEvent e) {
 //	    GWT.log("touchmove");
         e.preventDefault();
@@ -283,6 +293,7 @@ public class Scrollbar extends Composite implements
         doMouseMove(t.getRelativeX(getElement()));
     }
 
+    @Override
     public void onTouchEnd(TouchEndEvent event) {
 //	    GWT.log("touchend");;
         event.preventDefault();
@@ -294,12 +305,14 @@ public class Scrollbar extends Composite implements
         }
     }
 
+    @Override
     public void onTouchCancel(TouchCancelEvent event) {
 //	    GWT.log("touchcancel");;
         event.preventDefault();
         dragging = false;
     }
 
+    @Override
     public void onTouchStart(TouchStartEvent event) {
 //	    GWT.log("touchstart");
         event.preventDefault();

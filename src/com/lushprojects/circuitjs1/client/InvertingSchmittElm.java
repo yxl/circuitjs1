@@ -21,7 +21,9 @@ package com.lushprojects.circuitjs1.client;
 
 // contributed by Edward Calver
 
-class InvertingSchmittElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class InvertingSchmittElm extends CircuitElm {
     double slewRate; // V/ns
     double lowerTrigger;
     double upperTrigger;
@@ -59,15 +61,18 @@ class InvertingSchmittElm extends CircuitElm {
         }
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + slewRate + " " + lowerTrigger + " " + upperTrigger + " " + logicOnLevel + " " + logicOffLevel;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 183;
     }//Trying to find unused type
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         drawPosts(g);
         draw2Leads(g);
         g.setColor(needsHighlight() ? selectColor : lightGrayColor);
@@ -84,7 +89,8 @@ class InvertingSchmittElm extends CircuitElm {
     Polygon symbolPoly;
     Point pcircle;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         int hs = 16;
         int ww = 16;
@@ -102,15 +108,18 @@ class InvertingSchmittElm extends CircuitElm {
         setBbox(point1, point2, hs);
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampVoltageSource(0, nodes[1], voltSource);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         double v0 = volts[1];
         double out;
         if (state) {//Output is high
@@ -136,16 +145,19 @@ class InvertingSchmittElm extends CircuitElm {
         sim.updateVoltageSource(0, nodes[1], voltSource, out);
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[0];
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "inverting Schmitt trigger";
         arr[1] = "Vi = " + getVoltageText(volts[0]);
         arr[2] = "Vo = " + getVoltageText(volts[1]);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             dlt = lowerTrigger;
@@ -168,6 +180,7 @@ class InvertingSchmittElm extends CircuitElm {
     double dlt;
     double dut;
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             dlt = ei.value;
@@ -193,16 +206,18 @@ class InvertingSchmittElm extends CircuitElm {
 
     // there is no current path through the InvertingSchmitt input, but there
     // is an indirect path through the output to ground.
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         return false;
     }
 
-    boolean hasGroundConnection(int n1) {
+    @Override
+    public boolean hasGroundConnection(int n1) {
         return (n1 == 1);
     }
 
     @Override
-    double getCurrentIntoNode(int n) {
+    public double getCurrentIntoNode(int n) {
         if (n == 1)
             return current;
         return 0;

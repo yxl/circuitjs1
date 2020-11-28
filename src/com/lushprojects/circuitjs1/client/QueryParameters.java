@@ -31,8 +31,8 @@ public class QueryParameters {
         String search = getQueryString();
         if ((search != null) && (search.length() > 0)) {
             String[] nameValues = search.substring(1).split("&");
-            for (int i = 0; i < nameValues.length; i++) {
-                String[] pair = nameValues[i].split("=");
+            for (String nameValue : nameValues) {
+                String[] pair = nameValue.split("=");
 
                 map.put(pair[0], URL.decode(pair[1]));
             }

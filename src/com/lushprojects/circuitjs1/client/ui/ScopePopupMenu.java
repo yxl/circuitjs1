@@ -17,10 +17,11 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.lushprojects.circuitjs1.client.*;
 
 public class ScopePopupMenu {
 
@@ -36,7 +37,7 @@ public class ScopePopupMenu {
     private final MenuItem dockItem;
     private final MenuItem undockItem;
 
-    ScopePopupMenu() {
+    public ScopePopupMenu() {
         m = new MenuBar(true);
         m.addItem(removeScopeItem = new CheckboxAlignedMenuItem(CirSim.LS("Remove Scope"), new MyCommand("scopepop", "remove")));
         m.addItem(dockItem = new CheckboxAlignedMenuItem(CirSim.LS("Dock Scope"), new MyCommand("scopepop", "dock")));
@@ -50,7 +51,7 @@ public class ScopePopupMenu {
         m.addItem(propertiesItem = new CheckboxAlignedMenuItem(CirSim.LS("Properties..."), new MyCommand("scopepop", "properties")));
     }
 
-    void doScopePopupChecks(boolean floating, Scope s) {
+    public void doScopePopupChecks(boolean floating, Scope s) {
         maxScaleItem.setState(s.maxScale);
         stackItem.setVisible(!floating);
         unstackItem.setVisible(!floating);

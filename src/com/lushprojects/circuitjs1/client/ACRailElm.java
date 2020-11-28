@@ -19,17 +19,18 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class ACRailElm extends RailElm {
+public class ACRailElm extends RailElm {
     public ACRailElm(int xx, int yy) {
         super(xx, yy, WF_AC);
     }
 
     @Override
-    Class getDumpClass() {
+    public Class<?> getDumpClass() {
         return RailElm.class;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 0;
     }
 }

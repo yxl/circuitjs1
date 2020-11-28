@@ -2,9 +2,9 @@ package com.lushprojects.circuitjs1.client;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.TextArea;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
@@ -15,17 +15,17 @@ public class CustomLogicModel implements Editable {
 
     int flags;
     String name;
-    String[] inputs;
-    String[] outputs;
-    String infoText;
+    public String[] inputs;
+    public String[] outputs;
+    public String infoText;
     String rules;
-    Vector<String> rulesLeft, rulesRight;
-    boolean dumped;
-    boolean triState;
+    public Vector<String> rulesLeft, rulesRight;
+    public boolean dumped;
+    public boolean triState;
 
-    static CustomLogicModel getModelWithName(String name) {
+    public static CustomLogicModel getModelWithName(String name) {
         if (modelMap == null)
-            modelMap = new HashMap<String, CustomLogicModel>();
+            modelMap = new HashMap<>();
         CustomLogicModel lm = modelMap.get(name);
         if (lm != null)
             return lm;
@@ -36,9 +36,9 @@ public class CustomLogicModel implements Editable {
         return lm;
     }
 
-    static CustomLogicModel getModelWithNameOrCopy(String name, CustomLogicModel oldmodel) {
+    public static CustomLogicModel getModelWithNameOrCopy(String name, CustomLogicModel oldmodel) {
         if (modelMap == null)
-            modelMap = new HashMap<String, CustomLogicModel>();
+            modelMap = new HashMap<>();
         CustomLogicModel lm = modelMap.get(name);
         if (lm != null)
             return lm;
@@ -49,12 +49,11 @@ public class CustomLogicModel implements Editable {
         return lm;
     }
 
-    static void clearDumpedFlags() {
+    public static void clearDumpedFlags() {
         if (modelMap == null)
             return;
-        Iterator it = modelMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, CustomLogicModel> pair = (Map.Entry) it.next();
+        for (Map.Entry<String, CustomLogicModel> stringCustomLogicModelEntry : modelMap.entrySet()) {
+            Map.Entry<String, CustomLogicModel> pair = stringCustomLogicModelEntry;
             pair.getValue().dumped = false;
         }
     }
@@ -62,8 +61,8 @@ public class CustomLogicModel implements Editable {
     CustomLogicModel() {
         inputs = listToArray("A,B");
         outputs = listToArray("C,D");
-        rulesLeft = new Vector<String>();
-        rulesRight = new Vector<String>();
+        rulesLeft = new Vector<>();
+        rulesRight = new Vector<>();
         rules = "";
     }
 
@@ -77,7 +76,7 @@ public class CustomLogicModel implements Editable {
         rulesRight = copy.rulesRight;
     }
 
-    static void undumpModel(StringTokenizer st) {
+    public static void undumpModel(StringTokenizer st) {
         String name = unescape(st.nextToken());
         CustomLogicModel model = getModelWithName(name);
         model.undump(st);
@@ -108,6 +107,7 @@ public class CustomLogicModel implements Editable {
         return arr.split(",");
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo("Inputs", 0, -1, -1);
@@ -142,6 +142,7 @@ public class CustomLogicModel implements Editable {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             inputs = listToArray(ei.textf.getText());
@@ -165,8 +166,8 @@ public class CustomLogicModel implements Editable {
     void parseRules() {
         String[] lines = rules.split("\n");
         int i;
-        rulesLeft = new Vector<String>();
-        rulesRight = new Vector<String>();
+        rulesLeft = new Vector<>();
+        rulesRight = new Vector<>();
         triState = false;
         for (i = 0; i != lines.length; i++) {
             String s = lines[i].toLowerCase();
@@ -219,7 +220,7 @@ public class CustomLogicModel implements Editable {
         }
     }
 
-    String dump() {
+    public String dump() {
         dumped = true;
         if (rules.length() > 0 && !rules.endsWith("\n"))
             rules += "\n";
@@ -227,14 +228,14 @@ public class CustomLogicModel implements Editable {
                 escape(arrayToList(outputs)) + " " + escape(infoText) + " " + escape(rules);
     }
 
-    static String escape(String s) {
+    public static String escape(String s) {
         if (s.length() == 0)
             return "\\0";
         return s.replace("\\", "\\\\").replace("\n", "\\n").replace(" ", "\\s").replace("+", "\\p").
                 replace("=", "\\q").replace("#", "\\h").replace("&", "\\a").replace("\r", "\\r");
     }
 
-    static String unescape(String s) {
+    public static String unescape(String s) {
         if (s.equals("\\0"))
             return "";
         int i;

@@ -21,10 +21,12 @@ package com.lushprojects.circuitjs1.client;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.lushprojects.circuitjs1.client.ui.EditDialog;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
 
 import java.util.Vector;
 
-class DiodeElm extends CircuitElm {
+public class DiodeElm extends CircuitElm {
     Diode diode;
     static final int FLAG_FWDROP = 1;
     static final int FLAG_MODEL = 2;
@@ -64,7 +66,8 @@ class DiodeElm extends CircuitElm {
         setup();
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
@@ -78,19 +81,23 @@ class DiodeElm extends CircuitElm {
         allocNodes();
     }
 
-    int getInternalNodeCount() {
+    @Override
+    public int getInternalNodeCount() {
         return hasResistance ? 1 : 0;
     }
 
+    @Override
     public void updateModels() {
         setup();
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'd';
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         flags |= FLAG_MODEL;
 /*	if (modelName == null) {
 	    sim.console("model name is null??");
@@ -99,7 +106,8 @@ class DiodeElm extends CircuitElm {
         return super.dump() + " " + CustomLogicModel.escape(modelName);
     }
 
-    String dumpModel() {
+    @Override
+    public String dumpModel() {
         if (model.builtIn || model.dumped)
             return null;
         return model.dump();
@@ -109,7 +117,8 @@ class DiodeElm extends CircuitElm {
     Polygon poly;
     Point[] cathode;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         calcLeads(16);
         cathode = newPointArray(2);
@@ -119,13 +128,15 @@ class DiodeElm extends CircuitElm {
         poly = createPolygon(pa[0], pa[1], lead2);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         drawDiode(g);
         doDots(g);
         drawPosts(g);
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         diode.reset();
         volts[0] = volts[1] = curcount = 0;
         if (hasResistance)
@@ -151,7 +162,8 @@ class DiodeElm extends CircuitElm {
         drawThickLine(g, cathode[0], cathode[1]);
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         if (hasResistance) {
             // create diode from node 0 to internal node
             diode.stamp(nodes[0], nodes[2]);
@@ -162,15 +174,18 @@ class DiodeElm extends CircuitElm {
             diode.stamp(nodes[0], nodes[1]);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         diode.doStep(volts[0] - volts[diodeEndNode]);
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         current = diode.calculateCurrent(volts[0] - volts[diodeEndNode]);
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         if (model.oldStyle)
             arr[0] = "diode";
         else
@@ -185,6 +200,7 @@ class DiodeElm extends CircuitElm {
     boolean customModelUI;
     Vector<DiodeModel> models;
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (!customModelUI && n == 0) {
             EditInfo ei = new EditInfo("Model", 0, -1, -1);
@@ -220,6 +236,7 @@ class DiodeElm extends CircuitElm {
         return super.getEditInfo(n);
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (!customModelUI && n == 0) {
             int ix = ei.choice.getSelectedIndex();
@@ -271,7 +288,8 @@ class DiodeElm extends CircuitElm {
         super.setEditValue(n, ei);
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'd';
     }
 
@@ -279,7 +297,8 @@ class DiodeElm extends CircuitElm {
         lastModelName = n;
     }
 
-    void stepFinished() {
+    @Override
+    public void stepFinished() {
         // stop for huge currents that make simulator act weird
         if (Math.abs(current) > 1e12)
             sim.stop("max current exceeded", this);

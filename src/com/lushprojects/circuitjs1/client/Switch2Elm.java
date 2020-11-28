@@ -21,7 +21,9 @@ package com.lushprojects.circuitjs1.client;
 
 // SPDT switch
 
-class Switch2Elm extends SwitchElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class Switch2Elm extends SwitchElm {
     int link;
     int throwCount;
     static final int FLAG_CENTER_OFF = 1;
@@ -50,11 +52,13 @@ class Switch2Elm extends SwitchElm {
         noDiagonal = true;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'S';
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + link + " " + throwCount;
     }
 
@@ -62,7 +66,8 @@ class Switch2Elm extends SwitchElm {
     Point[] swposts;
     Point[] swpoles;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         calcLeads(32);
         swposts = newPointArray(throwCount);
@@ -79,7 +84,8 @@ class Switch2Elm extends SwitchElm {
         posCount = hasCenterOff() ? 3 : throwCount;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setBbox(point1, point2, openhs);
         adjustBbox(swposts[0], swposts[throwCount - 1]);
 
@@ -106,7 +112,8 @@ class Switch2Elm extends SwitchElm {
         drawPosts(g);
     }
 
-    double getCurrentIntoNode(int n) {
+    @Override
+    public double getCurrentIntoNode(int n) {
         if (n == 0)
             return -current;
         if (n == position + 1)
@@ -114,34 +121,41 @@ class Switch2Elm extends SwitchElm {
         return 0;
     }
 
-    Rectangle getSwitchRect() {
+    @Override
+    public Rectangle getSwitchRect() {
         return new Rectangle(lead1).union(new Rectangle(swpoles[0])).union(new Rectangle(swpoles[throwCount - 1]));
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return (n == 0) ? point1 : swposts[n - 1];
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 1 + throwCount;
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         if (position == 2 && hasCenterOff())
             current = 0;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         if (position == 2 && hasCenterOff()) // in center?
             return;
         sim.stampVoltageSource(nodes[0], nodes[position + 1], voltSource, 0);
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return (position == 2 && hasCenterOff()) ? 0 : 1;
     }
 
-    void toggle() {
+    @Override
+    public void toggle() {
         super.toggle();
         if (link != 0) {
             int i;
@@ -156,22 +170,26 @@ class Switch2Elm extends SwitchElm {
         }
     }
 
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         if (position == 2 && hasCenterOff())
             return false;
         return comparePair(n1, n2, 0, 1 + position);
     }
 
-    boolean isWire() {
+    @Override
+    public boolean isWire() {
         return true;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "switch (" + (link == 0 ? "S" : "D") + "P" +
                 ((throwCount > 2) ? throwCount + "T)" : "DT)");
         arr[1] = "I = " + getCurrentDText(getCurrent());
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
 	    /*if (n == 1) {
 	    	EditInfo ei = new EditInfo("", 0, -1, -1);
@@ -185,6 +203,7 @@ class Switch2Elm extends SwitchElm {
         return super.getEditInfo(n);
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
 	    /*if (n == 1) {
 	    	flags &= ~FLAG_CENTER_OFF;
@@ -212,7 +231,8 @@ class Switch2Elm extends SwitchElm {
         return (flags & FLAG_CENTER_OFF) != 0 && throwCount == 2;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'S';
     }
 }

@@ -17,27 +17,16 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.ui.*;
-
-interface Editable {
-    EditInfo getEditInfo(int n);
-
-    void setEditValue(int n, EditInfo ei);
-}
+import com.lushprojects.circuitjs1.client.*;
 
 // class EditDialog extends Dialog implements AdjustmentListener, ActionListener, ItemListener {
-class EditDialog extends DialogBox {
+public class EditDialog extends DialogBox {
     Editable elm;
     CirSim cframe;
     Button applyButton, okButton, cancelButton;
@@ -49,7 +38,7 @@ class EditDialog extends DialogBox {
     boolean closeOnEnter = true;
     static NumberFormat noCommaFormat = NumberFormat.getFormat("####.##########");
 
-    EditDialog(Editable ce, CirSim f) {
+    public EditDialog(Editable ce, CirSim f) {
 //		super(f, "Edit Component", false);
         super(); // Do we need this?
         setText(CirSim.LS("Edit Component"));
@@ -68,25 +57,15 @@ class EditDialog extends DialogBox {
         hp.setStyleName("topSpace");
         vp.add(hp);
         hp.add(applyButton = new Button(CirSim.LS("Apply")));
-        applyButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                apply();
-            }
-        });
+        applyButton.addClickHandler(event -> apply());
         hp.add(okButton = new Button(CirSim.LS("OK")));
-        okButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                apply();
-                closeDialog();
-            }
+        okButton.addClickHandler(event -> {
+            apply();
+            closeDialog();
         });
         hp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
         hp.add(cancelButton = new Button(CirSim.LS("Cancel")));
-        cancelButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                closeDialog();
-            }
-        });
+        cancelButton.addClickHandler(event -> closeDialog());
         buildDialog();
         this.center();
     }
@@ -111,25 +90,13 @@ class EditDialog extends DialogBox {
             idx = vp.getWidgetIndex(hp);
             if (ei.choice != null) {
                 vp.insert(ei.choice, idx);
-                ei.choice.addChangeHandler(new ChangeHandler() {
-                    public void onChange(ChangeEvent e) {
-                        itemStateChanged(e);
-                    }
-                });
+                ei.choice.addChangeHandler(e -> itemStateChanged(e));
             } else if (ei.checkbox != null) {
                 vp.insert(ei.checkbox, idx);
-                ei.checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-                    public void onValueChange(ValueChangeEvent<Boolean> e) {
-                        itemStateChanged(e);
-                    }
-                });
+                ei.checkbox.addValueChangeHandler(e -> itemStateChanged(e));
             } else if (ei.button != null) {
                 vp.insert(ei.button, idx);
-                ei.button.addClickHandler(new ClickHandler() {
-                    public void onClick(ClickEvent event) {
-                        itemStateChanged(event);
-                    }
-                });
+                ei.button.addClickHandler(event -> itemStateChanged(event));
             } else if (ei.textArea != null) {
                 vp.insert(ei.textArea, idx);
                 closeOnEnter = false;
@@ -162,7 +129,7 @@ class EditDialog extends DialogBox {
         return unitString(ei, ei.value);
     }
 
-    static String unitString(EditInfo ei, double v) {
+    public static String unitString(EditInfo ei, double v) {
         double va = Math.abs(v);
         if (ei != null && ei.dimensionless)
             return noCommaFormat.format(v);
@@ -189,7 +156,7 @@ class EditDialog extends DialogBox {
         return parseUnits(s);
     }
 
-    static double parseUnits(String s) throws java.text.ParseException {
+    public static double parseUnits(String s) throws java.text.ParseException {
         s = s.trim();
         double rmsMult = 1;
         if (s.endsWith("rms")) {
@@ -243,8 +210,7 @@ class EditDialog extends DialogBox {
             EditInfo ei = einfos[i];
             if (ei.textf != null && ei.text == null) {
                 try {
-                    double d = parseUnits(ei);
-                    ei.value = d;
+                    ei.value = parseUnits(ei);
                 } catch (Exception ex) { /* ignored */ }
             }
             if (ei.button != null)
@@ -298,7 +264,7 @@ class EditDialog extends DialogBox {
             vp.remove(0);
     }
 
-    protected void closeDialog() {
+    public void closeDialog() {
         EditDialog.this.hide();
         CirSim.editDialog = null;
     }

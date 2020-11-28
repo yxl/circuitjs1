@@ -20,10 +20,11 @@
 package com.lushprojects.circuitjs1.client;
 
 import com.google.gwt.user.client.Window;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
 
 // Zener code contributed by J. Mike Rollins
 // http://www.camotruck.net/rollins/simulator.html
-class ZenerElm extends DiodeElm {
+public class ZenerElm extends DiodeElm {
     static String lastZenerModelName = "default-zener";
 
     public ZenerElm(int xx, int yy) {
@@ -44,7 +45,8 @@ class ZenerElm extends DiodeElm {
         setup();
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'z';
     }
 
@@ -53,7 +55,8 @@ class ZenerElm extends DiodeElm {
     Point[] cathode;
     Point[] wing;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         calcLeads(16);
         cathode = newPointArray(2);
@@ -66,7 +69,8 @@ class ZenerElm extends DiodeElm {
         poly = createPolygon(pa[0], pa[1], lead2);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setBbox(point1, point2, hs);
 
         double v1 = volts[0];
@@ -93,20 +97,24 @@ class ZenerElm extends DiodeElm {
 
     final double default_zvoltage = 5.6;
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         super.getInfo(arr);
         arr[0] = "Zener diode";
         arr[5] = "Vz = " + getVoltageText(model.breakdownVoltage);
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'z';
     }
 
-    void setLastModelName(String n) {
+    @Override
+    public void setLastModelName(String n) {
         lastZenerModelName = n;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 2) {
             String val = Window.prompt(CirSim.LS("Breakdown Voltage"), CirSim.LS("5.6"));

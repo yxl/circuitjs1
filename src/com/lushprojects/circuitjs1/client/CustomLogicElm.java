@@ -1,6 +1,8 @@
 package com.lushprojects.circuitjs1.client;
 
 import com.google.gwt.user.client.ui.Button;
+import com.lushprojects.circuitjs1.client.ui.EditDialog;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
 
 public class CustomLogicElm extends ChipElm {
     String modelName;
@@ -32,7 +34,8 @@ public class CustomLogicElm extends ChipElm {
         }
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         String s = super.dump();
         s += " " + CustomLogicModel.escape(modelName);
 
@@ -47,12 +50,14 @@ public class CustomLogicElm extends ChipElm {
         return s;
     }
 
-    String dumpModel() {
+    @Override
+    public String dumpModel() {
         if (model.dumped)
             return "";
         return model.dump();
     }
 
+    @Override
     public void updateModels() {
         model = CustomLogicModel.getModelWithNameOrCopy(modelName, model);
         setupPins();
@@ -61,7 +66,7 @@ public class CustomLogicElm extends ChipElm {
     }
 
     @Override
-    void setupPins() {
+    public void setupPins() {
         if (modelName == null) {
             postCount = bits;
             allocNodes();
@@ -92,12 +97,13 @@ public class CustomLogicElm extends ChipElm {
         highImpedance = new boolean[postCount];
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return postCount;
     }
 
     @Override
-    int getVoltageSourceCount() {
+    public int getVoltageSourceCount() {
         return outputCount;
     }
 
@@ -106,17 +112,20 @@ public class CustomLogicElm extends ChipElm {
         return model != null && model.triState;
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return hasTriState();
     }
 
-    int getInternalNodeCount() {
+    @Override
+    public int getInternalNodeCount() {
         // for tri-state outputs, we need an internal node to connect a voltage source to, and then connect a resistor from there to the output.
         // we do this for all outputs if any of them are tri-state
         return (hasTriState()) ? outputCount : 0;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         int i;
         int add = (hasTriState()) ? outputCount : 0;
         for (i = 0; i != getPostCount(); i++) {
@@ -131,7 +140,8 @@ public class CustomLogicElm extends ChipElm {
         }
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         int i;
         for (i = 0; i != getPostCount(); i++) {
             Pin p = pins[i];
@@ -153,7 +163,8 @@ public class CustomLogicElm extends ChipElm {
         }
     }
 
-    void execute() {
+    @Override
+    public void execute() {
         int i;
         for (i = 0; i != model.rulesLeft.size(); i++) {
             // check for a match
@@ -221,6 +232,7 @@ public class CustomLogicElm extends ChipElm {
         }
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 2) {
             EditInfo ei = new EditInfo("Model Name", 0, -1, -1);
@@ -236,6 +248,7 @@ public class CustomLogicElm extends ChipElm {
         return super.getEditInfo(n);
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 2) {
             modelName = lastModelName = ei.textf.getText();
@@ -255,11 +268,13 @@ public class CustomLogicElm extends ChipElm {
         super.setEditValue(n, ei);
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 208;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         super.getInfo(arr);
         arr[0] = model.infoText;
     }

@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class AndGateElm extends GateElm {
+public class AndGateElm extends GateElm {
     public AndGateElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -29,11 +29,13 @@ class AndGateElm extends GateElm {
         super(xa, ya, xb, yb, f, st);
     }
 
-    String getGateText() {
+    @Override
+    public String getGateText() {
         return "&";
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
 
         if (useEuroGates()) {
@@ -60,11 +62,13 @@ class AndGateElm extends GateElm {
         }
     }
 
-    String getGateName() {
+    @Override
+    public String getGateName() {
         return "AND gate";
     }
 
-    boolean calcFunction() {
+    @Override
+    public boolean calcFunction() {
         int i;
         boolean f = true;
         for (i = 0; i != inputCount; i++)
@@ -72,11 +76,13 @@ class AndGateElm extends GateElm {
         return f;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 150;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return '2';
     }
 }

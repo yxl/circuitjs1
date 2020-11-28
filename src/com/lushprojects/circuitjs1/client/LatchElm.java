@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class LatchElm extends ChipElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class LatchElm extends ChipElm {
     final int FLAG_STATE = 2;
 
     public LatchElm(int xx, int yy) {
@@ -39,17 +41,20 @@ class LatchElm extends ChipElm {
         }
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "Latch";
     }
 
-    boolean needsBits() {
+    @Override
+    public boolean needsBits() {
         return true;
     }
 
     int loadPin;
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = bits + 1;
         pins = new Pin[getPostCount()];
@@ -67,7 +72,8 @@ class LatchElm extends ChipElm {
 
     boolean lastLoad = false;
 
-    void execute() {
+    @Override
+    public void execute() {
         int i;
         if (pins[loadPin].value && !lastLoad)
             for (i = 0; i != bits; i++)
@@ -75,18 +81,22 @@ class LatchElm extends ChipElm {
         lastLoad = pins[loadPin].value;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return bits;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return bits * 2 + 1;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 168;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n < 2)
             return super.getEditInfo(n);
@@ -95,6 +105,7 @@ class LatchElm extends ChipElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n < 2) {
             super.setEditValue(n, ei);

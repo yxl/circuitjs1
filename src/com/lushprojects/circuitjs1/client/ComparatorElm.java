@@ -26,6 +26,7 @@ public class ComparatorElm extends CompositeElm {
         setSize((f & FLAG_SMALL) != 0 ? 1 : 2);
     }
 
+    @Override
     public int getDumpType() {
         return 401;
     }
@@ -37,11 +38,13 @@ public class ComparatorElm extends CompositeElm {
         flags = (flags & ~FLAG_SMALL) | ((s == 1) ? FLAG_SMALL : 0);
     }
 
+    @Override
     public boolean getConnection(int n1, int n2) {
         return false;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setBbox(point1, point2, opheight * 2);
         setVoltageColor(g, volts[0]);
         drawThickLine(g, in1p[0], in1p[1]);
@@ -61,7 +64,8 @@ public class ComparatorElm extends CompositeElm {
         drawPosts(g);
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         if (dn > 150 && this == sim.dragElm)
             setSize(2);
@@ -89,7 +93,8 @@ public class ComparatorElm extends CompositeElm {
     }
 
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "Comparator";
         arr[1] = "V+ = " + getVoltageText(volts[1]);
         arr[2] = "V- = " + getVoltageText(volts[0]);

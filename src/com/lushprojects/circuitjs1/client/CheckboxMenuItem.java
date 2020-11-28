@@ -27,7 +27,7 @@ public class CheckboxMenuItem extends MenuItem implements Command {
     private String name = "";
     private String shortcut = "";
     private Command extcmd = null;
-    static String checkBoxHtml = "<div style=\"display:inline-block;width:15px;\">";
+    public static String checkBoxHtml = "<div style=\"display:inline-block;width:15px;\">";
 
     public String getName() {
         return name;
@@ -66,6 +66,7 @@ public class CheckboxMenuItem extends MenuItem implements Command {
         shortcut = s;
     }
 
+    @Override
     public void execute() {
         setState(!on);
         if (extcmd != null) {
@@ -74,6 +75,7 @@ public class CheckboxMenuItem extends MenuItem implements Command {
         }
     }
 
+    @Override
     public void setTitle(String s) {
         name = s;
     }

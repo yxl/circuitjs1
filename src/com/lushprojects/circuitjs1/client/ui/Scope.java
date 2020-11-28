@@ -17,12 +17,13 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.storage.client.Storage;
+import com.lushprojects.circuitjs1.client.*;
 
 import java.util.Vector;
 
@@ -130,7 +131,7 @@ class ScopePlot {
     }
 }
 
-class Scope {
+public class Scope {
     final int FLAG_YELM = 32;
 
     // bunch of other flags go here, see dump()
@@ -138,30 +139,30 @@ class Scope {
     final int FLAG_PLOTS = 4096; // new-style dump with multiple plots
     // other flags go here too, see dump()
 
-    static final int VAL_POWER = 7;
-    static final int VAL_POWER_OLD = 1;
-    static final int VAL_CURRENT = 3;
-    static final int VAL_IB = 1;
-    static final int VAL_IC = 2;
-    static final int VAL_IE = 3;
-    static final int VAL_VBE = 4;
-    static final int VAL_VBC = 5;
-    static final int VAL_VCE = 6;
-    static final int VAL_R = 2;
-    static final int UNITS_V = 0;
-    static final int UNITS_A = 1;
-    static final int UNITS_W = 2;
-    static final int UNITS_OHMS = 3;
-    static final int UNITS_COUNT = 4;
-    static final double[] multa = {2.0, 2.5, 2.0};
+    public static final int VAL_POWER = 7;
+    public static final int VAL_POWER_OLD = 1;
+    public static final int VAL_CURRENT = 3;
+    public static final int VAL_IB = 1;
+    public static final int VAL_IC = 2;
+    public static final int VAL_IE = 3;
+    public static final int VAL_VBE = 4;
+    public static final int VAL_VBC = 5;
+    public static final int VAL_VCE = 6;
+    public static final int VAL_R = 2;
+    public static final int UNITS_V = 0;
+    public static final int UNITS_A = 1;
+    public static final int UNITS_W = 2;
+    public static final int UNITS_OHMS = 3;
+    public static final int UNITS_COUNT = 4;
+    public static final double[] multa = {2.0, 2.5, 2.0};
     int scopePointCount = 128;
     FFT fft;
-    int position;
-    int speed;
-    int stackCount; // number of scopes in this column
+    public int position;
+    public int speed;
+    public int stackCount; // number of scopes in this column
     String text;
-    Rectangle rect;
-    boolean showI, showV, showScale, showMax, showMin, showFreq, lockScale, plot2d, plotXY, maxScale, logSpectrum;
+    public Rectangle rect;
+    public boolean showI, showV, showScale, showMax, showMin, showFreq, lockScale, plot2d, plotXY, maxScale, logSpectrum;
     boolean showFFT, showNegative, showRMS, showDutyCycle;
     Vector<ScopePlot> plots, visiblePlots;
     //    MemoryImageSource imageSource;
@@ -178,10 +179,10 @@ class Scope {
     boolean[] reduceRange;
     double scaleX, scaleY;  // for X-Y plots
     int wheelDeltaY;
-    int selectedPlot;
+    public int selectedPlot;
     ScopePropertiesDialog properties;
 
-    Scope(CirSim s) {
+    public Scope(CirSim s) {
         sim = s;
         scale = new double[UNITS_COUNT];
         reduceRange = new boolean[UNITS_COUNT];
@@ -233,16 +234,16 @@ class Scope {
         lockScale = b;
     }
 
-    void resetGraph() {
+    public void resetGraph() {
         resetGraph(false);
     }
 
-    void resetGraph(boolean full) {
+    public void resetGraph(boolean full) {
         scopePointCount = 1;
         while (scopePointCount <= rect.width)
             scopePointCount *= 2;
         if (plots == null)
-            plots = new Vector<ScopePlot>();
+            plots = new Vector<>();
         showNegative = false;
         int i;
         for (i = 0; i != plots.size(); i++)
@@ -312,7 +313,7 @@ class Scope {
     }
 
     void calcVisiblePlots() {
-        visiblePlots = new Vector<ScopePlot>();
+        visiblePlots = new Vector<>();
         int i;
         int vc = 0, ac = 0, oc = 0;
         for (i = 0; i != plots.size(); i++) {
@@ -334,7 +335,7 @@ class Scope {
         }
     }
 
-    void setRect(Rectangle r) {
+    public void setRect(Rectangle r) {
         int w = this.rect.width;
         this.rect = r;
         if (this.rect.width != w)
@@ -345,12 +346,12 @@ class Scope {
         return rect.width;
     }
 
-    int rightEdge() {
+    public int rightEdge() {
         return rect.x + rect.width;
     }
 
-    void setElm(CircuitElm ce) {
-        plots = new Vector<ScopePlot>();
+    public void setElm(CircuitElm ce) {
+        plots = new Vector<>();
         if (ce instanceof TransistorElm)
             setValue(VAL_VCE, ce);
         else
@@ -369,7 +370,7 @@ class Scope {
     }
 
     void setValue(int val, CircuitElm ce) {
-        plots = new Vector<ScopePlot>();
+        plots = new Vector<>();
         if (val == 0) {
             plots.add(new ScopePlot(ce, UNITS_V, 0));
 
@@ -394,13 +395,13 @@ class Scope {
 
     void setValues(int val, int ival, CircuitElm ce, CircuitElm yelm) {
         if (ival > 0) {
-            plots = new Vector<ScopePlot>();
+            plots = new Vector<>();
             plots.add(new ScopePlot(ce, ce.getScopeUnits(val), val));
             plots.add(new ScopePlot(ce, ce.getScopeUnits(ival), ival));
             return;
         }
         if (yelm != null) {
-            plots = new Vector<ScopePlot>();
+            plots = new Vector<>();
             plots.add(new ScopePlot(ce, ce.getScopeUnits(val), 0));
             plots.add(new ScopePlot(yelm, ce.getScopeUnits(ival), 0));
             return;
@@ -442,7 +443,7 @@ class Scope {
     }
 
 
-    void combine(Scope s) {
+    public void combine(Scope s) {
 	/*
 	// if voltage and current are shown, remove current
 	if (plots.size() == 2 && plots.get(0).elm == plots.get(1).elm)
@@ -458,7 +459,7 @@ class Scope {
     }
 
     // separate this scope's plots into separate scopes and return them in arr[pos], arr[pos+1], etc.  return new length of array.
-    int separate(Scope[] arr, int pos) {
+    public int separate(Scope[] arr, int pos) {
         int i;
         ScopePlot lastPlot = null;
         for (i = 0; i != visiblePlots.size(); i++) {
@@ -478,7 +479,7 @@ class Scope {
         return pos;
     }
 
-    void removePlot(int plot) {
+    public void removePlot(int plot) {
         if (plot < visiblePlots.size()) {
             ScopePlot p = visiblePlots.get(plot);
             plots.remove(p);
@@ -487,7 +488,7 @@ class Scope {
     }
 
     // called for each timestep
-    void timeStep() {
+    public void timeStep() {
         int i;
         for (i = 0; i != plots.size(); i++)
             plots.get(i).timeStep();
@@ -556,7 +557,7 @@ class Scope {
 	scaleY *= x;
     }
     */
-    void maxScale() {
+    public void maxScale() {
         if (plot2d) {
             double x = 1e-8;
             scale[UNITS_V] *= x;
@@ -725,7 +726,7 @@ class Scope {
         return rect.height > 100 && rect.width > 100;
     }
 
-    boolean cursorInSettingsWheel() {
+    public boolean cursorInSettingsWheel() {
         return showSettingsWheel() &&
                 sim.mouseCursorX >= rect.x &&
                 sim.mouseCursorX <= rect.x + 36 &&
@@ -734,7 +735,7 @@ class Scope {
     }
 
 
-    void draw(Graphics g) {
+    public void draw(Graphics g) {
         if (plots.size() == 0)
             return;
 
@@ -905,7 +906,6 @@ class Scope {
         int multptr = 0;
         int x = 0;
         int maxy = (rect.height - 1) / 2;
-        int y = maxy;
 
         String color = (somethingSelected) ? "#A0A0A0" : plot.color;
         if (sim.scopeSelected == -1 && plot.elm.isMouseElm())
@@ -1019,7 +1019,7 @@ class Scope {
                 if (ox != -1) {
                     if (minvy == oy && maxvy == oy)
                         continue;
-                    g.drawLine(ox, y - oy, x + i - 1, y - oy);
+                    g.drawLine(ox, maxy - oy, x + i - 1, maxy - oy);
                     ox = oy = -1;
                 }
                 if (minvy == maxvy) {
@@ -1027,11 +1027,11 @@ class Scope {
                     oy = minvy;
                     continue;
                 }
-                g.drawLine(x + i, y - minvy, x + i, y - maxvy - 1);
+                g.drawLine(x + i, maxy - minvy, x + i, maxy - maxvy - 1);
             }
         } // for (i=0...)
         if (ox != -1)
-            g.drawLine(ox, y - oy, x + i - 1, y - oy); // Horizontal
+            g.drawLine(ox, maxy - oy, x + i - 1, maxy - oy); // Horizontal
 
     }
 
@@ -1046,14 +1046,13 @@ class Scope {
         int ipa = plots.get(0).startIndex(rect.width);
         int ip = (sim.mouseCursorX - rect.x + ipa) & (scopePointCount - 1);
         int maxy = (rect.height - 1) / 2;
-        int y = maxy;
         int i;
         int bestdist = 10000;
         int best = -1;
         for (i = 0; i != visiblePlots.size(); i++) {
             ScopePlot plot = visiblePlots.get(i);
             int maxvy = (int) ((maxy / scale[plot.units]) * plot.maxValues[ip]);
-            int dist = Math.abs(sim.mouseCursorY - (rect.y + y - maxvy));
+            int dist = Math.abs(sim.mouseCursorY - (rect.y + maxy - maxvy));
             if (dist < bestdist) {
                 bestdist = dist;
                 best = i;
@@ -1073,14 +1072,12 @@ class Scope {
         int ipa = plots.get(0).startIndex(rect.width);
         int ip = (sim.mouseCursorX - rect.x + ipa) & (scopePointCount - 1);
         int ct = 0;
-        int maxy = (rect.height - 1) / 2;
-        int y = maxy;
         if (selectedPlot >= 0) {
             ScopePlot plot = visiblePlots.get(selectedPlot);
             info[ct++] = plot.getUnitText(plot.maxValues[ip]);
             int maxvy = (int) (mainGridMult * (plot.maxValues[ip] - mainGridMid));
             g.setColor(plot.color);
-            g.fillOval(sim.mouseCursorX - 2, rect.y + y - maxvy - 2, 5, 5);
+            g.fillOval(sim.mouseCursorX - 2, rect.y + (rect.height - 1) / 2 - maxvy - 2, 5, 5);
         }
         if (showFFT) {
             double maxFrequency = 1 / (sim.timeStep * speed * 2);
@@ -1432,26 +1429,26 @@ class Scope {
         resetGraph();
     }
 
-    void properties() {
+    public void properties() {
         properties = new ScopePropertiesDialog(sim, this);
         CirSim.dialogShowing = properties;
     }
 
-    void speedUp() {
+    public void speedUp() {
         if (speed > 1) {
             speed /= 2;
             resetGraph();
         }
     }
 
-    void slowDown() {
+    public void slowDown() {
         if (speed < 1024)
             speed *= 2;
         resetGraph();
     }
 
     // get scope element, returning null if there's more than one
-    CircuitElm getSingleElm() {
+    public CircuitElm getSingleElm() {
         CircuitElm elm = plots.get(0).elm;
         int i;
         for (i = 1; i < plots.size(); i++) {
@@ -1461,7 +1458,7 @@ class Scope {
         return elm;
     }
 
-    boolean canMenu() {
+    public boolean canMenu() {
         return (plots.get(0).elm != null);
     }
 
@@ -1486,7 +1483,7 @@ class Scope {
         return flags;
     }
 
-    String dump() {
+    public String dump() {
         ScopePlot vPlot = plots.get(0);
 
         CircuitElm elm = vPlot.elm;
@@ -1514,7 +1511,7 @@ class Scope {
         return x;
     }
 
-    void undump(StringTokenizer st) {
+    public void undump(StringTokenizer st) {
         initialize();
         int e = new Integer(st.nextToken()).intValue();
         if (e == -1)
@@ -1729,7 +1726,7 @@ class Scope {
 //    	}
 //    }
 
-    void selectY() {
+    public void selectY() {
         CircuitElm yElm = (plots.size() == 2) ? plots.get(1).elm : null;
         int e = (yElm == null) ? -1 : sim.locateElm(yElm);
         int firstE = e;
@@ -1755,7 +1752,7 @@ class Scope {
         // not reached
     }
 
-    void onMouseWheel(MouseWheelEvent e) {
+    public void onMouseWheel(MouseWheelEvent e) {
         wheelDeltaY += e.getDeltaY();
         if (wheelDeltaY > 5) {
             slowDown();
@@ -1767,13 +1764,13 @@ class Scope {
         }
     }
 
-    CircuitElm getElm() {
+    public CircuitElm getElm() {
         if (selectedPlot >= 0 && visiblePlots.size() > selectedPlot)
             return visiblePlots.get(selectedPlot).elm;
         return visiblePlots.size() > 0 ? visiblePlots.get(0).elm : plots.get(0).elm;
     }
 
-    boolean viewingWire() {
+    public boolean viewingWire() {
         int i;
         for (i = 0; i != plots.size(); i++)
             if (plots.get(i).elm instanceof WireElm)
@@ -1781,17 +1778,17 @@ class Scope {
         return false;
     }
 
-    CircuitElm getXElm() {
+    public CircuitElm getXElm() {
         return getElm();
     }
 
-    CircuitElm getYElm() {
+    public CircuitElm getYElm() {
         if (plots.size() == 2)
             return plots.get(1).elm;
         return null;
     }
 
-    boolean needToRemove() {
+    public boolean needToRemove() {
         boolean ret = true;
         boolean removed = false;
         int i;

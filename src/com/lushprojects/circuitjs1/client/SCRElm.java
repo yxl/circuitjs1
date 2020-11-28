@@ -26,7 +26,9 @@ package com.lushprojects.circuitjs1.client;
 // 3, 2 = diode
 // 2, 1 = 50 ohm resistor
 
-class SCRElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class SCRElm extends CircuitElm {
     final int anode = 0;
     final int cnode = 1;
     final int gnode = 2;
@@ -70,21 +72,25 @@ class SCRElm extends CircuitElm {
         diode.setupForDefaultModel();
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         volts[anode] = volts[cnode] = volts[gnode] = 0;
         diode.reset();
         lastvag = lastvac = curcount_a = curcount_c = curcount_g = 0;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 177;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + (volts[anode] - volts[cnode]) + " " +
                 (volts[anode] - volts[gnode]) + " " + triggerI + " " + holdingI + " " +
                 cresistance;
@@ -103,7 +109,8 @@ class SCRElm extends CircuitElm {
         return (flags & FLAG_GATE_FIX) != 0;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         int dir = 0;
         if (abs(dx) > abs(dy)) {
@@ -144,7 +151,8 @@ class SCRElm extends CircuitElm {
         gate[1].y = sim.snapGrid(gate[1].y);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setBbox(point1, point2, hs);
         adjustBbox(gate[0], gate[1]);
 
@@ -188,7 +196,8 @@ class SCRElm extends CircuitElm {
         drawPosts(g);
     }
 
-    double getCurrentIntoNode(int n) {
+    @Override
+    public double getCurrentIntoNode(int n) {
         if (n == anode)
             return -ia;
         if (n == cnode)
@@ -197,25 +206,30 @@ class SCRElm extends CircuitElm {
     }
 
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return (n == 0) ? point1 : (n == 1) ? point2 : gate[1];
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 3;
     }
 
-    int getInternalNodeCount() {
+    @Override
+    public int getInternalNodeCount() {
         return 1;
     }
 
-    double getPower() {
+    @Override
+    public double getPower() {
         return (volts[anode] - volts[gnode]) * ia + (volts[cnode] - volts[gnode]) * ic;
     }
 
     double aresistance;
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampNonLinear(nodes[anode]);
         sim.stampNonLinear(nodes[cnode]);
         sim.stampNonLinear(nodes[gnode]);
@@ -224,7 +238,8 @@ class SCRElm extends CircuitElm {
         diode.stamp(nodes[inode], nodes[gnode]);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         double vac = volts[anode] - volts[cnode]; // typically negative
         double vag = volts[anode] - volts[gnode]; // typically positive
         if (Math.abs(vac - lastvac) > .01 ||
@@ -241,7 +256,8 @@ class SCRElm extends CircuitElm {
         sim.stampResistor(nodes[anode], nodes[inode], aresistance);
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "SCR";
         double vac = volts[anode] - volts[cnode];
         double vag = volts[anode] - volts[gnode];
@@ -254,12 +270,14 @@ class SCRElm extends CircuitElm {
         arr[6] = "P = " + getUnitText(getPower(), "W");
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         ic = (volts[cnode] - volts[gnode]) / cresistance;
         ia = (volts[anode] - volts[inode]) / aresistance;
         ig = -ic - ia;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         // ohmString doesn't work here on linux
         if (n == 0)
@@ -271,6 +289,7 @@ class SCRElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0)
             triggerI = ei.value;

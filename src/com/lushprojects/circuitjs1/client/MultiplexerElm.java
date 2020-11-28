@@ -21,7 +21,9 @@ package com.lushprojects.circuitjs1.client;
 
 // contributed by Edward Calver
 
-class MultiplexerElm extends ChipElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class MultiplexerElm extends ChipElm {
     int selectBitCount;
     int outputCount;
 
@@ -46,15 +48,18 @@ class MultiplexerElm extends ChipElm {
         setupPins();
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "Multiplexer";
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + selectBitCount;
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = selectBitCount + 1;
         outputCount = 1;
         int i;
@@ -78,15 +83,18 @@ class MultiplexerElm extends ChipElm {
 
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return outputCount + selectBitCount + 1;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    void execute() {
+    @Override
+    public void execute() {
         int selectedValue = 0;
         int i;
         for (i = 0; i != selectBitCount; i++)
@@ -95,10 +103,12 @@ class MultiplexerElm extends ChipElm {
         pins[outputCount + selectBitCount].value = pins[selectedValue].value;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 184;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 2)
             return new EditInfo("# of Select Bits", selectBitCount, 1, 8).
@@ -106,6 +116,7 @@ class MultiplexerElm extends ChipElm {
         return super.getEditInfo(n);
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 2 && ei.value >= 1 && ei.value <= 6) {
             selectBitCount = (int) ei.value;

@@ -22,7 +22,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class AmmeterElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class AmmeterElm extends CircuitElm {
 
     int meter;
     int scale;
@@ -54,7 +56,8 @@ class AmmeterElm extends CircuitElm {
         }
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + meter + " " + scale;
     }
 
@@ -68,7 +71,8 @@ class AmmeterElm extends CircuitElm {
         return "";
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         mid = interpPoint(point1, point2, 0.6);
         arrowPoly = calcArrow(point1, mid, 14, 7);
@@ -77,7 +81,8 @@ class AmmeterElm extends CircuitElm {
     Point mid;
     static final int FLAG_SHOWCURRENT = 1;
 
-    void stepFinished() {
+    @Override
+    public void stepFinished() {
         count++;//how many counts are in a cycle    
         total += current * current; //sum of squares
         if (current > maxI && increasingI) {
@@ -148,7 +153,8 @@ class AmmeterElm extends CircuitElm {
 
     Polygon arrowPoly;
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         super.draw(g);//BC required for highlighting
         setVoltageColor(g, volts[0]);
         drawThickLine(g, point1, point2);
@@ -169,11 +175,13 @@ class AmmeterElm extends CircuitElm {
         drawPosts(g);
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 370;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampVoltageSource(nodes[0], nodes[1], voltSource, 0);
     }
 
@@ -181,11 +189,13 @@ class AmmeterElm extends CircuitElm {
         return (flags & FLAG_SHOWCURRENT) != 0;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "Ammeter";
         switch (meter) {
             case AM_VOL:
@@ -197,18 +207,22 @@ class AmmeterElm extends CircuitElm {
         }
     }
 
-    double getPower() {
+    @Override
+    public double getPower() {
         return 0;
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[0];
     }
 
-    boolean isWire() {
+    @Override
+    public boolean isWire() {
         return true;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo("Value", selectedValue, -1, -1);
@@ -231,6 +245,7 @@ class AmmeterElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             meter = ei.choice.getSelectedIndex();

@@ -19,6 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
 abstract class GateElm extends CircuitElm {
     final int FLAG_SMALL = 1;
     final int FLAG_SCHMITT = 2;
@@ -71,7 +74,8 @@ abstract class GateElm extends CircuitElm {
         flags |= (s == 1) ? FLAG_SMALL : 0;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + inputCount + " " + volts[inputCount] + " " + highVoltage;
     }
 
@@ -80,7 +84,8 @@ abstract class GateElm extends CircuitElm {
     boolean[] inputStates;
     int ww;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         inputStates = new boolean[inputCount];
         if (dn > 150 && this == sim.dragElm)
@@ -125,7 +130,8 @@ abstract class GateElm extends CircuitElm {
         return sim.euroGatesCheckItem.getState();
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int i;
         for (i = 0; i != inputCount; i++) {
             setVoltageColor(g, volts[i]);
@@ -157,29 +163,34 @@ abstract class GateElm extends CircuitElm {
     Point pcircle;
     Point[] linePoints;
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return inputCount + 1;
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         if (n == inputCount)
             return point2;
         return inPosts[n];
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
     abstract String getGateName();
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = getGateName();
         arr[1] = "Vout = " + getVoltageText(volts[inputCount]);
         arr[2] = "Iout = " + getCurrentText(getCurrent());
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampVoltageSource(0, nodes[inputCount], voltSource);
     }
 
@@ -199,7 +210,8 @@ abstract class GateElm extends CircuitElm {
 
     int oscillationCount;
 
-    void doStep() {
+    @Override
+    public void doStep() {
         boolean f = calcFunction();
         if (isInverting())
             f = !f;
@@ -220,6 +232,7 @@ abstract class GateElm extends CircuitElm {
         sim.updateVoltageSource(0, nodes[inputCount], voltSource, res);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("# of Inputs", inputCount, 1, 8).
@@ -234,6 +247,7 @@ abstract class GateElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value >= 1) {
             inputCount = (int) ei.value;
@@ -253,15 +267,18 @@ abstract class GateElm extends CircuitElm {
 
     // there is no current path through the gate inputs, but there
     // is an indirect path through the output to ground.
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         return false;
     }
 
-    boolean hasGroundConnection(int n1) {
+    @Override
+    public boolean hasGroundConnection(int n1) {
         return (n1 == inputCount);
     }
 
-    double getCurrentIntoNode(int n) {
+    @Override
+    public double getCurrentIntoNode(int n) {
         if (n == inputCount)
             return current;
         return 0;

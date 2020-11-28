@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class AntennaElm extends RailElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class AntennaElm extends RailElm {
     public AntennaElm(int xx, int yy) {
         super(xx, yy, WF_AC);
     }
@@ -32,11 +34,13 @@ class AntennaElm extends RailElm {
 
     double fmphase;
 
-    void drawRail(Graphics g) {
+    @Override
+    public void drawRail(Graphics g) {
         drawRailText(g, "Ant");
     }
 
-    double getVoltage() {
+    @Override
+    public double getVoltage() {
         fmphase += 2 * pi * (2200 + Math.sin(2 * pi * sim.t * 13) * 100) * sim.timeStep;
         double fm = 3 * Math.sin(fmphase);
         return Math.sin(2 * pi * sim.t * 3000) * (1.3 + Math.sin(2 * pi * sim.t * 12)) * 3 +
@@ -44,14 +48,17 @@ class AntennaElm extends RailElm {
                 Math.sin(2 * pi * sim.t * 2433) * (1.3 + Math.sin(2 * pi * sim.t * 14)) * 3 + fm;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'A';
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 0;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         return null;
     }

@@ -19,17 +19,18 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class SquareRailElm extends RailElm {
+public class SquareRailElm extends RailElm {
     public SquareRailElm(int xx, int yy) {
         super(xx, yy, WF_SQUARE);
     }
 
     @Override
-    Class getDumpClass() {
+    public Class<?> getDumpClass() {
         return RailElm.class;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 0;
     }
 }

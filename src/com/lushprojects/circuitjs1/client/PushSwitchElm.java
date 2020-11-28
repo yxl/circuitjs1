@@ -19,17 +19,18 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class PushSwitchElm extends SwitchElm {
+public class PushSwitchElm extends SwitchElm {
     public PushSwitchElm(int xx, int yy) {
         super(xx, yy, true);
     }
 
     @Override
-    Class getDumpClass() {
+    public Class<?> getDumpClass() {
         return SwitchElm.class;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 0;
     }
 }

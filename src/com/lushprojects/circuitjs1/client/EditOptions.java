@@ -21,14 +21,16 @@ package com.lushprojects.circuitjs1.client;
 
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
 
-class EditOptions implements Editable {
+public class EditOptions implements Editable {
     CirSim sim;
 
     public EditOptions(CirSim s) {
         sim = s;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Time step size (s)", sim.timeStep, 0, 0);
@@ -54,6 +56,7 @@ class EditOptions implements Editable {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0) {
             sim.timeStep = ei.value;

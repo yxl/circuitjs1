@@ -22,7 +22,9 @@ package com.lushprojects.circuitjs1.client;
 
 // contributed by Edward Calver
 
-class TriStateElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class TriStateElm extends CircuitElm {
     double resistance, r_on, r_off;
 
     public TriStateElm(int xx, int yy) {
@@ -43,11 +45,13 @@ class TriStateElm extends CircuitElm {
 
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + r_on + " " + r_off;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 180;
     }
 
@@ -57,7 +61,8 @@ class TriStateElm extends CircuitElm {
 
     Polygon gatePoly;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         calcLeads(32);
         ps = new Point();
@@ -75,7 +80,8 @@ class TriStateElm extends CircuitElm {
         lead3 = interpPoint(point1, point2, .5, -hs / 2);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int hs = 16;
         setBbox(point1, point2, hs);
 
@@ -90,35 +96,41 @@ class TriStateElm extends CircuitElm {
         drawPosts(g);
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         current = (volts[0] - volts[1]) / resistance;
     }
 
-    double getCurrentIntoNode(int n) {
+    @Override
+    public double getCurrentIntoNode(int n) {
         if (n == 1)
             return current;
         return 0;
     }
 
     // we need this to be able to change the matrix for each step
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampVoltageSource(0, nodes[3], voltSource);
         sim.stampNonLinear(nodes[3]);
         sim.stampNonLinear(nodes[1]);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         open = (volts[2] < 2.5);
         resistance = (open) ? r_off : r_on;
         sim.stampResistor(nodes[3], nodes[1], resistance);
         sim.updateVoltageSource(0, nodes[3], voltSource, volts[0] > 2.5 ? 5 : 0);
     }
 
-    void drag(int xx, int yy) {
+    @Override
+    public void drag(int xx, int yy) {
         xx = sim.snapGrid(xx);
         yy = sim.snapGrid(yy);
         if (abs(x - xx) < abs(y - yy))
@@ -134,23 +146,28 @@ class TriStateElm extends CircuitElm {
         setPoints();
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 3;
     }
 
-    int getInternalNodeCount() {
+    @Override
+    public int getInternalNodeCount() {
         return 1;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return (n == 0) ? point1 : (n == 1) ? point2 : point3;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "tri-state buffer";
         arr[1] = open ? "open" : "closed";
         arr[2] = "Vd = " + getVoltageDText(getVoltageDiff());
@@ -160,14 +177,17 @@ class TriStateElm extends CircuitElm {
 
     // there is no current path through the input, but there
     // is an indirect path through the output to ground.
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         return false;
     }
 
-    boolean hasGroundConnection(int n1) {
+    @Override
+    public boolean hasGroundConnection(int n1) {
         return (n1 == 1);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
 
         if (n == 0)
@@ -177,6 +197,7 @@ class TriStateElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
 
         if (n == 0 && ei.value > 0)

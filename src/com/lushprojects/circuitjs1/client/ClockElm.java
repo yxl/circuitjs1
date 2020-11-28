@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class ClockElm extends RailElm {
+public class ClockElm extends RailElm {
     public ClockElm(int xx, int yy) {
         super(xx, yy, WF_SQUARE);
         maxVoltage = 2.5;
@@ -29,11 +29,12 @@ class ClockElm extends RailElm {
     }
 
     @Override
-    Class getDumpClass() {
+    public Class<?> getDumpClass() {
         return RailElm.class;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 0;
     }
 }

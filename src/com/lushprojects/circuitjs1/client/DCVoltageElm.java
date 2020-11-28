@@ -20,17 +20,18 @@
 package com.lushprojects.circuitjs1.client;
 
 
-class DCVoltageElm extends VoltageElm {
+public class DCVoltageElm extends VoltageElm {
     public DCVoltageElm(int xx, int yy) {
         super(xx, yy, WF_DC);
     }
 
     @Override
-    Class getDumpClass() {
+    public Class<?> getDumpClass() {
         return VoltageElm.class;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'v';
     }
 }

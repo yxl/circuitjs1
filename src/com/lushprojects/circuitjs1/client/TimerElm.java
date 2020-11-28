@@ -19,7 +19,10 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class TimerElm extends ChipElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class TimerElm extends ChipElm {
     final int FLAG_RESET = 2;
     final int FLAG_GROUND = 4;
     final int N_DIS = 0;
@@ -31,7 +34,8 @@ class TimerElm extends ChipElm {
     final int N_RST = 6;
     final int N_GND = 7;
 
-    int getDefaultFlags() {
+    @Override
+    public int getDefaultFlags() {
         return FLAG_RESET | FLAG_GROUND;
     }
 
@@ -46,11 +50,13 @@ class TimerElm extends ChipElm {
         super(xa, ya, xb, yb, f, st);
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "555 Timer";
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 3;
         sizeY = 5;
         pins = new Pin[8];
@@ -66,7 +72,8 @@ class TimerElm extends ChipElm {
         pins[N_GND] = new Pin(2, SIDE_S, "gnd");
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
@@ -78,7 +85,8 @@ class TimerElm extends ChipElm {
         return (flags & FLAG_GROUND) != 0;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         ground = hasGroundPin() ? nodes[N_GND] : 0;
         // stamp voltage divider to put ctl pin at 2/3 V
         sim.stampResistor(nodes[N_VIN], nodes[N_CTL], 5000);
@@ -91,7 +99,8 @@ class TimerElm extends ChipElm {
             sim.stampNonLinear(nodes[N_GND]);
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         // need current for V, discharge, control, ground; output current is
         // calculated for us, and other pins have no current.
         pins[N_VIN].current = (volts[N_CTL] - volts[N_VIN]) / 5000;
@@ -110,7 +119,8 @@ class TimerElm extends ChipElm {
 
     boolean out;
 
-    void startIteration() {
+    @Override
+    public void startIteration() {
         out = volts[N_OUT] > volts[N_VIN] / 2;
         // check comparators
         if (volts[N_THRES] > volts[N_CTL])
@@ -127,7 +137,8 @@ class TimerElm extends ChipElm {
             out = false;
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         // if output is low, discharge pin 0.  we use a small
         // resistor because it's easier, and sometimes people tie
         // the discharge pin to the trigger and threshold pins.
@@ -138,18 +149,22 @@ class TimerElm extends ChipElm {
         sim.stampResistor(out ? nodes[N_VIN] : ground, nodes[N_OUT], 1);
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return hasGroundPin() ? 8 : hasReset() ? 7 : 6;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 0;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 165;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 2) {
             EditInfo ei = new EditInfo("", 0, 0, 0);
@@ -159,6 +174,7 @@ class TimerElm extends ChipElm {
         return super.getEditInfo(n);
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 2) {
             flags = ei.changeFlag(flags, FLAG_GROUND);

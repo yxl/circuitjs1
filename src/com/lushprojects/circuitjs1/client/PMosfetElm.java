@@ -19,17 +19,18 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class PMosfetElm extends MosfetElm {
+public class PMosfetElm extends MosfetElm {
     public PMosfetElm(int xx, int yy) {
         super(xx, yy, true);
     }
 
     @Override
-    Class getDumpClass() {
+    public Class<?> getDumpClass() {
         return MosfetElm.class;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'P';
     }
 }

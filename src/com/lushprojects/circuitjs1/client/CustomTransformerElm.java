@@ -20,8 +20,10 @@
 package com.lushprojects.circuitjs1.client;
 
 import com.google.gwt.user.client.Window;
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
 
-class CustomTransformerElm extends CircuitElm {
+public class CustomTransformerElm extends CircuitElm {
     double[] coilCurrents;
     double[] coilInductances;
     double[] coilCurCounts;
@@ -75,7 +77,8 @@ class CustomTransformerElm extends CircuitElm {
         parseDescription(description);
     }
 
-    void drag(int xx, int yy) {
+    @Override
+    public void drag(int xx, int yy) {
         xx = sim.snapGrid(xx);
         yy = sim.snapGrid(yy);
 //	    width = max(32, abs(yy-y));
@@ -86,11 +89,13 @@ class CustomTransformerElm extends CircuitElm {
         setPoints();
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 406;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         String s = super.dump() + " " + inductance + " " + couplingCoef + " " + CustomLogicModel.escape(description) + " " + coilCount + " ";
         int i;
         for (i = 0; i != coilCount; i++) {
@@ -192,7 +197,8 @@ class CustomTransformerElm extends CircuitElm {
         return (flags & Inductor.FLAG_BACK_EULER) == 0;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int i;
 
         // draw taps
@@ -237,7 +243,8 @@ class CustomTransformerElm extends CircuitElm {
         adjustBbox(ptCore[0], ptCore[3]);
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         point2.y = point1.y;
         int i;
@@ -289,15 +296,18 @@ class CustomTransformerElm extends CircuitElm {
             dots = null;
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return nodePoints[n];
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return nodeCount;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         int i;
         for (i = 0; i != coilCount; i++)
             coilCurrents[i] = coilCurSourceValues[i] = coilCurCounts[i] = 0;
@@ -307,7 +317,8 @@ class CustomTransformerElm extends CircuitElm {
 
     double[][] xformMatrix;
 
-    void stamp() {
+    @Override
+    public void stamp() {
         // equations for transformer:
         //   v1 = L1  di1/dt + M12  di2/dt + M13 di3/dt + ...
         //   v2 = M21 di1/dt + L2 di2/dt   + M23 di3/dt + ...
@@ -359,7 +370,8 @@ class CustomTransformerElm extends CircuitElm {
             sim.stampRightSide(nodes[i]);
     }
 
-    void startIteration() {
+    @Override
+    public void startIteration() {
         int i;
         for (i = 0; i != coilCount; i++) {
             double val = coilCurrents[i];
@@ -375,7 +387,8 @@ class CustomTransformerElm extends CircuitElm {
         }
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         int i;
         for (i = 0; i != coilCount; i++) {
             int n = coilNodes[i];
@@ -383,7 +396,8 @@ class CustomTransformerElm extends CircuitElm {
         }
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         int i;
         for (i = 0; i != nodeCount; i++)
             nodeCurrents[i] = 0;
@@ -405,11 +419,12 @@ class CustomTransformerElm extends CircuitElm {
     }
 
     @Override
-    double getCurrentIntoNode(int n) {
+    public double getCurrentIntoNode(int n) {
         return -nodeCurrents[n];
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "transformer (custom)";
         arr[1] = "L = " + getUnitText(inductance, "H");
         int i;
@@ -422,7 +437,8 @@ class CustomTransformerElm extends CircuitElm {
         }
     }
 
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         int i;
         for (i = 0; i != coilCount; i++)
             if (comparePair(n1, n2, coilNodes[i], coilNodes[i] + 1))
@@ -430,6 +446,7 @@ class CustomTransformerElm extends CircuitElm {
         return false;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Base Inductance (H)", inductance, .01, 5);
@@ -451,6 +468,7 @@ class CustomTransformerElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0) {
             inductance = ei.value;

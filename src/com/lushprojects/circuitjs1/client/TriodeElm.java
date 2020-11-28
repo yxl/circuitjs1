@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class TriodeElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class TriodeElm extends CircuitElm {
     double mu, kg1;
     double curcountp, curcountc, curcountg, currentp, currentg, currentc;
     final double gridCurrentR = 6000;
@@ -43,20 +45,24 @@ class TriodeElm extends CircuitElm {
         noDiagonal = true;
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         volts[0] = volts[1] = volts[2] = 0;
         curcount = 0;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + mu + " " + kg1;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 173;
     }
 
@@ -67,7 +73,8 @@ class TriodeElm extends CircuitElm {
     Point midcath;
     int circler;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         plate = newPointArray(4);
         grid = newPointArray(8);
@@ -96,7 +103,8 @@ class TriodeElm extends CircuitElm {
         interpPoint(point2, plate[1], cath[0], -farw / (double) nearw, cathw);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         g.setColor(Color.gray);
         drawThickCircle(g, point2.x, point2.y, circler);
         setBbox(point1, plate[0], 16);
@@ -131,7 +139,8 @@ class TriodeElm extends CircuitElm {
         drawPosts(g);
     }
 
-    double getCurrentIntoNode(int n) {
+    @Override
+    public double getCurrentIntoNode(int n) {
         if (n == 2)
             return currentc;
         if (n == 0)
@@ -139,21 +148,25 @@ class TriodeElm extends CircuitElm {
         return -currentg;
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return (n == 0) ? plate[0] : (n == 1) ? grid[0] : cath[0];
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 3;
     }
 
-    double getPower() {
+    @Override
+    public double getPower() {
         return (volts[0] - volts[2]) * current;
     }
 
     double lastv0, lastv1, lastv2;
 
-    void doStep() {
+    @Override
+    public void doStep() {
         double[] vs = new double[3];
         vs[0] = volts[0];
         vs[1] = volts[1];
@@ -216,13 +229,15 @@ class TriodeElm extends CircuitElm {
         sim.stampRightSide(nodes[cath], -rs);
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampNonLinear(nodes[0]);
         sim.stampNonLinear(nodes[1]);
         sim.stampNonLinear(nodes[2]);
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "triode";
         double vbc = volts[0] - volts[1];
         double vbe = volts[0] - volts[2];
@@ -233,10 +248,12 @@ class TriodeElm extends CircuitElm {
     }
 
     // grid not connected to other terminals
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         return !(n1 == 1 || n2 == 1);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("mu", mu, 0, 0).setDimensionless();
@@ -245,6 +262,7 @@ class TriodeElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0)
             mu = ei.value;

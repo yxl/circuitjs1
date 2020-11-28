@@ -21,7 +21,10 @@ package com.lushprojects.circuitjs1.client;
 
 // much of this was adapted from Bill Collis's code in TestPointElm.java
 
-class ProbeElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class ProbeElm extends CircuitElm {
     static final int FLAG_SHOWVOLTAGE = 1;
     int meter;
     int units;
@@ -58,11 +61,13 @@ class ProbeElm extends CircuitElm {
         }
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'p';
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + meter + " " + scale;
     }
 
@@ -108,13 +113,15 @@ class ProbeElm extends CircuitElm {
 
     Point center;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         center = interpPoint(point1, point2, .5);
     }
 
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int hs = 8;
         setBbox(point1, point2, hs);
         boolean selected = needsHighlight();
@@ -186,7 +193,8 @@ class ProbeElm extends CircuitElm {
         return (flags & FLAG_SHOWVOLTAGE) != 0;
     }
 
-    void stepFinished() {
+    @Override
+    public void stepFinished() {
         count++;//how many counts are in a cycle
         double v = getVoltageDiff();
         total += v * v; //sum of squares
@@ -261,15 +269,18 @@ class ProbeElm extends CircuitElm {
         }
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "voltmeter";
         arr[1] = "Vd = " + getVoltageText(getVoltageDiff());
     }
 
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         return false;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo("", 0, -1, -1);
@@ -306,6 +317,7 @@ class ProbeElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0) {
             if (ei.checkbox.getState())

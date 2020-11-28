@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class VCCSElm extends ChipElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class VCCSElm extends ChipElm {
     double gain;
     int inputCount;
     Expr expr;
@@ -44,13 +46,15 @@ class VCCSElm extends ChipElm {
         setupPins();
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + inputCount + " " + CustomLogicModel.escape(exprString);
     }
 
     double[] lastVolts;
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = inputCount > 2 ? inputCount : 2;
         pins = new Pin[inputCount + 2];
@@ -63,15 +67,18 @@ class VCCSElm extends ChipElm {
         exprState = new ExprState(inputCount);
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "VCCS~";
     } // ~ is for localization
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampNonLinear(nodes[inputCount]);
         sim.stampNonLinear(nodes[inputCount + 1]);
     }
@@ -104,15 +111,16 @@ class VCCSElm extends ChipElm {
         return .1;
     }
 
-    boolean hasCurrentOutput() {
+    public boolean hasCurrentOutput() {
         return true;
     }
 
-    int getOutputNode(int n) {
+    public int getOutputNode(int n) {
         return nodes[n + inputCount];
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         int i;
 
         // no current path?  give up
@@ -171,30 +179,37 @@ class VCCSElm extends ChipElm {
             lastVolts[i] = volts[i];
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         drawChip(g);
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return inputCount + 2;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 0;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 213;
     }
 
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         return comparePair(inputCount, inputCount + 1, n1, n2);
     }
 
-    boolean hasGroundConnection(int n1) {
+    @Override
+    public boolean hasGroundConnection(int n1) {
         return false;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo(EditInfo.makeLink("customfunction.html", "Output Function"), 0, -1, -1);
@@ -208,6 +223,7 @@ class VCCSElm extends ChipElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0) {
             exprString = ei.textf.getText();
@@ -234,7 +250,8 @@ class VCCSElm extends ChipElm {
         expr = parser.parseExpression();
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         super.getInfo(arr);
         int i;
         for (i = 0; arr[i] != null; i++) ;

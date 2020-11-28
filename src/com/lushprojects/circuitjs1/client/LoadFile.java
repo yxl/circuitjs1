@@ -40,7 +40,7 @@ public class LoadFile extends FileUpload implements ChangeHandler {
         sim.unsavedChanges = false;
     }
 
-    LoadFile(CirSim s) {
+    public LoadFile(CirSim s) {
         super();
         sim = s;
         this.setName("Import");
@@ -50,11 +50,13 @@ public class LoadFile extends FileUpload implements ChangeHandler {
     }
 
 
+    @Override
     public void onChange(ChangeEvent e) {
         doLoad();
     }
 
 
+    @Override
     public final native void click()
         /*-{
             $doc.getElementById("LoadFileElement").click();

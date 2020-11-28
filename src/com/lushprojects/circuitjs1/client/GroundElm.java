@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class GroundElm extends CircuitElm {
+public class GroundElm extends CircuitElm {
     public GroundElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -29,15 +29,18 @@ class GroundElm extends CircuitElm {
         super(xa, ya, xb, yb, f);
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'g';
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 1;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setVoltageColor(g, 0);
         drawThickLine(g, point1, point2);
         int i;
@@ -53,37 +56,44 @@ class GroundElm extends CircuitElm {
         drawPosts(g);
     }
 
-    void setCurrent(int x, double c) {
+    @Override
+    public void setCurrent(int x, double c) {
         current = -c;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampVoltageSource(0, nodes[0], voltSource, 0);
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return 0;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "ground";
         arr[1] = "I = " + getCurrentText(getCurrent());
     }
 
-    boolean hasGroundConnection(int n1) {
+    @Override
+    public boolean hasGroundConnection(int n1) {
         return true;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'g';
     }
 
     @Override
-    double getCurrentIntoNode(int n) {
+    public double getCurrentIntoNode(int n) {
         return -current;
     }
 }

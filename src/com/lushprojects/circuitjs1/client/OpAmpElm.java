@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class OpAmpElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class OpAmpElm extends CircuitElm {
     int opsize, opheight, opwidth, opaddtext;
     double maxOut, minOut, gain, gbw;
     boolean reset;
@@ -70,16 +72,19 @@ class OpAmpElm extends CircuitElm {
         gain = ((flags & FLAG_LOWGAIN) != 0) ? 1000 : 100000;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         flags |= FLAG_GAIN;
         return super.dump() + " " + maxOut + " " + minOut + " " + gbw + " " + volts[0] + " " + volts[1] + " " + gain;
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setBbox(point1, point2, opheight * 2);
         setVoltageColor(g, volts[0]);
         drawThickLine(g, in1p[0], in1p[1]);
@@ -98,7 +103,8 @@ class OpAmpElm extends CircuitElm {
         drawPosts(g);
     }
 
-    double getPower() {
+    @Override
+    public double getPower() {
         return volts[2] * current;
     }
 
@@ -115,7 +121,8 @@ class OpAmpElm extends CircuitElm {
         flags = (flags & ~FLAG_SMALL) | ((s == 1) ? FLAG_SMALL : 0);
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         if (dn > 150 && this == sim.dragElm)
             setSize(2);
@@ -138,19 +145,23 @@ class OpAmpElm extends CircuitElm {
         plusFont = new Font("SansSerif", 0, opsize == 2 ? 14 : 10);
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 3;
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return (n == 0) ? in1p[0] : (n == 1) ? in2p[0] : point2;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "op-amp";
         arr[1] = "V+ = " + getVoltageText(volts[1]);
         arr[2] = "V- = " + getVoltageText(volts[0]);
@@ -165,13 +176,15 @@ class OpAmpElm extends CircuitElm {
 
     double lastvd;
 
-    void stamp() {
+    @Override
+    public void stamp() {
         int vn = sim.nodeList.size() + voltSource;
         sim.stampNonLinear(vn);
         sim.stampMatrix(nodes[2], vn, 1);
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         double vd = volts[1] - volts[0];
         if (Math.abs(lastvd - vd) > .1)
             sim.converged = false;
@@ -203,22 +216,27 @@ class OpAmpElm extends CircuitElm {
 
     // there is no current path through the op-amp inputs, but there
     // is an indirect path through the output to ground.
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         return false;
     }
 
-    boolean hasGroundConnection(int n1) {
+    @Override
+    public boolean hasGroundConnection(int n1) {
         return (n1 == 2);
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[2] - volts[1];
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'a';
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Max Output (V)", maxOut, 1, 20);
@@ -229,6 +247,7 @@ class OpAmpElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             maxOut = ei.value;
@@ -238,12 +257,13 @@ class OpAmpElm extends CircuitElm {
             gain = ei.value;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'a';
     }
 
     @Override
-    double getCurrentIntoNode(int n) {
+    public double getCurrentIntoNode(int n) {
         if (n == 2)
             return -current;
         return 0;

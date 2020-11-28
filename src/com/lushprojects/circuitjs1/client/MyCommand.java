@@ -31,6 +31,7 @@ public class MyCommand implements Command {
         itemName = item;
     }
 
+    @Override
     public void execute() {
         circuitjs1.mysim.menuPerformed(menuName, itemName);
     }

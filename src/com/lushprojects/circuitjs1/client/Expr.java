@@ -16,7 +16,7 @@ class ExprState {
 
 class Expr {
     Expr(Expr e1, Expr e2, int v) {
-        children = new Vector<Expr>();
+        children = new Vector<>();
         children.add(e1);
         if (e2 != null)
             children.add(e2);

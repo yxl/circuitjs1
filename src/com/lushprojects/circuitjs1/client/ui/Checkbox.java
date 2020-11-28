@@ -17,11 +17,12 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
 import com.google.gwt.user.client.ui.CheckBox;
+import com.lushprojects.circuitjs1.client.CirSim;
 
-class Checkbox extends CheckBox {
+public class Checkbox extends CheckBox {
     public Checkbox(String s) {
         super(CirSim.LS(s));
     }

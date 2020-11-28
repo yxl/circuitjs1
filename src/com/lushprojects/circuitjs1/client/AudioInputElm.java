@@ -21,9 +21,8 @@ package com.lushprojects.circuitjs1.client;
 
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.FileUpload;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
 
 import java.util.HashMap;
 
@@ -32,7 +31,7 @@ class AudioFileEntry {
     JsArrayNumber data;
 }
 
-class AudioInputElm extends RailElm {
+public class AudioInputElm extends RailElm {
     JsArrayNumber data;
     double timeOffset;
     int samplingRate;
@@ -45,7 +44,7 @@ class AudioInputElm extends RailElm {
 
     // cache to preserve audio data when doing cut/paste, or undo/redo
     static int fileNumCounter = 1;
-    static HashMap<Integer, AudioFileEntry> audioFileMap = new HashMap<Integer, AudioFileEntry>();
+    static HashMap<Integer, AudioFileEntry> audioFileMap = new HashMap<>();
 
     public AudioInputElm(int xx, int yy) {
         super(xx, yy, WF_AC);
@@ -70,7 +69,8 @@ class AudioInputElm extends RailElm {
 
     double fmphase;
 
-    String dump() {
+    @Override
+    public String dump() {
         // add a file number to the dump so we can preserve the audio file data when doing cut and paste, or undo/redo.
         // we don't save the entire file in the dump because it would be huge.
         if (data != null) {
@@ -84,15 +84,18 @@ class AudioInputElm extends RailElm {
         return super.dump() + " " + maxVoltage + " " + startPosition + " " + fileNum;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         timeOffset = startPosition;
     }
 
-    void drawRail(Graphics g) {
+    @Override
+    public void drawRail(Graphics g) {
         drawRailText(g, fileName == null ? "No file" : fileName);
     }
 
-    String getRailText() {
+    @Override
+    public String getRailText() {
         return fileName == null ? "No file" : fileName;
     }
 
@@ -100,7 +103,8 @@ class AudioInputElm extends RailElm {
         samplingRate = sr;
     }
 
-    double getVoltage() {
+    @Override
+    public double getVoltage() {
         if (data == null)
             return 0;
         if (timeOffset < startPosition)
@@ -113,29 +117,31 @@ class AudioInputElm extends RailElm {
         return data.get(ptr) * maxVoltage;
     }
 
-    void stepFinished() {
+    @Override
+    public void stepFinished() {
         timeOffset += sim.timeStep;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 411;
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 0;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo("", 0, -1, -1);
             final AudioInputElm thisElm = this;
             final FileUpload file = new FileUpload();
             ei.widget = file;
-            file.addChangeHandler(new ChangeHandler() {
-                public void onChange(ChangeEvent event) {
-                    fileName = file.getFilename().replaceAll("^.*\\\\", "").replaceAll("\\.[^.]*$", "");
-                    AudioInputElm.fetchLoadFileData(thisElm, file.getElement());
-                }
+            file.addChangeHandler(event -> {
+                fileName = file.getFilename().replaceAll("^.*\\\\", "").replaceAll("\\.[^.]*$", "");
+                AudioInputElm.fetchLoadFileData(thisElm, file.getElement());
             });
             return ei;
         }
@@ -146,6 +152,7 @@ class AudioInputElm extends RailElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 1)
             maxVoltage = ei.value;
@@ -180,7 +187,8 @@ class AudioInputElm extends RailElm {
         AudioOutputElm.lastSamplingRate = samplingRate;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "audio input";
         if (data == null) {
             arr[1] = "no file loaded";

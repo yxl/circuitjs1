@@ -19,8 +19,11 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class WireElm extends CircuitElm {
-    boolean hasWireInfo; // used in CirSim to calculate wire currents
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class WireElm extends CircuitElm {
+    public boolean hasWireInfo; // used in CirSim to calculate wire currents
 
     public WireElm(int xx, int yy) {
         super(xx, yy);
@@ -34,7 +37,8 @@ class WireElm extends CircuitElm {
     static final int FLAG_SHOWCURRENT = 1;
     static final int FLAG_SHOWVOLTAGE = 2;
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setVoltageColor(g, volts[0]);
         drawThickLine(g, point1, point2);
         doDots(g);
@@ -50,7 +54,8 @@ class WireElm extends CircuitElm {
         drawPosts(g);
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
 //	    sim.stampVoltageSource(nodes[0], nodes[1], voltSource, 0);
     }
 
@@ -62,29 +67,35 @@ class WireElm extends CircuitElm {
         return (flags & FLAG_SHOWVOLTAGE) != 0;
     }
 
-    //	int getVoltageSourceCount() { return 1; }
-    void getInfo(String[] arr) {
+    //	public int getVoltageSourceCount() { return 1; }
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "wire";
         arr[1] = "I = " + getCurrentDText(getCurrent());
         arr[2] = "V = " + getVoltageText(volts[0]);
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'w';
     }
 
-    double getPower() {
+    @Override
+    public double getPower() {
         return 0;
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[0];
     }
 
-    boolean isWire() {
+    @Override
+    public boolean isWire() {
         return true;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo("", 0, -1, -1);
@@ -99,6 +110,7 @@ class WireElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0) {
             if (ei.checkbox.getState())
@@ -114,7 +126,8 @@ class WireElm extends CircuitElm {
         }
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'w';
     }
 }

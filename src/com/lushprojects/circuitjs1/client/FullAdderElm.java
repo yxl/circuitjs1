@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class FullAdderElm extends ChipElm {
+public class FullAdderElm extends ChipElm {
     boolean hasReset() {
         return false;
     }
@@ -33,11 +33,13 @@ class FullAdderElm extends ChipElm {
         super(xa, ya, xb, yb, f, st);
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "Full Adder";
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = 3;
         pins = new Pin[getPostCount()];
@@ -53,21 +55,25 @@ class FullAdderElm extends ChipElm {
 
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 5;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 2;
     }
 
-    void execute() {
+    @Override
+    public void execute() {
         pins[0].value = (pins[2].value ^ pins[3].value) ^ pins[4].value;
         pins[1].value = (pins[2].value && pins[3].value) || (pins[2].value && pins[4].value) ||
                 (pins[3].value && pins[4].value);
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 196;
     }
 

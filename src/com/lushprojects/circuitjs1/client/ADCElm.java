@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class ADCElm extends ChipElm {
+public class ADCElm extends ChipElm {
     public ADCElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -29,15 +29,18 @@ class ADCElm extends ChipElm {
         super(xa, ya, xb, yb, f, st);
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "ADC";
     }
 
-    boolean needsBits() {
+    @Override
+    public boolean needsBits() {
         return true;
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = bits > 2 ? bits : 2;
         pins = new Pin[getPostCount()];
@@ -51,7 +54,8 @@ class ADCElm extends ChipElm {
         allocNodes();
     }
 
-    void execute() {
+    @Override
+    public void execute() {
         int imax = (1 << bits) - 1;
         // if we round, the half-flash doesn't work
         double val = imax * volts[bits] / volts[bits + 1]; // + .5;
@@ -62,15 +66,18 @@ class ADCElm extends ChipElm {
             pins[i].value = ((ival & (1 << i)) != 0);
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return bits;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return bits + 2;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 167;
     }
 }

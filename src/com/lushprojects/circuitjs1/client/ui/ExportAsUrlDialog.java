@@ -17,14 +17,13 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.*;
+import com.lushprojects.circuitjs1.client.CirSim;
 import com.lushprojects.circuitjs1.client.entrypoint.circuitjs1;
 
 public class ExportAsUrlDialog extends DialogBox {
@@ -52,10 +51,12 @@ public class ExportAsUrlDialog extends DialogBox {
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         try {
             requestBuilder.sendRequest(null, new RequestCallback() {
+                @Override
                 public void onError(Request request, Throwable exception) {
                     GWT.log("File Error Response", exception);
                 }
 
+                @Override
                 public void onResponseReceived(Request request, Response response) {
                     // processing goes here
                     if (response.getStatusCode() == Response.SC_OK) {
@@ -112,18 +113,12 @@ public class ExportAsUrlDialog extends DialogBox {
             hp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 
             hp.add(shortButton = new Button(CirSim.LS("Create short URL")));
-            shortButton.addClickHandler(new ClickHandler() {
-                public void onClick(ClickEvent event) {
-                    shortButton.setVisible(false);
-                    createShort(requrl);
-                }
+            shortButton.addClickHandler(event -> {
+                shortButton.setVisible(false);
+                createShort(requrl);
             });
         }
-        okButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                closeDialog();
-            }
-        });
+        okButton.addClickHandler(event -> closeDialog());
         this.center();
     }
 

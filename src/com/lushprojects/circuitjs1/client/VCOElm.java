@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class VCOElm extends ChipElm {
+public class VCOElm extends ChipElm {
     public VCOElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -29,11 +29,13 @@ class VCOElm extends ChipElm {
         super(xa, ya, xb, yb, f, st);
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "VCO";
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = 4;
         pins = new Pin[6];
@@ -48,11 +50,13 @@ class VCOElm extends ChipElm {
         pins[5].output = true;
     }
 
-    boolean nonLinear() {
+    @Override
+    public boolean nonLinear() {
         return true;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         // output pin
         sim.stampVoltageSource(0, nodes[1], pins[1].voltSource);
         // attach Vi to R1 pin so its current is proportional to Vi
@@ -70,7 +74,8 @@ class VCOElm extends ChipElm {
     double cCurrent;
     int cDir;
 
-    void doStep() {
+    @Override
+    public void doStep() {
         double vc = volts[3] - volts[2];
         double vo = volts[1];
         int dir = (vo < 2.5) ? 1 : -1;
@@ -110,20 +115,24 @@ class VCOElm extends ChipElm {
         pins[0].current = -pins[4].current;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         computeCurrent();
         drawChip(g);
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 6;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 3;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 158;
     }
 }

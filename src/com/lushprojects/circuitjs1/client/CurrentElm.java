@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class CurrentElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class CurrentElm extends CircuitElm {
     double currentValue;
 
     public CurrentElm(int xx, int yy) {
@@ -37,18 +39,21 @@ class CurrentElm extends CircuitElm {
         }
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + currentValue;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'i';
     }
 
     Polygon arrow;
     Point ashaft1, ashaft2, center;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         calcLeads(26);
         ashaft1 = interpPoint(lead1, lead2, .25);
@@ -58,7 +63,8 @@ class CurrentElm extends CircuitElm {
         arrow = calcArrow(center, p2, 4, 4);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int cr = 12;
         draw2Leads(g);
         setVoltageColor(g, (volts[0] + volts[1]) / 2);
@@ -79,7 +85,7 @@ class CurrentElm extends CircuitElm {
     }
 
     // we defer stamping current sources until we can tell if they have a current path or not
-    void stampCurrentSource(boolean broken) {
+    public void stampCurrentSource(boolean broken) {
         if (broken) {
             // no current path; stamping a current source would cause a matrix error.
             sim.stampResistor(nodes[0], nodes[1], 1e8);
@@ -91,26 +97,31 @@ class CurrentElm extends CircuitElm {
         }
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Current (A)", currentValue, 0, .1);
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         currentValue = ei.value;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "current source";
         getBasicInfo(arr);
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[1] - volts[0];
     }
 
-    double getPower() {
+    @Override
+    public double getPower() {
         return -getVoltageDiff() * current;
     }
 }

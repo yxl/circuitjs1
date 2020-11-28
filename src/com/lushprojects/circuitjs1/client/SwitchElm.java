@@ -19,9 +19,12 @@
 
 package com.lushprojects.circuitjs1.client;
 
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
 // SPST switch
-class SwitchElm extends CircuitElm {
-    boolean momentary;
+public class SwitchElm extends CircuitElm {
+    public boolean momentary;
     // position 0 == closed, position 1 == open
     int position, posCount;
 
@@ -53,17 +56,20 @@ class SwitchElm extends CircuitElm {
         posCount = 2;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 's';
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + position + " " + momentary;
     }
 
     Point ps, ps2;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         calcLeads(32);
         ps = new Point();
@@ -72,7 +78,8 @@ class SwitchElm extends CircuitElm {
 
     final int openhs = 16;
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int hs1 = (position == 1) ? 0 : 2;
         int hs2 = (position == 1) ? openhs : 2;
         setBbox(point1, point2, openhs);
@@ -91,37 +98,41 @@ class SwitchElm extends CircuitElm {
         drawPosts(g);
     }
 
-    Rectangle getSwitchRect() {
+    public Rectangle getSwitchRect() {
         interpPoint(lead1, lead2, ps, 0, openhs);
         return new Rectangle(lead1).union(new Rectangle(lead2)).union(new Rectangle(ps));
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         if (position == 1)
             current = 0;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         if (position == 0)
             sim.stampVoltageSource(nodes[0], nodes[1], voltSource, 0);
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return (position == 1) ? 0 : 1;
     }
 
-    void mouseUp() {
+    public void mouseUp() {
         if (momentary)
             toggle();
     }
 
-    void toggle() {
+    public void toggle() {
         position++;
         if (position >= posCount)
             position = 0;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = (momentary) ? "push switch (SPST)" : "switch (SPST)";
         if (position == 1) {
             arr[1] = "open";
@@ -133,14 +144,17 @@ class SwitchElm extends CircuitElm {
         }
     }
 
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         return position == 0;
     }
 
-    boolean isWire() {
+    @Override
+    public boolean isWire() {
         return position == 0;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo("", 0, -1, -1);
@@ -150,12 +164,14 @@ class SwitchElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             momentary = ei.checkbox.getState();
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 's';
     }
 }

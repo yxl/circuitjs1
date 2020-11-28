@@ -19,9 +19,12 @@
 
 package com.lushprojects.circuitjs1.client;
 
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
 import java.util.HashMap;
 
-class LabeledNodeElm extends CircuitElm {
+public class LabeledNodeElm extends CircuitElm {
     final int FLAG_ESCAPE = 4;
     final int FLAG_INTERNAL = 1;
 
@@ -44,16 +47,17 @@ class LabeledNodeElm extends CircuitElm {
         }
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         flags |= FLAG_ESCAPE;
         return super.dump() + " " + CustomLogicModel.escape(text);
     }
 
-    String text;
+    public String text;
     static HashMap<String, Integer> nodeList;
     int nodeNumber;
 
-    boolean isInternal() {
+    public boolean isInternal() {
         return (flags & FLAG_INTERNAL) != 0;
     }
 
@@ -62,18 +66,20 @@ class LabeledNodeElm extends CircuitElm {
             console.log(text);
         }-*/;
 
-    static void resetNodeList() {
-        nodeList = new HashMap<String, Integer>();
+    public static void resetNodeList() {
+        nodeList = new HashMap<>();
     }
 
     final int circleSize = 17;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         lead1 = interpPoint(point1, point2, 1 - circleSize / dn);
     }
 
-    void setNode(int p, int n) {
+    @Override
+    public void setNode(int p, int n) {
         super.setNode(p, n);
         if (p == 1) {
             // assign new node
@@ -82,32 +88,38 @@ class LabeledNodeElm extends CircuitElm {
         }
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 207;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 1;
     }
 
     // this is basically a wire, since it just connects two nodes together
-    boolean isWire() {
+    @Override
+    public boolean isWire() {
         return true;
     }
 
     // get connection node (which is the same as regular nodes for all elements but this one).
     // node 0 is the terminal, node 1 is the internal node shared by all nodes with same name
-    int getConnectionNode(int n) {
+    @Override
+    public int getConnectionNode(int n) {
         if (n == 0)
             return nodes[0];
         return nodeNumber;
     }
 
-    int getConnectionNodeCount() {
+    @Override
+    public int getConnectionNodeCount() {
         return 2;
     }
 
-    int getInternalNodeCount() {
+    @Override
+    public int getInternalNodeCount() {
         // this can happen at startup
         if (nodeList == null)
             return 0;
@@ -124,7 +136,8 @@ class LabeledNodeElm extends CircuitElm {
         return 1;
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         setVoltageColor(g, volts[0]);
         drawThickLine(g, point1, lead1);
         g.setColor(needsHighlight() ? selectColor : whiteColor);
@@ -152,32 +165,39 @@ class LabeledNodeElm extends CircuitElm {
         drawPosts(g);
     }
 
-    double getCurrentIntoNode(int n) {
+    @Override
+    public double getCurrentIntoNode(int n) {
         return -current;
     }
 
-    void setCurrent(int x, double c) {
+    @Override
+    public void setCurrent(int x, double c) {
         current = -c;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         sim.stampVoltageSource(nodeNumber, nodes[0], voltSource, 0);
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[0];
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = text;
         arr[1] = "I = " + getCurrentText(getCurrent());
         arr[2] = "V = " + getVoltageText(volts[0]);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
             EditInfo ei = new EditInfo("Text", 0, -1, -1);
@@ -192,6 +212,7 @@ class LabeledNodeElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             text = ei.textf.getText();

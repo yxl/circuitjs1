@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class RingCounterElm extends ChipElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class RingCounterElm extends ChipElm {
     boolean justLoaded;
 
     public RingCounterElm(int xx, int yy) {
@@ -32,15 +34,18 @@ class RingCounterElm extends ChipElm {
         justLoaded = true;
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "ring counter";
     }
 
-    boolean needsBits() {
+    @Override
+    public boolean needsBits() {
         return true;
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = bits > 2 ? bits : 2;
         sizeY = 2;
         pins = new Pin[getPostCount()];
@@ -57,15 +62,18 @@ class RingCounterElm extends ChipElm {
         allocNodes();
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return bits + 2;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return bits;
     }
 
-    void execute() {
+    @Override
+    public void execute() {
         int i;
 
         // if we just loaded then the volts[] array is likely to be all zeroes, which might force us to do a reset, so defer execution until the next iteration
@@ -91,6 +99,7 @@ class RingCounterElm extends ChipElm {
         lastClock = pins[0].value;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n < 2)
             return super.getEditInfo(n);
@@ -99,6 +108,7 @@ class RingCounterElm extends ChipElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n < 2) {
             super.setEditValue(n, ei);
@@ -111,7 +121,8 @@ class RingCounterElm extends ChipElm {
         }
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 163;
     }
 }

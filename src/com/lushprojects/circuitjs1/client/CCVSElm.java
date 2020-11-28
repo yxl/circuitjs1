@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class CCVSElm extends VCCSElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class CCVSElm extends VCCSElm {
     public CCVSElm(int xa, int ya, int xb, int yb, int f,
                    StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
@@ -36,7 +38,8 @@ class CCVSElm extends VCCSElm {
 //	    setupPins();
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = 2;
         pins = new Pin[3];
@@ -49,11 +52,13 @@ class CCVSElm extends VCCSElm {
         exprState = new ExprState(1);
     }
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "CCVS";
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         // voltage source (0V) between C+ and C- so we can measure current
         int vn1 = pins[1].voltSource;
         sim.stampVoltageSource(nodes[0], nodes[1], vn1, 0);
@@ -66,7 +71,8 @@ class CCVSElm extends VCCSElm {
 
     double lastCurrent;
 
-    void doStep() {
+    @Override
+    public void doStep() {
         // converged yet?
 //            double limitStep = getLimitStep()*.1;
         double convergeLimit = getConvergeLimit() * .1;
@@ -83,8 +89,7 @@ class CCVSElm extends VCCSElm {
             // calculate output
             exprState.values[8] = cur;  // I = current
             exprState.t = sim.t;
-            double v0 = expr.eval(exprState);
-            double rs = v0;
+            double rs = expr.eval(exprState);
 
             double dv = 1e-6;
             exprState.values[8] = cur + dv;
@@ -104,29 +109,35 @@ class CCVSElm extends VCCSElm {
         lastCurrent = cur;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 4;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 2;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 214;
     }
 
-    boolean getConnection(int n1, int n2) {
+    @Override
+    public boolean getConnection(int n1, int n2) {
         if (comparePair(0, 1, n1, n2))
             return true;
         return comparePair(2, 3, n1, n2);
     }
 
-    boolean hasCurrentOutput() {
+    @Override
+    public boolean hasCurrentOutput() {
         return false;
     }
 
-    void setCurrent(int vn, double c) {
+    @Override
+    public void setCurrent(int vn, double c) {
         if (pins[1].voltSource == vn) {
             pins[0].current = -c;
             pins[1].current = c;
@@ -137,6 +148,7 @@ class CCVSElm extends VCCSElm {
         }
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         // can't set number of inputs
         if (n == 1)

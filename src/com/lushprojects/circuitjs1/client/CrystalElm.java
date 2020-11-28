@@ -19,7 +19,9 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class CrystalElm extends CompositeElm {
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class CrystalElm extends CompositeElm {
     double seriesCapacitance, parallelCapacitance;
     double inductance, resistance;
     Point[] plate1;
@@ -62,13 +64,15 @@ class CrystalElm extends CompositeElm {
     }
 
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 412;
     }
 
     Point[] sandwichPoints;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         double f = (dn / 2 - 10) / dn;
         // calc leads
@@ -90,7 +94,8 @@ class CrystalElm extends CompositeElm {
         setPost(1, point2);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int hs = 12;
         setBbox(point1, point2, hs);
 
@@ -121,11 +126,13 @@ class CrystalElm extends CompositeElm {
         drawPosts(g);
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         current = getCurrentIntoNode(1);
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "crystal";
         getBasicInfo(arr);
 //	    arr[3] = "C = " + getUnitText(capacitance, "F");
@@ -134,10 +141,12 @@ class CrystalElm extends CompositeElm {
         //arr[4] = "U = " + getUnitText(.5*capacitance*v*v, "J");
     }
 
+    @Override
     public boolean canViewInScope() {
         return true;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo(EditInfo.makeLink("crystal.html", "Parallel Capacitance"), parallelCapacitance);
@@ -150,6 +159,7 @@ class CrystalElm extends CompositeElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0)
             parallelCapacitance = ei.value;

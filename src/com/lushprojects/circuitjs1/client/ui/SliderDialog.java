@@ -17,19 +17,17 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.ui.*;
+import com.lushprojects.circuitjs1.client.CirSim;
+import com.lushprojects.circuitjs1.client.CircuitElm;
 
 // class EditDialog extends Dialog implements AdjustmentListener, ActionListener, ItemListener {
-class SliderDialog extends DialogBox {
+public class SliderDialog extends DialogBox {
     CircuitElm elm;
     CirSim sim;
     Button applyButton, okButton, cancelButton;
@@ -40,7 +38,7 @@ class SliderDialog extends DialogBox {
     HorizontalPanel hp;
     NumberFormat noCommaFormat;
 
-    SliderDialog(CircuitElm ce, CirSim f) {
+    public SliderDialog(CircuitElm ce, CirSim f) {
         super(); // Do we need this?
         setText(CirSim.LS("Add Sliders"));
         sim = f;
@@ -55,25 +53,15 @@ class SliderDialog extends DialogBox {
         hp.setStyleName("topSpace");
         vp.add(hp);
         hp.add(applyButton = new Button(CirSim.LS("Apply")));
-        applyButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                apply();
-            }
-        });
+        applyButton.addClickHandler(event -> apply());
         hp.add(okButton = new Button(CirSim.LS("OK")));
-        okButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                apply();
-                closeDialog();
-            }
+        okButton.addClickHandler(event -> {
+            apply();
+            closeDialog();
         });
         hp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
         hp.add(cancelButton = new Button(CirSim.LS("Cancel")));
-        cancelButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                closeDialog();
-            }
-        });
+        cancelButton.addClickHandler(event -> closeDialog());
         buildDialog();
         this.center();
     }
@@ -96,11 +84,7 @@ class SliderDialog extends DialogBox {
             name = name.replaceAll("<[^>]*>", "");
             ei.checkbox = new Checkbox(name, adj != null);
             vp.insert(ei.checkbox, idx++);
-            ei.checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-                public void onValueChange(ValueChangeEvent<Boolean> e) {
-                    itemStateChanged(e);
-                }
-            });
+            ei.checkbox.addValueChangeHandler(e -> itemStateChanged(e));
 
             if (adj != null) {
                 vp.insert(new Label("Min Value"), idx++);

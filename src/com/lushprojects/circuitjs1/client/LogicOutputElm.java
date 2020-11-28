@@ -19,7 +19,10 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class LogicOutputElm extends CircuitElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class LogicOutputElm extends CircuitElm {
     final int FLAG_TERNARY = 1;
     final int FLAG_NUMERIC = 2;
     final int FLAG_PULLDOWN = 4;
@@ -41,15 +44,18 @@ class LogicOutputElm extends CircuitElm {
         }
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + threshold;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 'M';
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 1;
     }
 
@@ -65,12 +71,14 @@ class LogicOutputElm extends CircuitElm {
         return (flags & FLAG_PULLDOWN) != 0;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         lead1 = interpPoint(point1, point2, 1 - 12 / dn);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         Font oldf = g.getFont();
         Font f = new Font("SansSerif", Font.BOLD, 20);
         g.setFont(f);
@@ -95,16 +103,19 @@ class LogicOutputElm extends CircuitElm {
         g.setFont(oldf);
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         if (needsPullDown())
             sim.stampResistor(nodes[0], 0, 1e6);
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[0];
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "logic output";
         arr[1] = (volts[0] < threshold) ? "low" : "high";
         if (isNumeric())
@@ -112,6 +123,7 @@ class LogicOutputElm extends CircuitElm {
         arr[2] = "V = " + getVoltageText(volts[0]);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0)
             return new EditInfo("Threshold", threshold, 10, -10);
@@ -133,6 +145,7 @@ class LogicOutputElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             threshold = ei.value;
@@ -156,7 +169,8 @@ class LogicOutputElm extends CircuitElm {
         }
     }
 
-    int getShortcut() {
+    @Override
+    public int getShortcut() {
         return 'o';
     }
 

@@ -1,10 +1,9 @@
 package com.lushprojects.circuitjs1.client;
 
 import com.google.gwt.core.client.JsArrayInteger;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
 
 public class AudioOutputElm extends CircuitElm {
     int dataCount, dataPtr;
@@ -38,11 +37,13 @@ public class AudioOutputElm extends CircuitElm {
         createButton();
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + duration + " " + samplingRate + " " + labelNum;
     }
 
-    void draggingDone() {
+    @Override
+    public void draggingDone() {
         setTimeStep();
     }
 
@@ -63,15 +64,18 @@ public class AudioOutputElm extends CircuitElm {
         return num;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 211;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 1;
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         dataPtr = 0;
         dataFull = false;
         dataSampleCount = 0;
@@ -79,12 +83,14 @@ public class AudioOutputElm extends CircuitElm {
         dataSample = 0;
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         lead1 = new Point();
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         boolean selected = (needsHighlight());
         Font f = new Font("SansSerif", selected ? Font.BOLD : 0, 14);
         String s = "Audio Out";
@@ -106,11 +112,13 @@ public class AudioOutputElm extends CircuitElm {
         drawPosts(g);
     }
 
-    double getVoltageDiff() {
+    @Override
+    public double getVoltageDiff() {
         return volts[0];
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "audio output";
         arr[1] = "V = " + getVoltageText(volts[0]);
         int ct = (dataFull ? dataCount : dataPtr);
@@ -124,7 +132,8 @@ public class AudioOutputElm extends CircuitElm {
     double nextDataSample = 0;
     double dataSample;
 
-    void stepFinished() {
+    @Override
+    public void stepFinished() {
         dataSample += volts[0];
         dataSampleCount++;
         if (sim.t >= nextDataSample) {
@@ -151,10 +160,10 @@ public class AudioOutputElm extends CircuitElm {
 
     int[] samplingRateChoices = {8000, 11025, 16000, 22050, 44100};
 
+    @Override
     public EditInfo getEditInfo(int n) {
         if (n == 0) {
-            EditInfo ei = new EditInfo("Duration (s)", duration, 0, 5);
-            return ei;
+            return new EditInfo("Duration (s)", duration, 0, 5);
         }
         if (n == 1) {
             EditInfo ei = new EditInfo("Sampling Rate", 0, -1, -1);
@@ -170,6 +179,7 @@ public class AudioOutputElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0 && ei.value > 0) {
             duration = ei.value;
@@ -217,15 +227,12 @@ public class AudioOutputElm extends CircuitElm {
             label += " " + labelNum;
         sim.addWidgetToVerticalPanel(button = new Button(label));
         button.setStylePrimaryName("topButton");
-        button.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                play();
-            }
-        });
+        button.addClickHandler(event -> play());
 
     }
 
-    void delete() {
+    @Override
+    public void delete() {
         sim.removeWidgetFromVerticalPanel(button);
         super.delete();
     }

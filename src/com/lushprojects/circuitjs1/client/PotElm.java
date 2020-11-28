@@ -23,8 +23,11 @@ import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Label;
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.Scrollbar;
 
-class PotElm extends CircuitElm implements Command, MouseWheelHandler {
+public class PotElm extends CircuitElm implements Command, MouseWheelHandler {
     final int FLAG_SHOW_VALUES = 1;
     double position, maxResistance, resistance1, resistance2;
     double current1, current2, current3;
@@ -57,19 +60,23 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
     void setup() {
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 3;
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 174;
     }
 
-    Point getPost(int n) {
+    @Override
+    public Point getPost(int n) {
         return (n == 0) ? point1 : (n == 1) ? point2 : post3;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + maxResistance + " " +
                 position + " " + sliderText;
     }
@@ -83,12 +90,14 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
         // 	slider.addAdjustmentListener(this);
     }
 
+    @Override
     public void execute() {
         sim.analyzeFlag = true;
         setPoints();
     }
 
-    void delete() {
+    @Override
+    public void delete() {
         sim.removeWidgetFromVerticalPanel(label);
         sim.removeWidgetFromVerticalPanel(slider);
         super.delete();
@@ -98,7 +107,8 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
     Point ps3, ps4;
     int bodyLen;
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         int offset = 0;
         int myLen = 0;
@@ -149,7 +159,8 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
     }
 
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         int segments = 16;
         int i;
         int ox = 0;
@@ -278,12 +289,14 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
         }
     }
 
-    void reset() {
+    @Override
+    public void reset() {
         curcount1 = curcount2 = curcount3 = 0;
         super.reset();
     }
 
-    void calculateCurrent() {
+    @Override
+    public void calculateCurrent() {
         if (resistance1 == 0)
             return; // avoid NaN
         current1 = (volts[0] - volts[2]) / resistance1;
@@ -292,7 +305,7 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
     }
 
     @Override
-    double getCurrentIntoNode(int n) {
+    public double getCurrentIntoNode(int n) {
         if (n == 0)
             return -current1;
         if (n == 1)
@@ -300,14 +313,16 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
         return -current3;
     }
 
-    void stamp() {
+    @Override
+    public void stamp() {
         resistance1 = maxResistance * position;
         resistance2 = maxResistance * (1 - position);
         sim.stampResistor(nodes[0], nodes[2], resistance1);
         sim.stampResistor(nodes[2], nodes[1], resistance2);
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "potentiometer";
         arr[1] = "Vd = " + getVoltageDText(getVoltageDiff());
         arr[2] = "R1 = " + getUnitText(resistance1, CirSim.ohmString);
@@ -316,6 +331,7 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
         arr[5] = "I2 = " + getCurrentDText(current2);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         // ohmString doesn't work here on linux
         if (n == 0)
@@ -333,6 +349,7 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0)
             maxResistance = ei.value;
@@ -345,12 +362,14 @@ class PotElm extends CircuitElm implements Command, MouseWheelHandler {
             flags = ei.changeFlag(flags, FLAG_SHOW_VALUES);
     }
 
-    void setMouseElm(boolean v) {
+    @Override
+    public void setMouseElm(boolean v) {
         super.setMouseElm(v);
         if (slider != null)
             slider.draw();
     }
 
+    @Override
     public void onMouseWheel(MouseWheelEvent e) {
         if (slider != null)
             slider.onMouseWheel(e);

@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class GraphicElm extends CircuitElm {
+public class GraphicElm extends CircuitElm {
 
     public GraphicElm(int xx, int yy) {
         super(xx, yy);
@@ -29,7 +29,8 @@ class GraphicElm extends CircuitElm {
         super(xa, ya, xb, yb, flags);
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 0;
     }
 }

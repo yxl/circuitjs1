@@ -1,12 +1,11 @@
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
 import com.google.gwt.dom.client.Style.FontWeight;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.*;
+import com.lushprojects.circuitjs1.client.*;
 
 class ScopeCheckBox extends CheckBox {
     String menuCmd;
@@ -49,11 +48,7 @@ public class ScopePropertiesDialog extends DialogBox implements ValueChangeHandl
         setWidget(fp);
         setText(CirSim.LS("Scope Properties"));
 //		fp.add(l);
-        Command cmd = new Command() {
-            public void execute() {
-                scrollbarChanged();
-            }
-        };
+        Command cmd = () -> scrollbarChanged();
         speedGrid = new Grid(2, 4);
         Label l = new Label(CirSim.LS("Scroll Speed"));
         l.getElement().getStyle().setFontWeight(FontWeight.BOLD);
@@ -145,28 +140,16 @@ public class ScopePropertiesDialog extends DialogBox implements ValueChangeHandl
         hp.setStyleName("topSpace");
         fp.add(hp);
         hp.add(okButton = new Button(CirSim.LS("OK")));
-        okButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                closeDialog();
-            }
-        });
+        okButton.addClickHandler(event -> closeDialog());
 
 //		hp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
         hp.add(applyButton = new Button(CirSim.LS("Apply")));
-        applyButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                apply();
-            }
-        });
+        applyButton.addClickHandler(event -> apply());
 
         hp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
         Button saveAsDefaultButton;
         hp.add(saveAsDefaultButton = new Button(CirSim.LS("Save as Default")));
-        saveAsDefaultButton.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                scope.saveAsDefault();
-            }
-        });
+        saveAsDefaultButton.addClickHandler(event -> scope.saveAsDefault());
         this.center();
         show();
     }
@@ -260,6 +243,7 @@ public class ScopePropertiesDialog extends DialogBox implements ValueChangeHandl
         }
     }
 
+    @Override
     public void onValueChange(ValueChangeEvent<Boolean> event) {
         ScopeCheckBox cb = (ScopeCheckBox) event.getSource();
         scope.handleMenu(cb.menuCmd, cb.getValue());

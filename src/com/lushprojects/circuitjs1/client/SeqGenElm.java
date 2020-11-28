@@ -21,7 +21,10 @@ package com.lushprojects.circuitjs1.client;
 
 // contributed by Edward Calver
 
-class SeqGenElm extends ChipElm {
+import com.lushprojects.circuitjs1.client.ui.Checkbox;
+import com.lushprojects.circuitjs1.client.ui.EditInfo;
+
+public class SeqGenElm extends ChipElm {
     boolean hasReset() {
         return false;
     }
@@ -46,11 +49,13 @@ class SeqGenElm extends ChipElm {
     double lastchangetime = 0;
     boolean clockstate = false;
 
-    String getChipName() {
+    @Override
+    public String getChipName() {
         return "Sequence generator";
     }
 
-    void setupPins() {
+    @Override
+    public void setupPins() {
         sizeX = 2;
         sizeY = 2;
         pins = new Pin[getPostCount()];
@@ -61,11 +66,13 @@ class SeqGenElm extends ChipElm {
         pins[1].output = true;
     }
 
-    int getPostCount() {
+    @Override
+    public int getPostCount() {
         return 2;
     }
 
-    int getVoltageSourceCount() {
+    @Override
+    public int getVoltageSourceCount() {
         return 1;
     }
 
@@ -74,7 +81,8 @@ class SeqGenElm extends ChipElm {
         position++;
     }
 
-    void execute() {
+    @Override
+    public void execute() {
         if (oneshot) {
             if (sim.t - lastchangetime > 0.005) {
                 if (position <= 8) GetNextBit();
@@ -94,14 +102,17 @@ class SeqGenElm extends ChipElm {
 
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 188;
     }
 
-    String dump() {
+    @Override
+    public String dump() {
         return super.dump() + " " + data + " " + oneshot;
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         //My code
         if (n == 0) {
@@ -156,6 +167,7 @@ class SeqGenElm extends ChipElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (n == 0) {
             if (ei.checkbox.getState())

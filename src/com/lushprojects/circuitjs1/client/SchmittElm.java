@@ -21,7 +21,7 @@ package com.lushprojects.circuitjs1.client;
 
 // contributed by Edward Calver
 
-class SchmittElm extends InvertingSchmittElm {
+public class SchmittElm extends InvertingSchmittElm {
     public SchmittElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -31,11 +31,13 @@ class SchmittElm extends InvertingSchmittElm {
         super(xa, ya, xb, yb, f, st);
     }
 
-    int getDumpType() {
+    @Override
+    public int getDumpType() {
         return 182;
     }
 
-    void doStep() {
+    @Override
+    public void doStep() {
         double v0 = volts[1];
         double out;
         if (state) {//Output is high
@@ -61,7 +63,8 @@ class SchmittElm extends InvertingSchmittElm {
         sim.updateVoltageSource(0, nodes[1], voltSource, out);
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         drawPosts(g);
         draw2Leads(g);
         g.setColor(needsHighlight() ? selectColor : lightGrayColor);
@@ -73,7 +76,8 @@ class SchmittElm extends InvertingSchmittElm {
         drawDots(g, lead2, point2, curcount);
     }
 
-    void setPoints() {
+    @Override
+    public void setPoints() {
         super.setPoints();
         int hs = 16;
         int ww = 16;
@@ -87,12 +91,13 @@ class SchmittElm extends InvertingSchmittElm {
         gatePoly = createPolygon(triPoints);
     }
 
-    void getInfo(String[] arr) {
+    @Override
+    public void getInfo(String[] arr) {
         arr[0] = "Schmitt Trigger~"; // ~ is for localization
     }
 
     @Override
-    double getCurrentIntoNode(int n) {
+    public double getCurrentIntoNode(int n) {
         if (n == 1)
             return current;
         return 0;
