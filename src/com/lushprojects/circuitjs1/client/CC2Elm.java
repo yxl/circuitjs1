@@ -95,6 +95,7 @@ class CC2NegElm extends CC2Elm {
         super(xx, yy, -1);
     }
 
+    @Override
     Class getDumpClass() {
         return CC2Elm.class;
     }

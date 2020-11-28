@@ -24,6 +24,7 @@ class PTransistorElm extends TransistorElm {
         super(xx, yy, true);
     }
 
+    @Override
     Class getDumpClass() {
         return TransistorElm.class;
     }

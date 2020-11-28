@@ -25,6 +25,7 @@ class OpAmpSwapElm extends OpAmpElm {
         flags |= FLAG_SWAP;
     }
 
+    @Override
     Class getDumpClass() {
         return OpAmpElm.class;
     }

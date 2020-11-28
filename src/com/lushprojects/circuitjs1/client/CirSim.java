@@ -226,8 +226,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
     int getrand(int x) {
         int q = random.nextInt();
-        if (q < 0)
+        if (q < 0) {
             q = -q;
+        }
         return q % x;
     }
 
@@ -300,15 +301,14 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         QueryParameters qp = new QueryParameters();
 
         try {
-            //baseURL = applet.getDocumentBase().getFile();
-            // look for circuit embedded in URL
-//		String doc = applet.getDocumentBase().toString();
             String cct = qp.getValue("cct");
-            if (cct != null)
+            if (cct != null) {
                 startCircuitText = cct.replace("%24", "$");
+            }
             String ctz = qp.getValue("ctz");
-            if (ctz != null)
+            if (ctz != null) {
                 startCircuitText = decompress(ctz);
+            }
             startCircuit = qp.getValue("startCircuit");
             startLabel = qp.getValue("startLabel");
             startCircuitLink = qp.getValue("startCircuitLink");
@@ -324,12 +324,13 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         }
 
         boolean euroSetting = false;
-        if (euroRes)
+        if (euroRes) {
             euroSetting = true;
-        else if (usRes)
+        } else if (usRes) {
             euroSetting = false;
-        else
+        } else {
             euroSetting = getOptionFromStorage("euroResistors", !weAreInUS());
+        }
         boolean euroGates = getOptionFromStorage("euroGates", weAreInGermany());
 
         transform = new double[6];
@@ -342,8 +343,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         layoutPanel = new DockLayoutPanel(Unit.PX);
 
         fileMenuBar = new MenuBar(true);
-        if (isElectron())
+        if (isElectron()) {
             fileMenuBar.addItem(iconMenuItem("clone", "New Window...", new MyCommand("file", "newwindow")));
+        }
         importFromLocalFileItem = iconMenuItem("folder", "Open File...", new MyCommand("file", "importfromlocalfile"));
         importFromLocalFileItem.setEnabled(LoadFile.isSupported());
         fileMenuBar.addItem(importFromLocalFileItem);
@@ -378,10 +380,12 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
         int width = RootLayoutPanel.get().getOffsetWidth();
         VERTICALPANELWIDTH = width / 5;
-        if (VERTICALPANELWIDTH > 166)
+        if (VERTICALPANELWIDTH > 166) {
             VERTICALPANELWIDTH = 166;
-        if (VERTICALPANELWIDTH < 128)
+        }
+        if (VERTICALPANELWIDTH < 128) {
             VERTICALPANELWIDTH = 128;
+        }
 
         menuBar = new MenuBar();
         menuBar.addItem(LS("File"), fileMenuBar);
@@ -429,8 +433,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         m.addItem(voltsCheckItem = new CheckboxMenuItem(LS("Show Voltage"),
                 new Command() {
                     public void execute() {
-                        if (voltsCheckItem.getState())
+                        if (voltsCheckItem.getState()) {
                             powerCheckItem.setState(false);
+                        }
                         setPowerBarEnable();
                     }
                 }));
@@ -438,8 +443,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         m.addItem(powerCheckItem = new CheckboxMenuItem(LS("Show Power"),
                 new Command() {
                     public void execute() {
-                        if (powerCheckItem.getState())
+                        if (powerCheckItem.getState()) {
                             voltsCheckItem.setState(false);
+                        }
                         setPowerBarEnable();
                     }
                 }));
@@ -471,8 +477,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                     public void execute() {
                         setOptionInStorage("euroGates", euroGatesCheckItem.getState());
                         int i;
-                        for (i = 0; i != elmList.size(); i++)
+                        for (i = 0; i != elmList.size(); i++) {
                             getElm(i).setPoints();
+                        }
                     }
                 }));
         euroGatesCheckItem.setState(euroGates);
@@ -480,8 +487,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 new Command() {
                     public void execute() {
                         int i;
-                        for (i = 0; i < scopeCount; i++)
+                        for (i = 0; i < scopeCount; i++) {
                             scopes[i].setRect(scopes[i].rect);
+                        }
                         setOptionInStorage("whiteBackground", printableCheckItem.getState());
                     }
                 }));
@@ -506,8 +514,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
         m.addItem(new CheckboxAlignedMenuItem(LS("Shortcuts..."), new MyCommand("options", "shortcuts")));
         m.addItem(optionsItem = new CheckboxAlignedMenuItem(LS("Other Options..."), new MyCommand("options", "other")));
-        if (isElectron())
+        if (isElectron()) {
             m.addItem(new CheckboxAlignedMenuItem(LS("Toggle Dev Tools"), new MyCommand("options", "devtools")));
+        }
 
         mainMenuBar = new MenuBar(true);
         mainMenuBar.setAutoOpen(true);
@@ -515,13 +524,15 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         composeMainMenu(drawMenuBar);
         loadShortcuts();
 
-        if (!hideMenu)
+        if (!hideMenu) {
             layoutPanel.addNorth(menuBar, MENUBARHEIGHT);
+        }
 
-        if (hideSidebar)
+        if (hideSidebar) {
             VERTICALPANELWIDTH = 0;
-        else
+        } else {
             layoutPanel.addEast(verticalPanel, VERTICALPANELWIDTH);
+        }
         RootLayoutPanel.get().add(layoutPanel);
 
         cv = Canvas.createIfSupported();
@@ -558,8 +569,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 	verticalPanel.add(dumpMatrixButton);// IES for debugging
 */
 
-        if (LoadFile.isSupported())
+        if (LoadFile.isSupported()) {
             verticalPanel.add(loadFileInput = new LoadFile(this));
+        }
 
         Label l;
         verticalPanel.add(l = new Label(LS("Simulation Speed")));
@@ -640,8 +652,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 if (stopMessage == null && startCircuit != null) {
                     getSetupList(false);
                     readSetupFile(startCircuit, startLabel);
-                } else
+                } else {
                     getSetupList(true);
+                }
             }
         }
 
@@ -667,8 +680,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
         Window.addWindowClosingHandler(new Window.ClosingHandler() {
             public void onWindowClosing(ClosingEvent event) {
-                if (unsavedChanges)
+                if (unsavedChanges) {
                     event.setMessage(LS("Are you sure?  There are unsaved changes."));
+                }
             }
         });
 
@@ -679,7 +693,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     MenuItem menuItemWithShortcut(String icon, String text, String shortcut, MyCommand cmd) {
         final String edithtml = "<div style=\"display:inline-block;width:100px;\"><i class=\"cirjsicon-";
         String nbsp = "&nbsp;";
-        if (icon == "") nbsp = "";
+        if (Objects.equals(icon, "")) {
+            nbsp = "";
+        }
         String sn = edithtml + icon + "\"></i>" + nbsp + text + "</div>" + shortcut;
         return new MenuItem(SafeHtmlUtils.fromTrustedString(sn), cmd);
     }
@@ -691,33 +707,38 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
     boolean getOptionFromStorage(String key, boolean val) {
         Storage stor = Storage.getLocalStorageIfSupported();
-        if (stor == null)
+        if (stor == null) {
             return val;
+        }
         String s = stor.getItem(key);
-        if (s == null)
+        if (s == null) {
             return val;
-        return s == "true";
+        }
+        return Objects.equals(s, "true");
     }
 
     void setOptionInStorage(String key, boolean val) {
         Storage stor = Storage.getLocalStorageIfSupported();
-        if (stor == null)
+        if (stor == null) {
             return;
+        }
         stor.setItem(key, val ? "true" : "false");
     }
 
     // save shortcuts to local storage
     void saveShortcuts() {
         Storage stor = Storage.getLocalStorageIfSupported();
-        if (stor == null)
+        if (stor == null) {
             return;
+        }
         String str = "1";
         int i;
         // format: version;code1=ClassName;code2=ClassName;etc
         for (i = 0; i != shortcuts.length; i++) {
             String sh = shortcuts[i];
-            if (sh == null)
+            if (sh == null) {
                 continue;
+            }
             str += ";" + i + "=" + sh;
         }
         stor.setItem("shortcuts", str);
@@ -726,32 +747,37 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     // load shortcuts from local storage
     void loadShortcuts() {
         Storage stor = Storage.getLocalStorageIfSupported();
-        if (stor == null)
+        if (stor == null) {
             return;
+        }
         String str = stor.getItem("shortcuts");
-        if (str == null)
+        if (str == null) {
             return;
+        }
         String[] keys = str.split(";");
 
         // clear existing shortcuts
         int i;
-        for (i = 0; i != shortcuts.length; i++)
+        for (i = 0; i != shortcuts.length; i++) {
             shortcuts[i] = null;
+        }
 
         // clear shortcuts from menu
         for (i = 0; i != mainMenuItems.size(); i++) {
             CheckboxMenuItem item = mainMenuItems.get(i);
             // stop when we get to drag menu items
-            if (item.getShortcut().length() > 1)
+            if (item.getShortcut().length() > 1) {
                 break;
+            }
             item.setShortcut("");
         }
 
         // go through keys (skipping version at start)
         for (i = 1; i < keys.length; i++) {
             String[] arr = keys[i].split("=");
-            if (arr.length != 2)
+            if (arr.length != 2) {
                 continue;
+            }
             int c = Integer.parseInt(arr[0]);
             String className = arr[1];
             shortcuts[c] = className;
@@ -759,7 +785,7 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             // find menu item and fix it
             int j;
             for (j = 0; j != mainMenuItems.size(); j++) {
-                if (mainMenuItemNames.get(j) == className) {
+                if (Objects.equals(mainMenuItemNames.get(j), className)) {
                     CheckboxMenuItem item = mainMenuItems.get(j);
                     item.setShortcut(Character.toString((char) c));
                     break;
@@ -988,20 +1014,23 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     }
 
     public void setiFrameHeight() {
-        if (iFrame == null)
+        if (iFrame == null) {
             return;
+        }
         int i;
         int cumheight = 0;
         for (i = 0; i < verticalPanel.getWidgetIndex(iFrame); i++) {
             if (verticalPanel.getWidget(i) != loadFileInput) {
                 cumheight = cumheight + verticalPanel.getWidget(i).getOffsetHeight();
-                if (verticalPanel.getWidget(i).getStyleName().contains("topSpace"))
+                if (verticalPanel.getWidget(i).getStyleName().contains("topSpace")) {
                     cumheight += 12;
+                }
             }
         }
         int ih = RootLayoutPanel.get().getOffsetHeight() - MENUBARHEIGHT - cumheight;
-        if (ih < 0)
+        if (ih < 0) {
             ih = 0;
+        }
         iFrame.setHeight(ih + "px");
     }
 
@@ -1025,10 +1054,11 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         //	} catch (Exception ee) {
         //	    ee.printStackTrace();
         //	}
-        if (shortcut == "")
+        if (Objects.equals(shortcut, "")) {
             mi = new CheckboxMenuItem(s);
-        else
+        } else {
             mi = new CheckboxMenuItem(s, shortcut);
+        }
         mi.setScheduledCommand(new MyCommand("main", t));
         mainMenuItems.add(mi);
         mainMenuItemNames.add(t);
@@ -1043,8 +1073,10 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
         if (bounds != null)
             // add some space on edges because bounds calculation is not perfect
+        {
             scale = Math.min(circuitArea.width / (double) (bounds.width + 140),
                     circuitArea.height / (double) (bounds.height + 100));
+        }
         scale = Math.min(scale, 1.5); // Limit scale so we don't create enormous circuits in big windows
 
         // calculate transform so circuit fills most of screen
@@ -1072,8 +1104,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             miny = min(ce.y, min(ce.y2, miny));
             maxy = max(ce.y, max(ce.y2, maxy));
         }
-        if (minx > maxx)
+        if (minx > maxx) {
             return null;
+        }
         return new Rectangle(minx, miny, maxx - minx, maxy - miny);
     }
 
@@ -1086,8 +1119,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
     public void setSimRunning(boolean s) {
         if (s) {
-            if (stopMessage != null)
+            if (stopMessage != null) {
                 return;
+            }
             simRunning = true;
             runStopButton.setHTML(LSHTML("<strong>RUN</strong>&nbsp;/&nbsp;Stop"));
             runStopButton.setStylePrimaryName("topButton");
@@ -1137,8 +1171,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         }
 //	if (editDialog != null && editDialog.elm instanceof CircuitElm)
 //	    mouseElm = (CircuitElm) (editDialog.elm);
-        if (stopElm != null && stopElm != mouseElm)
+        if (stopElm != null && stopElm != mouseElm) {
             stopElm.setMouseElm(true);
+        }
         setupScopes();
 
         Graphics g = new Graphics(backcontext);
@@ -1174,13 +1209,15 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 double c = currentBar.getValue();
                 c = java.lang.Math.exp(c / 3.5 - 14.2);
                 CircuitElm.currentMult = 1.7 * inc * c;
-                if (!conventionCheckItem.getState())
+                if (!conventionCheckItem.getState()) {
                     CircuitElm.currentMult = -CircuitElm.currentMult;
+                }
             }
 
             lastTime = sysTime;
-        } else
+        } else {
             lastTime = 0;
+        }
 
         if (sysTime - secTime >= 1000) {
             framerate = frames;
@@ -1208,8 +1245,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         backcontext.setTransform(transform[0], transform[1], transform[2],
                 transform[3], transform[4], transform[5]);
         for (i = 0; i != elmList.size(); i++) {
-            if (powerCheckItem.getState())
+            if (powerCheckItem.getState()) {
                 g.setColor(Color.gray);
+            }
 	    /*else if (conductanceCheckItem.getState())
 	      g.setColor(Color.white);*/
             getElm(i).draw(g);
@@ -1218,14 +1256,15 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
         // draw posts normally
         if (mouseMode != CirSim.MODE_DRAG_ROW && mouseMode != CirSim.MODE_DRAG_COLUMN) {
-            for (i = 0; i != postDrawList.size(); i++)
+            for (i = 0; i != postDrawList.size(); i++) {
                 CircuitElm.drawPost(g, postDrawList.get(i));
+            }
         }
 
         // for some mouse modes, what matters is not the posts but the endpoints (which are only
         // the same for 2-terminal elements).  We draw those now if needed
         if (tempMouseMode == MODE_DRAG_ROW || tempMouseMode == MODE_DRAG_COLUMN ||
-                tempMouseMode == MODE_DRAG_POST || tempMouseMode == MODE_DRAG_SELECTED)
+                tempMouseMode == MODE_DRAG_POST || tempMouseMode == MODE_DRAG_SELECTED) {
             for (i = 0; i != elmList.size(); i++) {
 
                 CircuitElm ce = getElm(i);
@@ -1239,6 +1278,7 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                     ce.drawHandles(g, Color.cyan);
                 }
             }
+        }
         // draw handles for elm we're creating
         if (tempMouseMode == MODE_SELECT && mouseElm != null) {
             mouseElm.drawHandles(g, Color.cyan);
@@ -1275,18 +1315,21 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
         backcontext.setTransform(1, 0, 0, 1, 0, 0);
 
-        if (printableCheckItem.getState())
+        if (printableCheckItem.getState()) {
             g.setColor(Color.white);
-        else
+        } else {
             g.setColor(Color.black);
+        }
         g.fillRect(0, circuitArea.height, circuitArea.width, cv.getCoordinateSpaceHeight() - circuitArea.height);
 //	g.restore();
         g.setFont(oldfont);
         int ct = scopeCount;
-        if (stopMessage != null)
+        if (stopMessage != null) {
             ct = 0;
-        for (i = 0; i != ct; i++)
+        }
+        for (i = 0; i != ct; i++) {
             scopes[i].draw(g);
+        }
         if (mouseWasOverSplitter) {
             g.setColor(Color.cyan);
             g.setLineWidth(4.0);
@@ -1303,11 +1346,13 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 if (mousePost == -1) {
                     mouseElm.getInfo(info);
                     info[0] = LS(info[0]);
-                    if (info[1] != null)
+                    if (info[1] != null) {
                         info[1] = LS(info[1]);
-                } else
+                    }
+                } else {
                     info[0] = "V = " +
                             CircuitElm.getUnitText(mouseElm.getPostVoltage(mousePost), "V");
+                }
 //		/* //shownodes
 //		for (i = 0; i != mouseElm.getPostCount(); i++)
 //		    info[0] += " " + mouseElm.nodes[i];
@@ -1320,35 +1365,42 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 info[1] = LS("time step = ") + CircuitElm.getTimeText(timeStep);
             }
             if (hintType != -1) {
-                for (i = 0; info[i] != null; i++)
+                for (i = 0; info[i] != null; i++) {
                     ;
+                }
                 String s = getHint();
-                if (s == null)
+                if (s == null) {
                     hintType = -1;
-                else
+                } else {
                     info[i] = s;
+                }
             }
             int x = 0;
-            if (ct != 0)
+            if (ct != 0) {
                 x = scopes[ct - 1].rightEdge() + 20;
+            }
             x = max(x, cv.getCoordinateSpaceWidth() * 2 / 3);
             //  x=cv.getCoordinateSpaceWidth()*2/3;
 
             // count lines of data
-            for (i = 0; info[i] != null; i++)
+            for (i = 0; info[i] != null; i++) {
                 ;
+            }
             int badnodes = badConnectionList.size();
-            if (badnodes > 0)
+            if (badnodes > 0) {
                 info[i++] = badnodes + ((badnodes == 1) ?
                         LS(" bad connection") : LS(" bad connections"));
+            }
 
             int ybase = circuitArea.height;
-            for (i = 0; info[i] != null; i++)
+            for (i = 0; info[i] != null; i++) {
                 g.drawString(info[i], x,
                         ybase + 15 * (i + 1));
+            }
         }
-        if (stopElm != null && stopElm != mouseElm)
+        if (stopElm != null && stopElm != mouseElm) {
             stopElm.setMouseElm(false);
+        }
         frames++;
 
         g.setColor(Color.white);
@@ -1375,8 +1427,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     }
 
     Color getBackgroundColor() {
-        if (printableCheckItem.getState())
+        if (printableCheckItem.getState()) {
             return Color.white;
+        }
         return Color.black;
     }
 
@@ -1389,34 +1442,40 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         for (i = 0; i < scopeCount; i++) {
             if (scopes[i].needToRemove()) {
                 int j;
-                for (j = i; j != scopeCount; j++)
+                for (j = i; j != scopeCount; j++) {
                     scopes[j] = scopes[j + 1];
+                }
                 scopeCount--;
                 i--;
                 continue;
             }
-            if (scopes[i].position > pos + 1)
+            if (scopes[i].position > pos + 1) {
                 scopes[i].position = pos + 1;
+            }
             pos = scopes[i].position;
         }
-        while (scopeCount > 0 && scopes[scopeCount - 1].getElm() == null)
+        while (scopeCount > 0 && scopes[scopeCount - 1].getElm() == null) {
             scopeCount--;
+        }
         int h = cv.getCoordinateSpaceHeight() - circuitArea.height;
         pos = 0;
-        for (i = 0; i != scopeCount; i++)
+        for (i = 0; i != scopeCount; i++) {
             scopeColCount[i] = 0;
+        }
         for (i = 0; i != scopeCount; i++) {
             pos = max(scopes[i].position, pos);
             scopeColCount[scopes[i].position]++;
         }
         int colct = pos + 1;
         int iw = infoWidth;
-        if (colct <= 2)
+        if (colct <= 2) {
             iw = iw * 3 / 2;
+        }
         int w = (cv.getCoordinateSpaceWidth() - iw) / colct;
         int marg = 10;
-        if (w < marg * 2)
+        if (w < marg * 2) {
             w = marg * 2;
+        }
         pos = -1;
         int colh = 0;
         int row = 0;
@@ -1437,61 +1496,73 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             Rectangle r = new Rectangle(pos * w, cv.getCoordinateSpaceHeight() - h + colh * row,
                     w - marg, colh);
             row++;
-            if (!r.equals(s.rect))
+            if (!r.equals(s.rect)) {
                 s.setRect(r);
+            }
         }
     }
 
     String getHint() {
         CircuitElm c1 = getElm(hintItem1);
         CircuitElm c2 = getElm(hintItem2);
-        if (c1 == null || c2 == null)
+        if (c1 == null || c2 == null) {
             return null;
+        }
         if (hintType == HINT_LC) {
-            if (!(c1 instanceof InductorElm))
+            if (!(c1 instanceof InductorElm)) {
                 return null;
-            if (!(c2 instanceof CapacitorElm))
+            }
+            if (!(c2 instanceof CapacitorElm)) {
                 return null;
+            }
             InductorElm ie = (InductorElm) c1;
             CapacitorElm ce = (CapacitorElm) c2;
             return LS("res.f = ") + CircuitElm.getUnitText(1 / (2 * pi * Math.sqrt(ie.inductance *
                     ce.capacitance)), "Hz");
         }
         if (hintType == HINT_RC) {
-            if (!(c1 instanceof ResistorElm))
+            if (!(c1 instanceof ResistorElm)) {
                 return null;
-            if (!(c2 instanceof CapacitorElm))
+            }
+            if (!(c2 instanceof CapacitorElm)) {
                 return null;
+            }
             ResistorElm re = (ResistorElm) c1;
             CapacitorElm ce = (CapacitorElm) c2;
             return "RC = " + CircuitElm.getUnitText(re.resistance * ce.capacitance,
                     "s");
         }
         if (hintType == HINT_3DB_C) {
-            if (!(c1 instanceof ResistorElm))
+            if (!(c1 instanceof ResistorElm)) {
                 return null;
-            if (!(c2 instanceof CapacitorElm))
+            }
+            if (!(c2 instanceof CapacitorElm)) {
                 return null;
+            }
             ResistorElm re = (ResistorElm) c1;
             CapacitorElm ce = (CapacitorElm) c2;
             return LS("f.3db = ") +
                     CircuitElm.getUnitText(1 / (2 * pi * re.resistance * ce.capacitance), "Hz");
         }
         if (hintType == HINT_3DB_L) {
-            if (!(c1 instanceof ResistorElm))
+            if (!(c1 instanceof ResistorElm)) {
                 return null;
-            if (!(c2 instanceof InductorElm))
+            }
+            if (!(c2 instanceof InductorElm)) {
                 return null;
+            }
             ResistorElm re = (ResistorElm) c1;
             InductorElm ie = (InductorElm) c2;
             return LS("f.3db = ") +
                     CircuitElm.getUnitText(re.resistance / (2 * pi * ie.inductance), "Hz");
         }
         if (hintType == HINT_TWINT) {
-            if (!(c1 instanceof ResistorElm))
+            if (!(c1 instanceof ResistorElm)) {
                 return null;
-            if (!(c2 instanceof CapacitorElm))
+            }
+            if (!(c2 instanceof CapacitorElm)) {
                 return null;
+            }
             ResistorElm re = (ResistorElm) c1;
             CapacitorElm ce = (CapacitorElm) c2;
             return LS("fc = ") +
@@ -1527,14 +1598,16 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     CircuitElm[] voltageSources;
 
     public CircuitNode getCircuitNode(int n) {
-        if (n >= nodeList.size())
+        if (n >= nodeList.size()) {
             return null;
+        }
         return nodeList.elementAt(n);
     }
 
     public CircuitElm getElm(int n) {
-        if (n >= elmList.size())
+        if (n >= elmList.size()) {
             return null;
+        }
         return elmList.elementAt(n);
     }
 
@@ -1542,8 +1615,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         int i;
         for (i = 0; i != adjustables.size(); i++) {
             Adjustable a = adjustables.get(i);
-            if (a.elm == elm && a.editItem == item)
+            if (a.elm == elm && a.editItem == item) {
                 return a;
+            }
         }
         return null;
     }
@@ -1595,8 +1669,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         wireInfoList = new Vector<WireInfo>();
         for (i = 0; i != elmList.size(); i++) {
             CircuitElm ce = getElm(i);
-            if (!(ce instanceof WireElm))
+            if (!(ce instanceof WireElm)) {
                 continue;
+            }
             WireElm we = (WireElm) ce;
             we.hasWireInfo = false;
             wireInfoList.add(new WireInfo(we));
@@ -1605,8 +1680,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             if (cn != null && cn2 != null) {
                 // merge nodes; go through map and change all keys pointing to cn2 to point to cn
                 for (Map.Entry<Point, NodeMapEntry> entry : nodeMap.entrySet()) {
-                    if (entry.getValue() == cn2)
+                    if (entry.getValue() == cn2) {
                         entry.setValue(cn);
+                    }
                 }
 //		mergeCount++;
                 continue;
@@ -1653,8 +1729,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             for (j = 0; j != cn1.links.size(); j++) {
                 CircuitNodeLink cnl = cn1.links.get(j);
                 CircuitElm ce = cnl.elm;
-                if (ce == wire)
+                if (ce == wire) {
                     continue;
+                }
                 Point pt = cnl.elm.getPost(cnl.num);
 
                 // is this a wire that doesn't have wire info yet?  If so we can't use it.
@@ -1664,10 +1741,14 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 // which post does this element connect to, if any?
                 if (pt.x == wire.x && pt.y == wire.y) {
                     neighbors0.add(ce);
-                    if (notReady) isReady0 = false;
+                    if (notReady) {
+                        isReady0 = false;
+                    }
                 } else if (pt.x == wire.x2 && pt.y == wire.y2) {
                     neighbors1.add(ce);
-                    if (notReady) isReady1 = false;
+                    if (notReady) {
+                        isReady1 = false;
+                    }
                 }
             }
 
@@ -1722,10 +1803,12 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 gotGround = true;
                 break;
             }
-            if (ce instanceof RailElm)
+            if (ce instanceof RailElm) {
                 gotRail = true;
-            if (volt == null && ce instanceof VoltageElm)
+            }
+            if (volt == null && ce instanceof VoltageElm) {
                 volt = ce;
+            }
         }
 
         // if no ground, and no rails, then the voltage elm's first terminal
@@ -1737,10 +1820,11 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
             // update node map
             NodeMapEntry cln = nodeMap.get(pt);
-            if (cln != null)
+            if (cln != null) {
                 cln.node = 0;
-            else
+            } else {
                 nodeMap.put(pt, new NodeMapEntry(0));
+            }
         } else {
             // otherwise allocate extra node for ground
             CircuitNode cn = new CircuitNode();
@@ -1774,10 +1858,11 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                     cnl.elm = ce;
                     cn.links.addElement(cnl);
                     ce.setNode(j, nodeList.size());
-                    if (cln != null)
+                    if (cln != null) {
                         cln.node = nodeList.size();
-                    else
+                    } else {
                         nodeMap.put(pt, new NodeMapEntry(nodeList.size()));
+                    }
                     nodeList.addElement(cn);
                 } else {
                     int n = cln.node;
@@ -1788,8 +1873,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                     ce.setNode(j, n);
                     // if it's the ground node, make sure the node voltage is 0,
                     // cause it may not get set later
-                    if (n == 0)
+                    if (n == 0) {
                         ce.setNodeVoltage(j, 0);
+                    }
                 }
             }
             for (j = 0; j != inodes; j++) {
@@ -1806,8 +1892,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         }
 
         makePostDrawList();
-        if (!calcWireInfo())
+        if (!calcWireInfo()) {
             return;
+        }
         nodeMap = null; // done with this
 
         voltageSources = new CircuitElm[vscount];
@@ -1818,8 +1905,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         // determine if circuit is nonlinear
         for (i = 0; i != elmList.size(); i++) {
             CircuitElm ce = getElm(i);
-            if (ce.nonLinear())
+            if (ce.nonLinear()) {
                 circuitNonLinear = true;
+            }
             int ivs = ce.getVoltageSourceCount();
             for (j = 0; j != ivs; j++) {
                 voltageSources[vscount] = ce;
@@ -1836,8 +1924,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         circuitMatrixSize = circuitMatrixFullSize = matrixSize;
         circuitRowInfo = new RowInfo[matrixSize];
         circuitPermute = new int[matrixSize];
-        for (i = 0; i != matrixSize; i++)
+        for (i = 0; i != matrixSize; i++) {
             circuitRowInfo[i] = new RowInfo();
+        }
         circuitNeedsMap = false;
 
         // stamp linear circuit elements
@@ -1855,20 +1944,23 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             changed = false;
             for (i = 0; i != elmList.size(); i++) {
                 CircuitElm ce = getElm(i);
-                if (ce instanceof WireElm)
+                if (ce instanceof WireElm) {
                     continue;
+                }
                 // loop through all ce's nodes to see if they are connected
                 // to other nodes not in closure
                 for (j = 0; j < ce.getConnectionNodeCount(); j++) {
                     if (!closure[ce.getConnectionNode(j)]) {
-                        if (ce.hasGroundConnection(j))
+                        if (ce.hasGroundConnection(j)) {
                             closure[ce.getConnectionNode(j)] = changed = true;
+                        }
                         continue;
                     }
                     int k;
                     for (k = 0; k != ce.getConnectionNodeCount(); k++) {
-                        if (j == k)
+                        if (j == k) {
                             continue;
+                        }
                         int kn = ce.getConnectionNode(k);
                         if (ce.getConnection(j, k) && !closure[kn]) {
                             closure[kn] = true;
@@ -1877,11 +1969,12 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                     }
                 }
             }
-            if (changed)
+            if (changed) {
                 continue;
+            }
 
             // connect one of the unconnected nodes to ground with a big resistor, then try again
-            for (i = 0; i != nodeList.size(); i++)
+            for (i = 0; i != nodeList.size(); i++) {
                 if (!closure[i] && !getCircuitNode(i).internal) {
                     console("node " + i + " unconnected");
                     stampResistor(0, i, 1e8);
@@ -1889,6 +1982,7 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                     changed = true;
                     break;
                 }
+            }
         }
         //System.out.println("ac5");
 
@@ -1931,11 +2025,12 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             } else if (ce instanceof Switch2Elm) {
                 // for Switch2Elms we need to do extra work to look for wire loops
                 FindPathInfo fpi = new FindPathInfo(FindPathInfo.VOLTAGE, ce, ce.getNode(0));
-                for (j = 1; j < ce.getPostCount(); j++)
+                for (j = 1; j < ce.getPostCount(); j++) {
                     if (ce.getConnection(0, j) && fpi.findPath(ce.getNode(j))) {
                         stop("Voltage source/wire loop with no resistance!", ce);
                         return;
                     }
+                }
             }
 
             // look for path from rail to ground
@@ -1971,8 +2066,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         }
         //System.out.println("ac6");
 
-        if (!simplifyMatrix(matrixSize))
+        if (!simplifyMatrix(matrixSize)) {
             return;
+        }
 
 	/*
 	System.out.println("matrixSize = " + matrixSize + " " + circuitNonLinear);
@@ -1984,8 +2080,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 	System.out.print("\n");*/
 
         // check if we called stop()
-        if (circuitMatrix == null)
+        if (circuitMatrix == null) {
             return;
+        }
 
         // if a matrix is linear, we can do the lu_factor here instead of
         // needing to do it every frame
@@ -2002,10 +2099,11 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         for (i = 0; i != elmList.size(); i++) {
             CircuitElm ce = getElm(i);
             if (ce instanceof VoltageElm) {
-                if (gotVoltageSource)
+                if (gotVoltageSource) {
                     showResistanceInVoltageSources = false;
-                else
+                } else {
                     gotVoltageSource = true;
+                }
             }
         }
 
@@ -2022,8 +2120,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 	    /*System.out.println("row " + i + " " + re.lsChanges + " " + re.rsChanges + " " +
 			       re.dropRow);*/
 //	    if (qp != -100) continue;   // uncomment to disable matrix simplification
-            if (re.lsChanges || re.dropRow || re.rsChanges)
+            if (re.lsChanges || re.dropRow || re.rsChanges) {
                 continue;
+            }
             double rsadd = 0;
 
             // look for rows that can be removed
@@ -2036,8 +2135,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                     continue;
                 }
                 // ignore zeroes
-                if (q == 0)
+                if (q == 0) {
                     continue;
+                }
                 // keep track of first nonzero element that is not ROW_CONST
                 if (qp == -1) {
                     qp = j;
@@ -2078,8 +2178,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 //System.out.println("col " + i + " maps to " + elt.mapCol);
                 continue;
             }
-            if (elt.type == RowInfo.ROW_CONST)
+            if (elt.type == RowInfo.ROW_CONST) {
                 elt.mapCol = -1;
+            }
         }
 
         // make the new, simplified matrix
@@ -2098,10 +2199,11 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             //System.out.println("Row " + i + " maps to " + ii);
             for (j = 0; j != matrixSize; j++) {
                 RowInfo ri = circuitRowInfo[j];
-                if (ri.type == RowInfo.ROW_CONST)
+                if (ri.type == RowInfo.ROW_CONST) {
                     newrs[ii] -= ri.value * circuitMatrix[i][j];
-                else
+                } else {
                     newmatx[ii][ri.mapCol] += circuitMatrix[i][j];
+                }
             }
             ii++;
         }
@@ -2111,11 +2213,14 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         circuitMatrix = newmatx;
         circuitRightSide = newrs;
         matrixSize = circuitMatrixSize = newsize;
-        for (i = 0; i != matrixSize; i++)
+        for (i = 0; i != matrixSize; i++) {
             origRightSide[i] = circuitRightSide[i];
-        for (i = 0; i != matrixSize; i++)
-            for (j = 0; j != matrixSize; j++)
+        }
+        for (i = 0; i != matrixSize; i++) {
+            for (j = 0; j != matrixSize; j++) {
                 origMatrix[i][j] = circuitMatrix[i][j];
+            }
+        }
         circuitNeedsMap = true;
         return true;
     }
@@ -2127,8 +2232,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         postDrawList = new Vector<Point>();
         badConnectionList = new Vector<Point>();
         for (Map.Entry<Point, Integer> entry : postCountMap.entrySet()) {
-            if (entry.getValue() != 2)
+            if (entry.getValue() != 2) {
                 postDrawList.add(entry.getKey());
+            }
 
             // look for bad connections, posts not connected to other elements which intersect
             // other elements' bounding boxes
@@ -2138,22 +2244,28 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 Point cn = entry.getKey();
                 for (j = 0; j != elmList.size() && !bad; j++) {
                     CircuitElm ce = getElm(j);
-                    if (ce instanceof GraphicElm)
+                    if (ce instanceof GraphicElm) {
                         continue;
+                    }
                     // does this post intersect elm's bounding box?
-                    if (!ce.boundingBox.contains(cn.x, cn.y))
+                    if (!ce.boundingBox.contains(cn.x, cn.y)) {
                         continue;
+                    }
                     int k;
                     // does this post belong to the elm?
                     int pc = ce.getPostCount();
-                    for (k = 0; k != pc; k++)
-                        if (ce.getPost(k).equals(cn))
+                    for (k = 0; k != pc; k++) {
+                        if (ce.getPost(k).equals(cn)) {
                             break;
-                    if (k == pc)
+                        }
+                    }
+                    if (k == pc) {
                         bad = true;
+                    }
                 }
-                if (bad)
+                if (bad) {
                     badConnectionList.add(cn);
+                }
             }
         }
         postCountMap = null;
@@ -2181,67 +2293,81 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         // look through circuit for loop starting at node n1 of firstElm, for a path back to
         // dest node of firstElm
         boolean findPath(int n1) {
-            if (n1 == dest)
+            if (n1 == dest) {
                 return true;
+            }
 
             // depth first search, don't need to revisit already visited nodes!
-            if (visited[n1])
+            if (visited[n1]) {
                 return false;
+            }
 
             visited[n1] = true;
             int i;
             for (i = 0; i != elmList.size(); i++) {
                 CircuitElm ce = getElm(i);
-                if (ce == firstElm)
+                if (ce == firstElm) {
                     continue;
+                }
                 if (type == INDUCT) {
                     // inductors need a path free of current sources
-                    if (ce instanceof CurrentElm)
+                    if (ce instanceof CurrentElm) {
                         continue;
+                    }
                 }
                 if (type == VOLTAGE) {
                     // when checking for voltage loops, we only care about voltage sources/wires/ground
-                    if (!(ce.isWire() || ce instanceof VoltageElm || ce instanceof GroundElm))
+                    if (!(ce.isWire() || ce instanceof VoltageElm || ce instanceof GroundElm)) {
                         continue;
+                    }
                 }
                 // when checking for shorts, just check wires
-                if (type == SHORT && !ce.isWire())
+                if (type == SHORT && !ce.isWire()) {
                     continue;
+                }
                 if (type == CAP_V) {
                     // checking for capacitor/voltage source loops
-                    if (!(ce.isWire() || ce instanceof CapacitorElm || ce instanceof VoltageElm))
+                    if (!(ce.isWire() || ce instanceof CapacitorElm || ce instanceof VoltageElm)) {
                         continue;
+                    }
                 }
                 if (n1 == 0) {
                     // look for posts which have a ground connection;
                     // our path can go through ground
                     int j;
-                    for (j = 0; j != ce.getConnectionNodeCount(); j++)
-                        if (ce.hasGroundConnection(j) && findPath(ce.getConnectionNode(j)))
+                    for (j = 0; j != ce.getConnectionNodeCount(); j++) {
+                        if (ce.hasGroundConnection(j) && findPath(ce.getConnectionNode(j))) {
                             return true;
+                        }
+                    }
                 }
                 int j;
                 for (j = 0; j != ce.getConnectionNodeCount(); j++) {
-                    if (ce.getConnectionNode(j) == n1)
+                    if (ce.getConnectionNode(j) == n1) {
                         break;
+                    }
                 }
-                if (j == ce.getConnectionNodeCount())
+                if (j == ce.getConnectionNodeCount()) {
                     continue;
+                }
                 if (ce.hasGroundConnection(j) && findPath(0)) {
                     return true;
                 }
                 if (type == INDUCT && ce instanceof InductorElm) {
                     // inductors can use paths with other inductors of matching current
                     double c = ce.getCurrent();
-                    if (j == 0)
+                    if (j == 0) {
                         c = -c;
-                    if (Math.abs(c - firstElm.getCurrent()) > 1e-10)
+                    }
+                    if (Math.abs(c - firstElm.getCurrent()) > 1e-10) {
                         continue;
+                    }
                 }
                 int k;
                 for (k = 0; k != ce.getConnectionNodeCount(); k++) {
-                    if (j == k)
+                    if (j == k) {
                         continue;
+                    }
                     if (ce.getConnection(j, k) && findPath(ce.getConnectionNode(k))) {
                         //System.out.println("got findpath " + n1);
                         return true;
@@ -2365,8 +2491,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             if (circuitNeedsMap) {
                 i = circuitRowInfo[i - 1].mapRow;
                 //System.out.println("stamping " + i + " " + x);
-            } else
+            } else {
                 i--;
+            }
             circuitRightSide[i] += x;
         }
     }
@@ -2374,20 +2501,23 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     // indicate that the value on the right side of row i changes in doStep()
     void stampRightSide(int i) {
         //System.out.println("rschanges true " + (i-1));
-        if (i > 0)
+        if (i > 0) {
             circuitRowInfo[i - 1].rsChanges = true;
+        }
     }
 
     // indicate that the values on the left side of row i change in doStep()
     void stampNonLinear(int i) {
-        if (i > 0)
+        if (i > 0) {
             circuitRowInfo[i - 1].lsChanges = true;
+        }
     }
 
     double getIterCount() {
         // IES - remove interaction
-        if (speedBar.getValue() == 0)
+        if (speedBar.getValue() == 0) {
             return 0;
+        }
 
         return .1 * Math.exp((speedBar.getValue() - 61) / 24.);
 
@@ -2397,12 +2527,16 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     // scope.  Otherwise we can do it only once per frame.
     boolean canDelayWireProcessing() {
         int i;
-        for (i = 0; i != scopeCount; i++)
-            if (scopes[i].viewingWire())
+        for (i = 0; i != scopeCount; i++) {
+            if (scopes[i].viewingWire()) {
                 return false;
-        for (i = 0; i != elmList.size(); i++)
-            if (getElm(i) instanceof ScopeElm && ((ScopeElm) getElm(i)).elmScope.viewingWire())
+            }
+        }
+        for (i = 0; i != elmList.size(); i++) {
+            if (getElm(i) instanceof ScopeElm && ((ScopeElm) getElm(i)).elmScope.viewingWire()) {
                 return false;
+            }
+        }
         return true;
     }
 
@@ -2428,8 +2562,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
         // Check if we don't need to run simulation (for very slow simulation speeds).
         // If the circuit changed, do at least one iteration to make sure everything is consistent.
-        if (1000 >= steprate * (tm - lastIterTime) && !didAnalyze)
+        if (1000 >= steprate * (tm - lastIterTime) && !didAnalyze) {
             return;
+        }
 
         boolean delayWireProcessing = canDelayWireProcessing();
 
@@ -2444,19 +2579,23 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             for (subiter = 0; subiter != subiterCount; subiter++) {
                 converged = true;
                 subIterations = subiter;
-                for (i = 0; i != circuitMatrixSize; i++)
+                for (i = 0; i != circuitMatrixSize; i++) {
                     circuitRightSide[i] = origRightSide[i];
+                }
                 if (circuitNonLinear) {
-                    for (i = 0; i != circuitMatrixSize; i++)
-                        for (j = 0; j != circuitMatrixSize; j++)
+                    for (i = 0; i != circuitMatrixSize; i++) {
+                        for (j = 0; j != circuitMatrixSize; j++) {
                             circuitMatrix[i][j] = origMatrix[i][j];
+                        }
+                    }
                 }
                 for (i = 0; i != elmList.size(); i++) {
                     CircuitElm ce = getElm(i);
                     ce.doStep();
                 }
-                if (stopMessage != null)
+                if (stopMessage != null) {
                     return;
+                }
                 boolean printit = debugprint;
                 debugprint = false;
                 for (j = 0; j != circuitMatrixSize; j++) {
@@ -2471,16 +2610,18 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 if (printit) {
                     for (j = 0; j != circuitMatrixSize; j++) {
                         String x = "";
-                        for (i = 0; i != circuitMatrixSize; i++)
+                        for (i = 0; i != circuitMatrixSize; i++) {
                             x += circuitMatrix[j][i] + ",";
+                        }
                         x += "\n";
                         console(x);
                     }
                     console("done");
                 }
                 if (circuitNonLinear) {
-                    if (converged && subiter > 0)
+                    if (converged && subiter > 0) {
                         break;
+                    }
                     if (!lu_factor(circuitMatrix, circuitMatrixSize,
                             circuitPermute)) {
                         stop("Singular matrix!", null);
@@ -2493,10 +2634,11 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 for (j = 0; j != circuitMatrixFullSize; j++) {
                     RowInfo ri = circuitRowInfo[j];
                     double res = 0;
-                    if (ri.type == RowInfo.ROW_CONST)
+                    if (ri.type == RowInfo.ROW_CONST) {
                         res = ri.value;
-                    else
+                    } else {
                         res = circuitRightSide[ri.mapCol];
+                    }
 		    /*System.out.println(j + " " + res + " " +
 		      ri.type + " " + ri.mapCol);*/
                     if (Double.isNaN(res)) {
@@ -2516,38 +2658,48 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                         voltageSources[ji].setCurrent(ji, res);
                     }
                 }
-                if (!circuitNonLinear)
+                if (!circuitNonLinear) {
                     break;
+                }
             }
-            if (subiter > 5)
+            if (subiter > 5) {
                 console("converged after " + subiter + " iterations\n");
+            }
             if (subiter == subiterCount) {
                 stop("Convergence failed!", null);
                 break;
             }
             t += timeStep;
-            for (i = 0; i != elmList.size(); i++)
+            for (i = 0; i != elmList.size(); i++) {
                 getElm(i).stepFinished();
-            if (!delayWireProcessing)
+            }
+            if (!delayWireProcessing) {
                 calcWireCurrents();
-            for (i = 0; i != scopeCount; i++)
+            }
+            for (i = 0; i != scopeCount; i++) {
                 scopes[i].timeStep();
-            for (i = 0; i != elmList.size(); i++)
-                if (getElm(i) instanceof ScopeElm)
+            }
+            for (i = 0; i != elmList.size(); i++) {
+                if (getElm(i) instanceof ScopeElm) {
                     ((ScopeElm) getElm(i)).stepScope();
+                }
+            }
 
             tm = System.currentTimeMillis();
             lit = tm;
             // Check whether enough time has elapsed to perform an *additional* iteration after
             // those we have already completed.
-            if ((iter + 1) * 1000 >= steprate * (tm - lastIterTime) || (tm - lastFrameTime > 500))
+            if ((iter + 1) * 1000 >= steprate * (tm - lastIterTime) || (tm - lastFrameTime > 500)) {
                 break;
-            if (!simRunning)
+            }
+            if (!simRunning) {
                 break;
+            }
         } // for (iter = 1; ; iter++)
         lastIterTime = lit;
-        if (delayWireProcessing)
+        if (delayWireProcessing) {
             calcWireCurrents();
+        }
 //	System.out.println((System.currentTimeMillis()-lastFrameTime)/(double) iter);
     }
 
@@ -2570,10 +2722,11 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 int n = ce.getNodeAtPoint(p.x, p.y);
                 cur += ce.getCurrentIntoNode(n);
             }
-            if (wi.post == 0)
+            if (wi.post == 0) {
                 wi.wire.setCurrent(-1, cur);
-            else
+            } else {
                 wi.wire.setCurrent(-1, -cur);
+            }
         }
     }
 
@@ -2588,16 +2741,19 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
     public void resetAction() {
         int i;
-        for (i = 0; i != elmList.size(); i++)
+        for (i = 0; i != elmList.size(); i++) {
             getElm(i).reset();
-        for (i = 0; i != scopeCount; i++)
+        }
+        for (i = 0; i != scopeCount; i++) {
             scopes[i].resetGraph(true);
+        }
         // TODO: Will need to do IE bug fix here?
         analyzeFlag = true;
-        if (t == 0)
+        if (t == 0) {
             setSimRunning(true);
-        else
+        } else {
             t = 0;
+        }
     }
 
     static void electronSaveAsCallback(String s) {
@@ -2640,213 +2796,263 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     }-*/;
 
     void allowSave(boolean b) {
-        if (saveFileItem != null)
+        if (saveFileItem != null) {
             saveFileItem.setEnabled(b);
+        }
     }
 
     public void menuPerformed(String menu, String item) {
-        if (item == "about")
+        if (Objects.equals(item, "about")) {
             aboutBox = new AboutBox(circuitjs1.versionString);
-        if (item == "importfromlocalfile") {
-            pushUndo();
-            if (isElectron())
-                electronOpenFile();
-            else
-                loadFileInput.click();
         }
-        if (item == "newwindow") {
+        if (Objects.equals(item, "importfromlocalfile")) {
+            pushUndo();
+            if (isElectron()) {
+                electronOpenFile();
+            } else {
+                loadFileInput.click();
+            }
+        }
+        if (Objects.equals(item, "newwindow")) {
             Window.open(Document.get().getURL(), "_blank", "");
         }
-        if (item == "save")
+        if (Objects.equals(item, "save")) {
             electronSave(dumpCircuit());
-        if (item == "saveas")
+        }
+        if (Objects.equals(item, "saveas")) {
             electronSaveAs(dumpCircuit());
-        if (item == "importfromtext") {
+        }
+        if (Objects.equals(item, "importfromtext")) {
             dialogShowing = new ImportFromTextDialog(this);
         }
-        if (item == "importfromdropbox") {
+        if (Objects.equals(item, "importfromdropbox")) {
             importFromDropboxDialog = new ImportFromDropboxDialog(this);
         }
-        if (item == "exportasurl") {
+        if (Objects.equals(item, "exportasurl")) {
             doExportAsUrl();
             unsavedChanges = false;
         }
-        if (item == "exportaslocalfile") {
+        if (Objects.equals(item, "exportaslocalfile")) {
             doExportAsLocalFile();
             unsavedChanges = false;
         }
-        if (item == "exportastext") {
+        if (Objects.equals(item, "exportastext")) {
             doExportAsText();
             unsavedChanges = false;
         }
-        if (item == "exportasimage")
+        if (Objects.equals(item, "exportasimage")) {
             doExportAsImage();
-        if (item == "createsubcircuit")
+        }
+        if (Objects.equals(item, "createsubcircuit")) {
             doCreateSubcircuit();
-        if (item == "dcanalysis")
+        }
+        if (Objects.equals(item, "dcanalysis")) {
             doDCAnalysis();
-        if (item == "print")
+        }
+        if (Objects.equals(item, "print")) {
             doPrint();
-        if (item == "recover")
+        }
+        if (Objects.equals(item, "recover")) {
             doRecover();
+        }
 
-        if ((menu == "elm" || menu == "scopepop") && contextPanel != null)
+        if ((Objects.equals(menu, "elm") || Objects.equals(menu, "scopepop")) && contextPanel != null) {
             contextPanel.hide();
-        if (menu == "options" && item == "shortcuts") {
+        }
+        if (Objects.equals(menu, "options") && Objects.equals(item, "shortcuts")) {
             dialogShowing = new ShortcutsDialog(this);
             dialogShowing.show();
         }
-        if (menu == "options" && item == "other")
+        if (Objects.equals(menu, "options") && Objects.equals(item, "other")) {
             doEdit(new EditOptions(this));
-        if (item == "devtools")
+        }
+        if (Objects.equals(item, "devtools")) {
             toggleDevTools();
-        if (item == "undo")
+        }
+        if (Objects.equals(item, "undo")) {
             doUndo();
-        if (item == "redo")
+        }
+        if (Objects.equals(item, "redo")) {
             doRedo();
+        }
 
         // if the mouse is hovering over an element, and a shortcut key is pressed, operate on that element (treat it like a context menu item selection)
-        if (menu == "key" && mouseElm != null) {
+        if (Objects.equals(menu, "key") && mouseElm != null) {
             menuElm = mouseElm;
             menu = "elm";
         }
 
-        if (item == "cut") {
-            if (menu != "elm")
+        if (Objects.equals(item, "cut")) {
+            if (!Objects.equals(menu, "elm")) {
                 menuElm = null;
+            }
             doCut();
         }
-        if (item == "copy") {
-            if (menu != "elm")
+        if (Objects.equals(item, "copy")) {
+            if (!Objects.equals(menu, "elm")) {
                 menuElm = null;
+            }
             doCopy();
         }
-        if (item == "paste")
+        if (Objects.equals(item, "paste")) {
             doPaste(null);
-        if (item == "duplicate") {
-            if (menu != "elm")
+        }
+        if (Objects.equals(item, "duplicate")) {
+            if (!Objects.equals(menu, "elm")) {
                 menuElm = null;
+            }
             doDuplicate();
         }
-        if (item == "flip")
+        if (Objects.equals(item, "flip")) {
             doFlip();
-        if (item == "split")
+        }
+        if (Objects.equals(item, "split")) {
             doSplit(menuElm);
-        if (item == "selectAll")
+        }
+        if (Objects.equals(item, "selectAll")) {
             doSelectAll();
+        }
         //	if (e.getSource() == exitItem) {
         //	    destroyFrame();
         //	    return;
         //	}
 
-        if (item == "centrecircuit") {
+        if (Objects.equals(item, "centrecircuit")) {
             pushUndo();
             centreCircuit();
         }
-        if (item == "stackAll")
+        if (Objects.equals(item, "stackAll")) {
             stackAll();
-        if (item == "unstackAll")
+        }
+        if (Objects.equals(item, "unstackAll")) {
             unstackAll();
-        if (item == "combineAll")
+        }
+        if (Objects.equals(item, "combineAll")) {
             combineAll();
-        if (item == "separateAll")
+        }
+        if (Objects.equals(item, "separateAll")) {
             separateAll();
-        if (item == "zoomin")
+        }
+        if (Objects.equals(item, "zoomin")) {
             zoomCircuit(20);
-        if (item == "zoomout")
+        }
+        if (Objects.equals(item, "zoomout")) {
             zoomCircuit(-20);
-        if (item == "zoom100")
+        }
+        if (Objects.equals(item, "zoom100")) {
             setCircuitScale(1);
-        if (menu == "elm" && item == "edit")
+        }
+        if (Objects.equals(menu, "elm") && Objects.equals(item, "edit")) {
             doEdit(menuElm);
-        if (item == "delete") {
-            if (menu != "elm")
+        }
+        if (Objects.equals(item, "delete")) {
+            if (!Objects.equals(menu, "elm")) {
                 menuElm = null;
+            }
             pushUndo();
             doDelete(true);
         }
-        if (item == "sliders")
+        if (Objects.equals(item, "sliders")) {
             doSliders(menuElm);
+        }
 
-        if (item == "viewInScope" && menuElm != null) {
+        if (Objects.equals(item, "viewInScope") && menuElm != null) {
             int i;
-            for (i = 0; i != scopeCount; i++)
-                if (scopes[i].getElm() == null)
+            for (i = 0; i != scopeCount; i++) {
+                if (scopes[i].getElm() == null) {
                     break;
+                }
+            }
             if (i == scopeCount) {
-                if (scopeCount == scopes.length)
+                if (scopeCount == scopes.length) {
                     return;
+                }
                 scopeCount++;
                 scopes[i] = new Scope(this);
                 scopes[i].position = i;
                 //handleResize();
             }
             scopes[i].setElm(menuElm);
-            if (i > 0)
+            if (i > 0) {
                 scopes[i].speed = scopes[i - 1].speed;
+            }
         }
 
-        if (item == "viewInFloatScope" && menuElm != null) {
+        if (Objects.equals(item, "viewInFloatScope") && menuElm != null) {
             ScopeElm newScope = new ScopeElm(snapGrid(menuElm.x + 50), snapGrid(menuElm.y + 50));
             elmList.addElement(newScope);
             newScope.setScopeElm(menuElm);
         }
 
-        if (menu == "scopepop") {
+        if (Objects.equals(menu, "scopepop")) {
             pushUndo();
             Scope s;
-            if (menuScope != -1)
+            if (menuScope != -1) {
                 s = scopes[menuScope];
-            else
+            } else {
                 s = ((ScopeElm) mouseElm).elmScope;
+            }
 
-            if (item == "dock") {
-                if (scopeCount == scopes.length)
+            if (Objects.equals(item, "dock")) {
+                if (scopeCount == scopes.length) {
                     return;
+                }
                 scopes[scopeCount] = ((ScopeElm) mouseElm).elmScope;
                 ((ScopeElm) mouseElm).clearElmScope();
                 scopes[scopeCount].position = scopeCount;
                 scopeCount++;
                 doDelete(false);
             }
-            if (item == "undock") {
+            if (Objects.equals(item, "undock")) {
                 ScopeElm newScope = new ScopeElm(snapGrid(menuElm.x + 50), snapGrid(menuElm.y + 50));
                 elmList.addElement(newScope);
                 newScope.setElmScope(scopes[menuScope]);
 
                 int i;
                 // remove scope from list.  setupScopes() will fix the positions
-                for (i = menuScope; i < scopeCount; i++)
+                for (i = menuScope; i < scopeCount; i++) {
                     scopes[i] = scopes[i + 1];
+                }
                 scopeCount--;
             }
-            if (item == "remove")
+            if (Objects.equals(item, "remove")) {
                 s.setElm(null);  // setupScopes() will clean this up
-            if (item == "removeplot")
+            }
+            if (Objects.equals(item, "removeplot")) {
                 s.removePlot(menuPlot);
-            if (item == "speed2")
+            }
+            if (Objects.equals(item, "speed2")) {
                 s.speedUp();
-            if (item == "speed1/2")
+            }
+            if (Objects.equals(item, "speed1/2")) {
                 s.slowDown();
+            }
 //    		if (item=="scale")
 //    			scopes[menuScope].adjustScale(.5);
-            if (item == "maxscale")
+            if (Objects.equals(item, "maxscale")) {
                 s.maxScale();
-            if (item == "stack")
+            }
+            if (Objects.equals(item, "stack")) {
                 stackScope(menuScope);
-            if (item == "unstack")
+            }
+            if (Objects.equals(item, "unstack")) {
                 unstackScope(menuScope);
-            if (item == "combine")
+            }
+            if (Objects.equals(item, "combine")) {
                 combineScope(menuScope);
-            if (item == "selecty")
+            }
+            if (Objects.equals(item, "selecty")) {
                 s.selectY();
-            if (item == "reset")
+            }
+            if (Objects.equals(item, "reset")) {
                 s.resetGraph(true);
-            if (item == "properties")
+            }
+            if (Objects.equals(item, "properties")) {
                 s.properties();
+            }
             deleteUnusedScopeElms();
         }
-        if (menu == "circuits" && item.indexOf("setup ") == 0) {
+        if (Objects.equals(menu, "circuits") && item.indexOf("setup ") == 0) {
             pushUndo();
             int sp = item.indexOf(' ', 6);
             readSetupFile(item.substring(6, sp), item.substring(sp + 1));
@@ -2859,27 +3065,30 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         //	}
 
         // IES: Moved from itemStateChanged()
-        if (menu == "main") {
-            if (contextPanel != null)
+        if (Objects.equals(menu, "main")) {
+            if (contextPanel != null) {
                 contextPanel.hide();
+            }
             //	MenuItem mmi = (MenuItem) mi;
             //		int prevMouseMode = mouseMode;
             setMouseMode(MODE_ADD_ELM);
             String s = item;
-            if (s.length() > 0)
+            if (s.length() > 0) {
                 mouseModeStr = s;
-            if (s.compareTo("DragAll") == 0)
+            }
+            if (s.compareTo("DragAll") == 0) {
                 setMouseMode(MODE_DRAG_ALL);
-            else if (s.compareTo("DragRow") == 0)
+            } else if (s.compareTo("DragRow") == 0) {
                 setMouseMode(MODE_DRAG_ROW);
-            else if (s.compareTo("DragColumn") == 0)
+            } else if (s.compareTo("DragColumn") == 0) {
                 setMouseMode(MODE_DRAG_COLUMN);
-            else if (s.compareTo("DragSelected") == 0)
+            } else if (s.compareTo("DragSelected") == 0) {
                 setMouseMode(MODE_DRAG_SELECTED);
-            else if (s.compareTo("DragPost") == 0)
+            } else if (s.compareTo("DragPost") == 0) {
                 setMouseMode(MODE_DRAG_POST);
-            else if (s.compareTo("Select") == 0)
+            } else if (s.compareTo("Select") == 0) {
                 setMouseMode(MODE_SELECT);
+            }
             //		else if (s.length() > 0) {
             //			try {
             //				addingClass = Class.forName(s);
@@ -2897,33 +3106,40 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
     void stackScope(int s) {
         if (s == 0) {
-            if (scopeCount < 2)
+            if (scopeCount < 2) {
                 return;
+            }
             s = 1;
         }
-        if (scopes[s].position == scopes[s - 1].position)
+        if (scopes[s].position == scopes[s - 1].position) {
             return;
+        }
         scopes[s].position = scopes[s - 1].position;
-        for (s++; s < scopeCount; s++)
+        for (s++; s < scopeCount; s++) {
             scopes[s].position--;
+        }
     }
 
     void unstackScope(int s) {
         if (s == 0) {
-            if (scopeCount < 2)
+            if (scopeCount < 2) {
                 return;
+            }
             s = 1;
         }
-        if (scopes[s].position != scopes[s - 1].position)
+        if (scopes[s].position != scopes[s - 1].position) {
             return;
-        for (; s < scopeCount; s++)
+        }
+        for (; s < scopeCount; s++) {
             scopes[s].position++;
+        }
     }
 
     void combineScope(int s) {
         if (s == 0) {
-            if (scopeCount < 2)
+            if (scopeCount < 2) {
                 return;
+            }
             s = 1;
         }
         scopes[s - 1].combine(scopes[s]);
@@ -2959,8 +3175,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         int i;
         Scope[] newscopes = new Scope[20];
         int ct = 0;
-        for (i = 0; i < scopeCount; i++)
+        for (i = 0; i < scopeCount; i++) {
             ct = scopes[i].separate(newscopes, ct);
+        }
         scopes = newscopes;
         scopeCount = ct;
     }
@@ -3008,8 +3225,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
     void doCreateSubcircuit() {
         EditCompositeModelDialog dlg = new EditCompositeModelDialog();
-        if (!dlg.createModel())
+        if (!dlg.createModel()) {
             return;
+        }
         dlg.createDialog();
         dialogShowing = dlg;
         dialogShowing.show();
@@ -3041,22 +3259,25 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         for (i = 0; i != elmList.size(); i++) {
             CircuitElm ce = getElm(i);
             String m = ce.dumpModel();
-            if (m != null && !m.isEmpty())
+            if (m != null && !m.isEmpty()) {
                 dump += m + "\n";
+            }
             dump += ce.dump() + "\n";
         }
         for (i = 0; i != scopeCount; i++) {
             String d = scopes[i].dump();
-            if (d != null)
+            if (d != null) {
                 dump += d + "\n";
+            }
         }
         for (i = 0; i != adjustables.size(); i++) {
             Adjustable adj = adjustables.get(i);
             dump += "38 " + adj.dump() + "\n";
         }
-        if (hintType != -1)
+        if (hintType != -1) {
             dump += "h " + hintType + " " + hintItem1 + " " +
                     hintItem2 + "\n";
+        }
         return dump;
     }
 
@@ -3077,8 +3298,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                         String text = response.getText();
                         processSetupList(text.getBytes(), openDefault);
                         // end or processing
-                    } else
+                    } else {
                         GWT.log("Bad file server response:" + response.getStatusText());
+                    }
                 }
             });
         } catch (RequestException e) {
@@ -3098,15 +3320,16 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         int p;
         for (p = 0; p < len; ) {
             int l;
-            for (l = 0; l != len - p; l++)
+            for (l = 0; l != len - p; l++) {
                 if (b[l + p] == '\n') {
                     l++;
                     break;
                 }
+            }
             String line = new String(b, p, l - 1);
-            if (line.charAt(0) == '#')
+            if (line.charAt(0) == '#') {
                 ;
-            else if (line.charAt(0) == '+') {
+            } else if (line.charAt(0) == '+') {
                 //	MenuBar n = new Menu(line.substring(1));
                 MenuBar n = new MenuBar(true);
                 n.setAutoOpen(true);
@@ -3119,8 +3342,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 if (i > 0) {
                     String title = LS(line.substring(i + 1));
                     boolean first = false;
-                    if (line.charAt(0) == '>')
+                    if (line.charAt(0) == '>') {
                         first = true;
+                    }
                     String file = line.substring(first ? 1 : 0, i);
                     currentMenuBar.addItem(new MenuItem(title,
                             new MyCommand("circuits", "setup " + file + " " + title)));
@@ -3131,8 +3355,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                     if (first && startCircuit == null) {
                         startCircuit = file;
                         startLabel = title;
-                        if (openDefault && stopMessage == null)
+                        if (openDefault && stopMessage == null) {
                             readSetupFile(startCircuit, startLabel);
+                        }
                     }
                 }
             }
@@ -3142,8 +3367,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
     void readCircuit(String text, int flags) {
         readCircuit(text.getBytes(), flags);
-        if ((flags & RC_KEEP_TITLE) == 0)
+        if ((flags & RC_KEEP_TITLE) == 0) {
             titleLabel.setText(null);
+        }
     }
 
     void readCircuit(String text) {
@@ -3152,8 +3378,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     }
 
     void setCircuitTitle(String s) {
-        if (s != null)
+        if (s != null) {
             titleLabel.setText(s);
+        }
     }
 
     void readSetupFile(String str, String title) {
@@ -3162,8 +3389,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         // TODO: Maybe think about some better approach to cache management!
         String url = GWT.getModuleBaseURL() + "circuits/" + str + "?v=" + random.nextInt();
         loadFileFromURL(url);
-        if (title != null)
+        if (title != null) {
             titleLabel.setText(title);
+        }
         unsavedChanges = false;
     }
 
@@ -3182,8 +3410,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                         readCircuit(text, RC_KEEP_TITLE);
                         allowSave(false);
                         unsavedChanges = false;
-                    } else
+                    } else {
                         GWT.log("Bad file server response:" + response.getStatusText());
+                    }
                 }
             });
         } catch (RequestException e) {
@@ -3228,21 +3457,24 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         for (p = 0; p < len; ) {
             int l;
             int linelen = len - p; // IES - changed to allow the last line to not end with a delim.
-            for (l = 0; l != len - p; l++)
+            for (l = 0; l != len - p; l++) {
                 if (b[l + p] == '\n' || b[l + p] == '\r') {
                     linelen = l++;
-                    if (l + p < b.length && b[l + p] == '\n')
+                    if (l + p < b.length && b[l + p] == '\n') {
                         l++;
+                    }
                     break;
                 }
+            }
             String line = new String(b, p, linelen);
             StringTokenizer st = new StringTokenizer(line, " +\t\n\r\f");
             while (st.hasMoreTokens()) {
                 String type = st.nextToken();
                 int tint = type.charAt(0);
                 try {
-                    if (subs && tint != '.')
+                    if (subs && tint != '.') {
                         continue;
+                    }
                     if (tint == 'o') {
                         Scope sc = new Scope(this);
                         sc.position = scopeCount;
@@ -3269,8 +3501,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                     // do not add new symbols here without testing export as link
 
                     // if first character is a digit then parse the type as a number
-                    if (tint >= '0' && tint <= '9')
-                        tint = new Integer(type).intValue();
+                    if (tint >= '0' && tint <= '9') {
+                        tint = new Integer(type);
+                    }
 
                     if (tint == 34) {
                         DiodeModel.undumpModel(st);
@@ -3285,11 +3518,11 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                         CustomCompositeModel.undumpModel(st);
                         break;
                     }
-                    int x1 = new Integer(st.nextToken()).intValue();
-                    int y1 = new Integer(st.nextToken()).intValue();
-                    int x2 = new Integer(st.nextToken()).intValue();
-                    int y2 = new Integer(st.nextToken()).intValue();
-                    int f = new Integer(st.nextToken()).intValue();
+                    int x1 = new Integer(st.nextToken());
+                    int y1 = new Integer(st.nextToken());
+                    int x2 = new Integer(st.nextToken());
+                    int y2 = new Integer(st.nextToken());
+                    int f = new Integer(st.nextToken());
 
                     CircuitElm newce = createCe(tint, x1, y1, x2, y2, f, st);
                     if (newce == null) {
@@ -3312,16 +3545,19 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         enableItems();
         if ((flags & RC_RETAIN) == 0) {
             // create sliders as needed
-            for (i = 0; i != adjustables.size(); i++)
+            for (i = 0; i != adjustables.size(); i++) {
                 adjustables.get(i).createSlider(this);
+            }
         }
 //	if (!retain)
         //    handleResize(); // for scopes
         needAnalyze();
-        if ((flags & RC_NO_CENTER) == 0)
+        if ((flags & RC_NO_CENTER) == 0) {
             centreCircuit();
-        if ((flags & RC_SUBCIRCUITS) != 0)
+        }
+        if ((flags & RC_SUBCIRCUITS) != 0) {
             updateModels();
+        }
 
         AudioInputElm.clearCache();  // to save memory
     }
@@ -3329,8 +3565,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     // delete sliders for an element
     void deleteSliders(CircuitElm elm) {
         int i;
-        if (adjustables == null)
+        if (adjustables == null) {
             return;
+        }
         for (i = adjustables.size() - 1; i >= 0; i--) {
             Adjustable adj = adjustables.get(i);
             if (adj.elm == elm) {
@@ -3341,28 +3578,28 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     }
 
     void readHint(StringTokenizer st) {
-        hintType = new Integer(st.nextToken()).intValue();
-        hintItem1 = new Integer(st.nextToken()).intValue();
-        hintItem2 = new Integer(st.nextToken()).intValue();
+        hintType = new Integer(st.nextToken());
+        hintItem1 = new Integer(st.nextToken());
+        hintItem2 = new Integer(st.nextToken());
     }
 
     void readOptions(StringTokenizer st) {
-        int flags = new Integer(st.nextToken()).intValue();
+        int flags = new Integer(st.nextToken());
         dotsCheckItem.setState((flags & 1) != 0);
         smallGridCheckItem.setState((flags & 2) != 0);
         voltsCheckItem.setState((flags & 4) == 0);
         powerCheckItem.setState((flags & 8) == 8);
         showValuesCheckItem.setState((flags & 16) == 0);
-        timeStep = new Double(st.nextToken()).doubleValue();
-        double sp = new Double(st.nextToken()).doubleValue();
+        timeStep = new Double(st.nextToken());
+        double sp = new Double(st.nextToken());
         int sp2 = (int) (Math.log(10 * sp) * 24 + 61.5);
         //int sp2 = (int) (Math.log(sp)*24+1.5);
         speedBar.setValue(sp2);
-        currentBar.setValue(new Integer(st.nextToken()).intValue());
-        CircuitElm.voltageRange = new Double(st.nextToken()).doubleValue();
+        currentBar.setValue(new Integer(st.nextToken()));
+        CircuitElm.voltageRange = new Double(st.nextToken());
 
         try {
-            powerBar.setValue(new Integer(st.nextToken()).intValue());
+            powerBar.setValue(new Integer(st.nextToken()));
         } catch (Exception e) {
         }
         setGrid();
@@ -3373,23 +3610,28 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     }
 
     boolean doSwitch(int x, int y) {
-        if (mouseElm == null || !(mouseElm instanceof SwitchElm))
+        if (mouseElm == null || !(mouseElm instanceof SwitchElm)) {
             return false;
+        }
         SwitchElm se = (SwitchElm) mouseElm;
-        if (!se.getSwitchRect().contains(x, y))
+        if (!se.getSwitchRect().contains(x, y)) {
             return false;
+        }
         se.toggle();
-        if (se.momentary)
+        if (se.momentary) {
             heldSwitchElm = se;
+        }
         needAnalyze();
         return true;
     }
 
     int locateElm(CircuitElm elm) {
         int i;
-        for (i = 0; i != elmList.size(); i++)
-            if (elm == elmList.elementAt(i))
+        for (i = 0; i != elmList.size(); i++) {
+            if (elm == elmList.elementAt(i)) {
                 return i;
+            }
+        }
         return -1;
     }
 
@@ -3399,8 +3641,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             if (!(e.isMetaKeyDown() ||
                     e.isShiftKeyDown() ||
                     e.isControlKeyDown() ||
-                    e.isAltKeyDown()))
+                    e.isAltKeyDown())) {
                 return;
+            }
         }
 
         if (tempMouseMode == MODE_DRAG_SPLITTER) {
@@ -3409,11 +3652,13 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         }
         int gx = inverseTransformX(e.getX());
         int gy = inverseTransformY(e.getY());
-        if (!circuitArea.contains(e.getX(), e.getY()))
+        if (!circuitArea.contains(e.getX(), e.getY())) {
             return;
+        }
         boolean changed = false;
-        if (dragElm != null)
+        if (dragElm != null) {
             dragElm.drag(gx, gy);
+        }
         boolean success = true;
         switch (tempMouseMode) {
             case MODE_DRAG_ALL:
@@ -3434,13 +3679,14 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 }
                 break;
             case MODE_SELECT:
-                if (mouseElm == null)
+                if (mouseElm == null) {
                     selectArea(gx, gy);
-                else {
+                } else {
                     // wait short delay before dragging.  This is to fix problem where switches were accidentally getting
                     // dragged when tapped on mobile devices
-                    if (System.currentTimeMillis() - mouseDownTime < 150)
+                    if (System.currentTimeMillis() - mouseDownTime < 150) {
                         return;
+                    }
 
                     tempMouseMode = MODE_DRAG_SELECTED;
                     changed = success = dragSelected(gx, gy);
@@ -3463,20 +3709,24 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 dragGridY = snapGrid(dragGridY);
             }
         }
-        if (changed)
+        if (changed) {
             writeRecoveryToStorage();
+        }
         repaint();
     }
 
     void dragSplitter(int x, int y) {
         double h = cv.getCanvasElement().getHeight();
-        if (h < 1)
+        if (h < 1) {
             h = 1;
+        }
         scopeHeightFraction = 1.0 - (((double) y) / h);
-        if (scopeHeightFraction < 0.1)
+        if (scopeHeightFraction < 0.1) {
             scopeHeightFraction = 0.1;
-        if (scopeHeightFraction > 0.9)
+        }
+        if (scopeHeightFraction > 0.9) {
             scopeHeightFraction = 0.9;
+        }
         setCircuitArea();
         repaint();
     }
@@ -3484,8 +3734,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     void dragAll(int x, int y) {
         int dx = x - dragScreenX;
         int dy = y - dragScreenY;
-        if (dx == 0 && dy == 0)
+        if (dx == 0 && dy == 0) {
             return;
+        }
         transform[4] += dx;
         transform[5] += dy;
         dragScreenX = x;
@@ -3494,42 +3745,50 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
     void dragRow(int x, int y) {
         int dy = y - dragGridY;
-        if (dy == 0)
+        if (dy == 0) {
             return;
+        }
         int i;
         for (i = 0; i != elmList.size(); i++) {
             CircuitElm ce = getElm(i);
-            if (ce.y == dragGridY)
+            if (ce.y == dragGridY) {
                 ce.movePoint(0, 0, dy);
-            if (ce.y2 == dragGridY)
+            }
+            if (ce.y2 == dragGridY) {
                 ce.movePoint(1, 0, dy);
+            }
         }
         removeZeroLengthElements();
     }
 
     void dragColumn(int x, int y) {
         int dx = x - dragGridX;
-        if (dx == 0)
+        if (dx == 0) {
             return;
+        }
         int i;
         for (i = 0; i != elmList.size(); i++) {
             CircuitElm ce = getElm(i);
-            if (ce.x == dragGridX)
+            if (ce.x == dragGridX) {
                 ce.movePoint(0, dx, 0);
-            if (ce.x2 == dragGridX)
+            }
+            if (ce.x2 == dragGridX) {
                 ce.movePoint(1, dx, 0);
+            }
         }
         removeZeroLengthElements();
     }
 
     boolean onlyGraphicsElmsSelected() {
-        if (mouseElm != null && !(mouseElm instanceof GraphicElm))
+        if (mouseElm != null && !(mouseElm instanceof GraphicElm)) {
             return false;
+        }
         int i;
         for (i = 0; i != elmList.size(); i++) {
             CircuitElm ce = getElm(i);
-            if (ce.isSelected() && !(ce instanceof GraphicElm))
+            if (ce.isSelected() && !(ce instanceof GraphicElm)) {
                 return false;
+            }
         }
         return true;
     }
@@ -3537,8 +3796,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     boolean dragSelected(int x, int y) {
         boolean me = false;
         int i;
-        if (mouseElm != null && !mouseElm.isSelected())
+        if (mouseElm != null && !mouseElm.isSelected()) {
             mouseElm.setSelected(me = true);
+        }
 
         if (!onlyGraphicsElmsSelected()) {
             //	    console("Snapping x and y");
@@ -3551,8 +3811,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         int dy = y - dragGridY;
         if (dx == 0 && dy == 0) {
             // don't leave mouseElm selected if we selected it above
-            if (me)
+            if (me) {
                 mouseElm.setSelected(false);
+            }
             return false;
         }
         boolean allowed = true;
@@ -3560,22 +3821,25 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         // check if moves are allowed
         for (i = 0; allowed && i != elmList.size(); i++) {
             CircuitElm ce = getElm(i);
-            if (ce.isSelected() && !ce.allowMove(dx, dy))
+            if (ce.isSelected() && !ce.allowMove(dx, dy)) {
                 allowed = false;
+            }
         }
 
         if (allowed) {
             for (i = 0; i != elmList.size(); i++) {
                 CircuitElm ce = getElm(i);
-                if (ce.isSelected())
+                if (ce.isSelected()) {
                     ce.move(dx, dy);
+                }
             }
             needAnalyze();
         }
 
         // don't leave mouseElm selected if we selected it above
-        if (me)
+        if (me) {
             mouseElm.setSelected(false);
+        }
 
         return allowed;
     }
@@ -3588,8 +3852,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         }
         int dx = x - dragGridX;
         int dy = y - dragGridY;
-        if (dx == 0 && dy == 0)
+        if (dx == 0 && dy == 0) {
             return;
+        }
         mouseElm.movePoint(draggingPost, dx, dy);
         needAnalyze();
     }
@@ -3602,16 +3867,19 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     void doSplit(CircuitElm ce) {
         int x = snapGrid(inverseTransformX(menuX));
         int y = snapGrid(inverseTransformY(menuY));
-        if (ce == null || !(ce instanceof WireElm))
+        if (ce == null || !(ce instanceof WireElm)) {
             return;
-        if (ce.x == ce.x2)
+        }
+        if (ce.x == ce.x2) {
             x = ce.x;
-        else
+        } else {
             y = ce.y;
+        }
 
         // don't create zero-length wire
-        if (x == ce.x && y == ce.y || x == ce.x2 && y == ce.y2)
+        if (x == ce.x && y == ce.y || x == ce.x2 && y == ce.y2) {
             return;
+        }
 
         WireElm newWire = new WireElm(x, y);
         newWire.drag(ce.x2, ce.y2);
@@ -3644,10 +3912,12 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
     void setMouseElm(CircuitElm ce) {
         if (ce != mouseElm) {
-            if (mouseElm != null)
+            if (mouseElm != null) {
                 mouseElm.setMouseElm(false);
-            if (ce != null)
+            }
+            if (ce != null) {
                 ce.setMouseElm(true);
+            }
             mouseElm = ce;
         }
     }
@@ -3671,10 +3941,11 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         isOverSplitter = ((x >= 0) && (x < circuitArea.width) &&
                 (y >= circuitArea.height - 5) && (y < circuitArea.height));
         if (isOverSplitter != mouseWasOverSplitter) {
-            if (isOverSplitter)
+            if (isOverSplitter) {
                 setCursorStyle("cursorSplitter");
-            else
+            } else {
                 setMouseMode(mouseMode);
+            }
         }
         mouseWasOverSplitter = isOverSplitter;
         return isOverSplitter;
@@ -3751,8 +4022,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                     int j;
                     int area = ce.boundingBox.width * ce.boundingBox.height;
                     int jn = ce.getPostCount();
-                    if (jn > 2)
+                    if (jn > 2) {
                         jn = 2;
+                    }
                     for (j = 0; j != jn; j++) {
                         Point pt = ce.getPost(j);
                         int dist = Graphics.distanceSq(gx, gy, pt.x, pt.y);
@@ -3816,8 +4088,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             // look for post close to the mouse pointer
             for (i = 0; i != newMouseElm.getPostCount(); i++) {
                 Point pt = newMouseElm.getPost(i);
-                if (Graphics.distanceSq(pt.x, pt.y, gx, gy) < 26)
+                if (Graphics.distanceSq(pt.x, pt.y, gx, gy) < 26) {
                     mousePost = i;
+                }
             }
         }
         repaint();
@@ -3883,8 +4156,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     }
 
     boolean canSplit(CircuitElm ce) {
-        if (!(ce instanceof WireElm))
+        if (!(ce instanceof WireElm)) {
             return false;
+        }
         WireElm we = (WireElm) ce;
 		return we.x == we.x2 || we.y == we.y2;
 	}
@@ -3894,15 +4168,18 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         int i;
 
         // prevent confusion
-        if (elm instanceof VarRailElm || elm instanceof PotElm)
+        if (elm instanceof VarRailElm || elm instanceof PotElm) {
             return false;
+        }
 
         for (i = 0; ; i++) {
             EditInfo ei = elm.getEditInfo(i);
-            if (ei == null)
+            if (ei == null) {
                 return false;
-            if (ei.canCreateAdjustable())
+            }
+            if (ei.canCreateAdjustable()) {
                 return true;
+            }
         }
     }
 
@@ -3920,15 +4197,17 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 //	    if (mouseMode == MODE_SELECT || mouseMode == MODE_DRAG_SELECTED)
 //		clearSelection();
 //	}
-        if ((e.getNativeButton() == NativeEvent.BUTTON_MIDDLE))
+        if ((e.getNativeButton() == NativeEvent.BUTTON_MIDDLE)) {
             scrollValues(e.getNativeEvent().getClientX(), e.getNativeEvent().getClientY(), 0);
+        }
     }
 
     public void onDoubleClick(DoubleClickEvent e) {
         e.preventDefault();
         //   	if (!didSwitch && mouseElm != null)
-        if (mouseElm != null && !(mouseElm instanceof SwitchElm))
+        if (mouseElm != null && !(mouseElm instanceof SwitchElm)) {
             doEdit(mouseElm);
+        }
     }
 
 //    public void mouseEntered(MouseEvent e) {
@@ -3960,8 +4239,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         // window receives focus
         enablePaste();
 
-        if (e.getNativeButton() != NativeEvent.BUTTON_LEFT && e.getNativeButton() != NativeEvent.BUTTON_MIDDLE)
+        if (e.getNativeButton() != NativeEvent.BUTTON_LEFT && e.getNativeButton() != NativeEvent.BUTTON_MIDDLE) {
             return;
+        }
 
         // set mouseElm in case we are on mobile
         mouseSelect(e);
@@ -3976,27 +4256,30 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         if (e.getNativeButton() == NativeEvent.BUTTON_LEFT) {
 //	    // left mouse
             tempMouseMode = mouseMode;
-            if (e.isAltKeyDown() && e.isMetaKeyDown())
+            if (e.isAltKeyDown() && e.isMetaKeyDown()) {
                 tempMouseMode = MODE_DRAG_COLUMN;
-            else if (e.isAltKeyDown() && e.isShiftKeyDown())
+            } else if (e.isAltKeyDown() && e.isShiftKeyDown()) {
                 tempMouseMode = MODE_DRAG_ROW;
-            else if (e.isShiftKeyDown())
+            } else if (e.isShiftKeyDown()) {
                 tempMouseMode = MODE_SELECT;
-            else if (e.isAltKeyDown())
+            } else if (e.isAltKeyDown()) {
                 tempMouseMode = MODE_DRAG_ALL;
-            else if (e.isControlKeyDown() || e.isMetaKeyDown())
+            } else if (e.isControlKeyDown() || e.isMetaKeyDown()) {
                 tempMouseMode = MODE_DRAG_POST;
-        } else
+            }
+        } else {
             tempMouseMode = MODE_DRAG_ALL;
+        }
 
         if ((scopeSelected != -1 && scopes[scopeSelected].cursorInSettingsWheel()) ||
                 (scopeSelected == -1 && mouseElm instanceof ScopeElm && ((ScopeElm) mouseElm).elmScope.cursorInSettingsWheel())) {
             console("Doing something");
             Scope s;
-            if (scopeSelected != -1)
+            if (scopeSelected != -1) {
                 s = scopes[scopeSelected];
-            else
+            } else {
                 s = ((ScopeElm) mouseElm).elmScope;
+            }
             s.properties();
             clearSelection();
             mouseDragging = false;
@@ -4015,24 +4298,28 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         // IES - Grab resize handles in select mode if they are far enough apart and you are on top of them
         if (tempMouseMode == MODE_SELECT && mouseElm != null &&
                 mouseElm.getHandleGrabbedClose(gx, gy, POSTGRABSQ, MINPOSTGRABSIZE) >= 0 &&
-                !anySelectedButMouse())
+                !anySelectedButMouse()) {
             tempMouseMode = MODE_DRAG_POST;
+        }
 
 
-        if (tempMouseMode != MODE_SELECT && tempMouseMode != MODE_DRAG_SELECTED)
+        if (tempMouseMode != MODE_SELECT && tempMouseMode != MODE_DRAG_SELECTED) {
             clearSelection();
+        }
 
         pushUndo();
         initDragGridX = gx;
         initDragGridY = gy;
         dragging = true;
-        if (tempMouseMode != MODE_ADD_ELM)
+        if (tempMouseMode != MODE_ADD_ELM) {
             return;
+        }
 //
         int x0 = snapGrid(gx);
         int y0 = snapGrid(gy);
-        if (!circuitArea.contains(e.getX(), e.getY()))
+        if (!circuitArea.contains(e.getX(), e.getY())) {
             return;
+        }
 
         dragElm = constructElement(mouseModeStr, x0, y0);
     }
@@ -4041,8 +4328,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     void doMainMenuChecks() {
         int c = mainMenuItems.size();
         int i;
-        for (i = 0; i < c; i++)
-            mainMenuItems.get(i).setState(mainMenuItemNames.get(i) == mouseModeStr);
+        for (i = 0; i < c; i++) {
+            mainMenuItems.get(i).setState(Objects.equals(mainMenuItemNames.get(i), mouseModeStr));
+        }
     }
 
 
@@ -4051,12 +4339,14 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         mouseDragging = false;
 
         // click to clear selection
-        if (tempMouseMode == MODE_SELECT && selectedArea == null)
+        if (tempMouseMode == MODE_SELECT && selectedArea == null) {
             clearSelection();
+        }
 
         // cmd-click = split wire
-        if (tempMouseMode == MODE_DRAG_POST && draggingPost == -1)
+        if (tempMouseMode == MODE_DRAG_POST && draggingPost == -1) {
             doSplit(mouseElm);
+        }
 
         tempMouseMode = mouseMode;
         selectedArea = null;
@@ -4072,8 +4362,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             // IES - and disable any previous selection
             if (dragElm.creationFailed()) {
                 dragElm.delete();
-                if (mouseMode == MODE_SELECT || mouseMode == MODE_DRAG_SELECTED)
+                if (mouseMode == MODE_SELECT || mouseMode == MODE_DRAG_SELECTED) {
                     clearSelection();
+                }
             } else {
                 elmList.addElement(dragElm);
                 dragElm.draggingDone();
@@ -4084,10 +4375,12 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             }
             dragElm = null;
         }
-        if (circuitChanged)
+        if (circuitChanged) {
             needAnalyze();
-        if (dragElm != null)
+        }
+        if (dragElm != null) {
             dragElm.delete();
+        }
         dragElm = null;
         repaint();
     }
@@ -4099,14 +4392,15 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         // so we don't accidentally edit a resistor value while zooming
         boolean zoomOnly = System.currentTimeMillis() < zoomTime + 1000;
 
-        if (!zoomOnly)
+        if (!zoomOnly) {
             scrollValues(e.getNativeEvent().getClientX(), e.getNativeEvent().getClientY(), e.getDeltaY());
+        }
 
-        if (mouseElm instanceof MouseWheelHandler && !zoomOnly)
+        if (mouseElm instanceof MouseWheelHandler && !zoomOnly) {
             ((MouseWheelHandler) mouseElm).onMouseWheel(e);
-        else if (scopeSelected != -1)
+        } else if (scopeSelected != -1) {
             scopes[scopeSelected].onMouseWheel(e);
-        else if (!dialogIsShowing()) {
+        } else if (!dialogIsShowing()) {
             zoomCircuit(-e.getDeltaY());
             zoomTime = System.currentTimeMillis();
         }
@@ -4144,10 +4438,11 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     }
 
     void scrollValues(int x, int y, int deltay) {
-        if (mouseElm != null && !dialogIsShowing() && scopeSelected == -1)
+        if (mouseElm != null && !dialogIsShowing() && scopeSelected == -1) {
             if (mouseElm instanceof ResistorElm || mouseElm instanceof CapacitorElm || mouseElm instanceof InductorElm) {
                 scrollValuePopup = new ScrollValuePopup(x, y, deltay, mouseElm, this);
             }
+        }
     }
 
     void enableItems() {
@@ -4163,15 +4458,17 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         redoStack.removeAllElements();
         String s = dumpCircuit();
         if (undoStack.size() > 0 &&
-                s.compareTo(undoStack.lastElement()) == 0)
+                s.compareTo(undoStack.lastElement()) == 0) {
             return;
+        }
         undoStack.add(s);
         enableUndoRedo();
     }
 
     void doUndo() {
-        if (undoStack.size() == 0)
+        if (undoStack.size() == 0) {
             return;
+        }
         redoStack.add(dumpCircuit());
         String s = undoStack.remove(undoStack.size() - 1);
         readCircuit(s, RC_NO_CENTER);
@@ -4179,8 +4476,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     }
 
     void doRedo() {
-        if (redoStack.size() == 0)
+        if (redoStack.size() == 0) {
             return;
+        }
         undoStack.add(dumpCircuit());
         String s = redoStack.remove(redoStack.size() - 1);
         readCircuit(s, RC_NO_CENTER);
@@ -4209,8 +4507,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     }
 
     void setCursorStyle(String s) {
-        if (lastCursorStyle != null)
+        if (lastCursorStyle != null) {
             cv.removeStyleName(lastCursorStyle);
+        }
         cv.addStyleName(s);
         lastCursorStyle = s;
     }
@@ -4218,8 +4517,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
     void setMenuSelection() {
         if (menuElm != null) {
-            if (menuElm.selected)
+            if (menuElm.selected) {
                 return;
+            }
             clearSelection();
             menuElm.setSelected(true);
         }
@@ -4246,31 +4546,35 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
     void writeClipboardToStorage() {
         Storage stor = Storage.getLocalStorageIfSupported();
-        if (stor == null)
+        if (stor == null) {
             return;
+        }
         stor.setItem("circuitClipboard", clipboard);
     }
 
     void readClipboardFromStorage() {
         Storage stor = Storage.getLocalStorageIfSupported();
-        if (stor == null)
+        if (stor == null) {
             return;
+        }
         clipboard = stor.getItem("circuitClipboard");
     }
 
     void writeRecoveryToStorage() {
         console("write recovery");
         Storage stor = Storage.getLocalStorageIfSupported();
-        if (stor == null)
+        if (stor == null) {
             return;
+        }
         String s = dumpCircuit();
         stor.setItem("circuitRecovery", s);
     }
 
     void readRecovery() {
         Storage stor = Storage.getLocalStorageIfSupported();
-        if (stor == null)
+        if (stor == null) {
             return;
+        }
         recovery = stor.getItem("circuitRecovery");
     }
 
@@ -4289,15 +4593,17 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
     void doDelete(boolean pushUndoFlag) {
         int i;
-        if (pushUndoFlag)
+        if (pushUndoFlag) {
             pushUndo();
+        }
         boolean hasDeleted = false;
 
         for (i = elmList.size() - 1; i >= 0; i--) {
             CircuitElm ce = getElm(i);
             if (willDelete(ce)) {
-                if (ce.isMouseElm())
+                if (ce.isMouseElm()) {
                     setMouseElm(null);
+                }
                 ce.delete();
                 elmList.removeElementAt(i);
                 hasDeleted = true;
@@ -4329,11 +4635,13 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         for (int i = elmList.size() - 1; i >= 0; i--) {
             CircuitElm ce = getElm(i);
             String m = ce.dumpModel();
-            if (m != null && !m.isEmpty())
+            if (m != null && !m.isEmpty()) {
                 r += m + "\n";
+            }
             // See notes on do cut why we don't copy ScopeElms.
-            if (ce.isSelected() && !(ce instanceof ScopeElm))
+            if (ce.isSelected() && !(ce instanceof ScopeElm)) {
                 r += ce.dump() + "\n";
+            }
         }
         return r;
     }
@@ -4345,16 +4653,18 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         setMenuSelection();
         clipboard = copyOfSelectedElms();
 
-        if (clearSel)
+        if (clearSel) {
             clearSelection();
+        }
 
         writeClipboardToStorage();
         enablePaste();
     }
 
     void enablePaste() {
-        if (clipboard == null || clipboard.length() == 0)
+        if (clipboard == null || clipboard.length() == 0) {
             readClipboardFromStorage();
+        }
         pasteItem.setEnabled(clipboard != null && clipboard.length() > 0);
     }
 
@@ -4375,17 +4685,18 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         for (i = 0; i != elmList.size(); i++) {
             CircuitElm ce = getElm(i);
             Rectangle bb = ce.getBoundingBox();
-            if (oldbb != null)
+            if (oldbb != null) {
                 oldbb = oldbb.union(bb);
-            else
+            } else {
                 oldbb = bb;
+            }
         }
 
         // add new items
         int oldsz = elmList.size();
-        if (dump != null)
+        if (dump != null) {
             readCircuit(dump, RC_RETAIN);
-        else {
+        } else {
             readClipboardFromStorage();
             readCircuit(clipboard, RC_RETAIN);
         }
@@ -4396,10 +4707,11 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             CircuitElm ce = getElm(i);
             ce.setSelected(true);
             Rectangle bb = ce.getBoundingBox();
-            if (newbb != null)
+            if (newbb != null) {
                 newbb = newbb.union(bb);
-            else
+            } else {
                 newbb = bb;
+            }
         }
 
         if (oldbb != null && newbb != null && oldbb.intersects(newbb)) {
@@ -4407,10 +4719,11 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             int dx = 0, dy = 0;
             int spacew = circuitArea.width - oldbb.width - newbb.width;
             int spaceh = circuitArea.height - oldbb.height - newbb.height;
-            if (spacew > spaceh)
+            if (spacew > spaceh) {
                 dx = snapGrid(oldbb.x + oldbb.width - newbb.x + gridSize);
-            else
+            } else {
                 dy = snapGrid(oldbb.y + oldbb.height - newbb.y + gridSize);
+            }
 
             // move new items near the mouse if possible
             if (mouseCursorX > 0 && circuitArea.contains(mouseCursorX, mouseCursorY)) {
@@ -4419,8 +4732,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 int mdx = snapGrid(gx - (newbb.x + newbb.width / 2));
                 int mdy = snapGrid(gy - (newbb.y + newbb.height / 2));
                 for (i = oldsz; i != elmList.size(); i++) {
-                    if (!getElm(i).allowMove(mdx, mdy))
+                    if (!getElm(i).allowMove(mdx, mdy)) {
                         break;
+                    }
                 }
                 if (i == elmList.size()) {
                     dx = mdx;
@@ -4458,9 +4772,11 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     }
 
     boolean anySelectedButMouse() {
-        for (int i = 0; i != elmList.size(); i++)
-            if (getElm(i) != mouseElm && getElm(i).selected)
+        for (int i = 0; i != elmList.size(); i++) {
+            if (getElm(i) != mouseElm && getElm(i).selected) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -4468,22 +4784,30 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 //    public void keyReleased(KeyEvent e) {}
 
     boolean dialogIsShowing() {
-        if (editDialog != null && editDialog.isShowing())
+        if (editDialog != null && editDialog.isShowing()) {
             return true;
-        if (sliderDialog != null && sliderDialog.isShowing())
+        }
+        if (sliderDialog != null && sliderDialog.isShowing()) {
             return true;
-        if (customLogicEditDialog != null && customLogicEditDialog.isShowing())
+        }
+        if (customLogicEditDialog != null && customLogicEditDialog.isShowing()) {
             return true;
-        if (diodeModelEditDialog != null && diodeModelEditDialog.isShowing())
+        }
+        if (diodeModelEditDialog != null && diodeModelEditDialog.isShowing()) {
             return true;
-        if (dialogShowing != null && dialogShowing.isShowing())
+        }
+        if (dialogShowing != null && dialogShowing.isShowing()) {
             return true;
-        if (contextPanel != null && contextPanel.isShowing())
+        }
+        if (contextPanel != null && contextPanel.isShowing()) {
             return true;
-        if (scrollValuePopup != null && scrollValuePopup.isShowing())
+        }
+        if (scrollValuePopup != null && scrollValuePopup.isShowing()) {
             return true;
-        if (aboutBox != null && aboutBox.isShowing())
+        }
+        if (aboutBox != null && aboutBox.isShowing()) {
             return true;
+        }
 		return importFromDropboxDialog != null && importFromDropboxDialog.isShowing();
 	}
 
@@ -4494,17 +4818,21 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         if (dialogIsShowing()) {
             if (scrollValuePopup != null && scrollValuePopup.isShowing() &&
                     (t & Event.ONKEYDOWN) != 0) {
-                if (code == KEY_ESCAPE || code == KEY_SPACE)
+                if (code == KEY_ESCAPE || code == KEY_SPACE) {
                     scrollValuePopup.close(false);
-                if (code == KEY_ENTER)
+                }
+                if (code == KEY_ENTER) {
                     scrollValuePopup.close(true);
+                }
             }
             if (editDialog != null && editDialog.isShowing() &&
                     (t & Event.ONKEYDOWN) != 0) {
-                if (code == KEY_ESCAPE)
+                if (code == KEY_ESCAPE) {
                     editDialog.closeDialog();
-                if (code == KEY_ENTER)
+                }
+                if (code == KEY_ENTER) {
                     editDialog.enterPressed();
+                }
             }
             return;
         }
@@ -4576,8 +4904,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             if (cc > 32 && cc < 127) {
                 String c = shortcuts[cc];
                 e.cancel();
-                if (c == null)
+                if (c == null) {
                     return;
+                }
                 setMouseMode(MODE_ADD_ELM);
                 mouseModeStr = c;
                 tempMouseMode = mouseMode;
@@ -4609,8 +4938,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 }
             }
             // if all zeros, it's a singular matrix
-            if (row_all_zeros)
+            if (row_all_zeros) {
                 return false;
+            }
         }
 
         // use Crout's method; loop through the columns
@@ -4619,8 +4949,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             // calculate upper triangular elements for this column
             for (i = 0; i != j; i++) {
                 double q = a[i][j];
-                for (k = 0; k != i; k++)
+                for (k = 0; k != i; k++) {
                     q -= a[i][k] * a[k][j];
+                }
                 a[i][j] = q;
             }
 
@@ -4629,8 +4960,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             int largestRow = -1;
             for (i = j; i != n; i++) {
                 double q = a[i][j];
-                for (k = 0; k != j; k++)
+                for (k = 0; k != j; k++) {
                     q -= a[i][k] * a[k][j];
+                }
                 a[i][j] = q;
                 double x = Math.abs(q);
                 if (x >= largest) {
@@ -4660,8 +4992,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
             if (j != n - 1) {
                 double mult = 1.0 / a[j][j];
-                for (i = j + 1; i != n; i++)
+                for (i = j + 1; i != n; i++) {
                     a[i][j] *= mult;
+                }
             }
         }
         return true;
@@ -4680,8 +5013,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             double swap = b[row];
             b[row] = b[i];
             b[i] = swap;
-            if (swap != 0)
+            if (swap != 0) {
                 break;
+            }
         }
 
         int bi = i++;
@@ -4692,8 +5026,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
             b[row] = b[i];
             // forward substitution using the lower triangular matrix
-            for (j = bi; j < i; j++)
+            for (j = bi; j < i; j++) {
                 tot -= a[i][j] * b[j];
+            }
             b[i] = tot;
         }
         for (i = n - 1; i >= 0; i--) {
@@ -4701,8 +5036,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
             // back-substitution using the upper triangular matrix
             int j;
-            for (j = i + 1; j != n; j++)
+            for (j = i + 1; j != n; j++) {
                 tot -= a[i][j] * b[j];
+            }
             b[i] = tot / a[i][i];
         }
     }
@@ -4724,14 +5060,16 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             int i = verticalPanel.getWidgetIndex(iFrame);
             verticalPanel.insert(w, i);
             setiFrameHeight();
-        } else
+        } else {
             verticalPanel.add(w);
+        }
     }
 
     void removeWidgetFromVerticalPanel(Widget w) {
         verticalPanel.remove(w);
-        if (iFrame != null)
+        if (iFrame != null) {
             setiFrameHeight();
+        }
     }
 
     public static CircuitElm createCe(int tint, int x1, int y1, int x2, int y2, int f, StringTokenizer st) {
@@ -4945,246 +5283,360 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     }
 
     public static CircuitElm constructElement(String n, int x1, int y1) {
-        if (n == "GroundElm")
+        if (Objects.equals(n, "GroundElm")) {
             return new GroundElm(x1, y1);
-        if (n == "ResistorElm")
+        }
+        if (Objects.equals(n, "ResistorElm")) {
             return new ResistorElm(x1, y1);
-        if (n == "RailElm")
+        }
+        if (Objects.equals(n, "RailElm")) {
             return new RailElm(x1, y1);
-        if (n == "SwitchElm")
+        }
+        if (Objects.equals(n, "SwitchElm")) {
             return new SwitchElm(x1, y1);
-        if (n == "Switch2Elm")
+        }
+        if (Objects.equals(n, "Switch2Elm")) {
             return new Switch2Elm(x1, y1);
-        if (n == "NTransistorElm" || n == "TransistorElm")
+        }
+        if (Objects.equals(n, "NTransistorElm") || Objects.equals(n, "TransistorElm")) {
             return new NTransistorElm(x1, y1);
-        if (n == "PTransistorElm")
+        }
+        if (Objects.equals(n, "PTransistorElm")) {
             return new PTransistorElm(x1, y1);
-        if (n == "WireElm")
+        }
+        if (Objects.equals(n, "WireElm")) {
             return new WireElm(x1, y1);
-        if (n == "CapacitorElm")
+        }
+        if (Objects.equals(n, "CapacitorElm")) {
             return new CapacitorElm(x1, y1);
-        if (n == "PolarCapacitorElm")
+        }
+        if (Objects.equals(n, "PolarCapacitorElm")) {
             return new PolarCapacitorElm(x1, y1);
-        if (n == "InductorElm")
+        }
+        if (Objects.equals(n, "InductorElm")) {
             return new InductorElm(x1, y1);
-        if (n == "DCVoltageElm" || n == "VoltageElm")
+        }
+        if (Objects.equals(n, "DCVoltageElm") || Objects.equals(n, "VoltageElm")) {
             return new DCVoltageElm(x1, y1);
-        if (n == "VarRailElm")
+        }
+        if (Objects.equals(n, "VarRailElm")) {
             return new VarRailElm(x1, y1);
-        if (n == "PotElm")
+        }
+        if (Objects.equals(n, "PotElm")) {
             return new PotElm(x1, y1);
-        if (n == "OutputElm")
+        }
+        if (Objects.equals(n, "OutputElm")) {
             return new OutputElm(x1, y1);
-        if (n == "CurrentElm")
+        }
+        if (Objects.equals(n, "CurrentElm")) {
             return new CurrentElm(x1, y1);
-        if (n == "ProbeElm")
+        }
+        if (Objects.equals(n, "ProbeElm")) {
             return new ProbeElm(x1, y1);
-        if (n == "DiodeElm")
+        }
+        if (Objects.equals(n, "DiodeElm")) {
             return new DiodeElm(x1, y1);
-        if (n == "ZenerElm")
+        }
+        if (Objects.equals(n, "ZenerElm")) {
             return new ZenerElm(x1, y1);
-        if (n == "ACVoltageElm")
+        }
+        if (Objects.equals(n, "ACVoltageElm")) {
             return new ACVoltageElm(x1, y1);
-        if (n == "ACRailElm")
+        }
+        if (Objects.equals(n, "ACRailElm")) {
             return new ACRailElm(x1, y1);
-        if (n == "SquareRailElm")
+        }
+        if (Objects.equals(n, "SquareRailElm")) {
             return new SquareRailElm(x1, y1);
-        if (n == "SweepElm")
+        }
+        if (Objects.equals(n, "SweepElm")) {
             return new SweepElm(x1, y1);
-        if (n == "LEDElm")
+        }
+        if (Objects.equals(n, "LEDElm")) {
             return new LEDElm(x1, y1);
-        if (n == "AntennaElm")
+        }
+        if (Objects.equals(n, "AntennaElm")) {
             return new AntennaElm(x1, y1);
-        if (n == "LogicInputElm")
+        }
+        if (Objects.equals(n, "LogicInputElm")) {
             return new LogicInputElm(x1, y1);
-        if (n == "LogicOutputElm")
+        }
+        if (Objects.equals(n, "LogicOutputElm")) {
             return new LogicOutputElm(x1, y1);
-        if (n == "TransformerElm")
+        }
+        if (Objects.equals(n, "TransformerElm")) {
             return new TransformerElm(x1, y1);
-        if (n == "TappedTransformerElm")
+        }
+        if (Objects.equals(n, "TappedTransformerElm")) {
             return new TappedTransformerElm(x1, y1);
-        if (n == "TransLineElm")
+        }
+        if (Objects.equals(n, "TransLineElm")) {
             return new TransLineElm(x1, y1);
-        if (n == "RelayElm")
+        }
+        if (Objects.equals(n, "RelayElm")) {
             return new RelayElm(x1, y1);
-        if (n == "MemristorElm")
+        }
+        if (Objects.equals(n, "MemristorElm")) {
             return new MemristorElm(x1, y1);
-        if (n == "SparkGapElm")
+        }
+        if (Objects.equals(n, "SparkGapElm")) {
             return new SparkGapElm(x1, y1);
-        if (n == "ClockElm")
+        }
+        if (Objects.equals(n, "ClockElm")) {
             return new ClockElm(x1, y1);
-        if (n == "AMElm")
+        }
+        if (Objects.equals(n, "AMElm")) {
             return new AMElm(x1, y1);
-        if (n == "FMElm")
+        }
+        if (Objects.equals(n, "FMElm")) {
             return new FMElm(x1, y1);
-        if (n == "LampElm")
+        }
+        if (Objects.equals(n, "LampElm")) {
             return new LampElm(x1, y1);
-        if (n == "PushSwitchElm")
+        }
+        if (Objects.equals(n, "PushSwitchElm")) {
             return new PushSwitchElm(x1, y1);
-        if (n == "OpAmpElm")
+        }
+        if (Objects.equals(n, "OpAmpElm")) {
             return new OpAmpElm(x1, y1);
-        if (n == "OpAmpSwapElm")
+        }
+        if (Objects.equals(n, "OpAmpSwapElm")) {
             return new OpAmpSwapElm(x1, y1);
-        if (n == "NMosfetElm" || n == "MosfetElm")
+        }
+        if (Objects.equals(n, "NMosfetElm") || Objects.equals(n, "MosfetElm")) {
             return new NMosfetElm(x1, y1);
-        if (n == "PMosfetElm")
+        }
+        if (Objects.equals(n, "PMosfetElm")) {
             return new PMosfetElm(x1, y1);
-        if (n == "NJfetElm" || n == "JfetElm")
+        }
+        if (Objects.equals(n, "NJfetElm") || Objects.equals(n, "JfetElm")) {
             return new NJfetElm(x1, y1);
-        if (n == "PJfetElm")
+        }
+        if (Objects.equals(n, "PJfetElm")) {
             return new PJfetElm(x1, y1);
-        if (n == "AnalogSwitchElm")
+        }
+        if (Objects.equals(n, "AnalogSwitchElm")) {
             return new AnalogSwitchElm(x1, y1);
-        if (n == "AnalogSwitch2Elm")
+        }
+        if (Objects.equals(n, "AnalogSwitch2Elm")) {
             return new AnalogSwitch2Elm(x1, y1);
-        if (n == "SchmittElm")
+        }
+        if (Objects.equals(n, "SchmittElm")) {
             return new SchmittElm(x1, y1);
-        if (n == "InvertingSchmittElm")
+        }
+        if (Objects.equals(n, "InvertingSchmittElm")) {
             return new InvertingSchmittElm(x1, y1);
-        if (n == "TriStateElm")
+        }
+        if (Objects.equals(n, "TriStateElm")) {
             return new TriStateElm(x1, y1);
-        if (n == "SCRElm")
+        }
+        if (Objects.equals(n, "SCRElm")) {
             return new SCRElm(x1, y1);
-        if (n == "DiacElm")
+        }
+        if (Objects.equals(n, "DiacElm")) {
             return new DiacElm(x1, y1);
-        if (n == "TriacElm")
+        }
+        if (Objects.equals(n, "TriacElm")) {
             return new TriacElm(x1, y1);
-        if (n == "TriodeElm")
+        }
+        if (Objects.equals(n, "TriodeElm")) {
             return new TriodeElm(x1, y1);
-        if (n == "VaractorElm")
+        }
+        if (Objects.equals(n, "VaractorElm")) {
             return new VaractorElm(x1, y1);
-        if (n == "TunnelDiodeElm")
+        }
+        if (Objects.equals(n, "TunnelDiodeElm")) {
             return new TunnelDiodeElm(x1, y1);
-        if (n == "CC2Elm")
+        }
+        if (Objects.equals(n, "CC2Elm")) {
             return new CC2Elm(x1, y1);
-        if (n == "CC2NegElm")
+        }
+        if (Objects.equals(n, "CC2NegElm")) {
             return new CC2NegElm(x1, y1);
-        if (n == "InverterElm")
+        }
+        if (Objects.equals(n, "InverterElm")) {
             return new InverterElm(x1, y1);
-        if (n == "NandGateElm")
+        }
+        if (Objects.equals(n, "NandGateElm")) {
             return new NandGateElm(x1, y1);
-        if (n == "NorGateElm")
+        }
+        if (Objects.equals(n, "NorGateElm")) {
             return new NorGateElm(x1, y1);
-        if (n == "AndGateElm")
+        }
+        if (Objects.equals(n, "AndGateElm")) {
             return new AndGateElm(x1, y1);
-        if (n == "OrGateElm")
+        }
+        if (Objects.equals(n, "OrGateElm")) {
             return new OrGateElm(x1, y1);
-        if (n == "XorGateElm")
+        }
+        if (Objects.equals(n, "XorGateElm")) {
             return new XorGateElm(x1, y1);
-        if (n == "DFlipFlopElm")
+        }
+        if (Objects.equals(n, "DFlipFlopElm")) {
             return new DFlipFlopElm(x1, y1);
-        if (n == "JKFlipFlopElm")
+        }
+        if (Objects.equals(n, "JKFlipFlopElm")) {
             return new JKFlipFlopElm(x1, y1);
-        if (n == "SevenSegElm")
+        }
+        if (Objects.equals(n, "SevenSegElm")) {
             return new SevenSegElm(x1, y1);
-        if (n == "MultiplexerElm")
+        }
+        if (Objects.equals(n, "MultiplexerElm")) {
             return new MultiplexerElm(x1, y1);
-        if (n == "DeMultiplexerElm")
+        }
+        if (Objects.equals(n, "DeMultiplexerElm")) {
             return new DeMultiplexerElm(x1, y1);
-        if (n == "SipoShiftElm")
+        }
+        if (Objects.equals(n, "SipoShiftElm")) {
             return new SipoShiftElm(x1, y1);
-        if (n == "PisoShiftElm")
+        }
+        if (Objects.equals(n, "PisoShiftElm")) {
             return new PisoShiftElm(x1, y1);
-        if (n == "PhaseCompElm")
+        }
+        if (Objects.equals(n, "PhaseCompElm")) {
             return new PhaseCompElm(x1, y1);
-        if (n == "CounterElm")
+        }
+        if (Objects.equals(n, "CounterElm")) {
             return new CounterElm(x1, y1);
+        }
 
         // if you take out RingCounterElm, it will break subcircuits
         // if you take out DecadeElm, it will break the menus and people's saved shortcuts
-        if (n == "DecadeElm" || n == "RingCounterElm")
+        if (Objects.equals(n, "DecadeElm") || Objects.equals(n, "RingCounterElm")) {
             return new RingCounterElm(x1, y1);
+        }
 
-        if (n == "TimerElm")
+        if (Objects.equals(n, "TimerElm")) {
             return new TimerElm(x1, y1);
-        if (n == "DACElm")
+        }
+        if (Objects.equals(n, "DACElm")) {
             return new DACElm(x1, y1);
-        if (n == "ADCElm")
+        }
+        if (Objects.equals(n, "ADCElm")) {
             return new ADCElm(x1, y1);
-        if (n == "LatchElm")
+        }
+        if (Objects.equals(n, "LatchElm")) {
             return new LatchElm(x1, y1);
-        if (n == "SeqGenElm")
+        }
+        if (Objects.equals(n, "SeqGenElm")) {
             return new SeqGenElm(x1, y1);
-        if (n == "VCOElm")
+        }
+        if (Objects.equals(n, "VCOElm")) {
             return new VCOElm(x1, y1);
-        if (n == "BoxElm")
+        }
+        if (Objects.equals(n, "BoxElm")) {
             return new BoxElm(x1, y1);
-        if (n == "TextElm")
+        }
+        if (Objects.equals(n, "TextElm")) {
             return new TextElm(x1, y1);
-        if (n == "TFlipFlopElm")
+        }
+        if (Objects.equals(n, "TFlipFlopElm")) {
             return new TFlipFlopElm(x1, y1);
-        if (n == "SevenSegDecoderElm")
+        }
+        if (Objects.equals(n, "SevenSegDecoderElm")) {
             return new SevenSegDecoderElm(x1, y1);
-        if (n == "FullAdderElm")
+        }
+        if (Objects.equals(n, "FullAdderElm")) {
             return new FullAdderElm(x1, y1);
-        if (n == "HalfAdderElm")
+        }
+        if (Objects.equals(n, "HalfAdderElm")) {
             return new HalfAdderElm(x1, y1);
-        if (n == "MonostableElm")
+        }
+        if (Objects.equals(n, "MonostableElm")) {
             return new MonostableElm(x1, y1);
-        if (n == "LabeledNodeElm")
+        }
+        if (Objects.equals(n, "LabeledNodeElm")) {
             return new LabeledNodeElm(x1, y1);
+        }
 
         // if you take out UserDefinedLogicElm, it will break people's saved shortcuts
-        if (n == "UserDefinedLogicElm" || n == "CustomLogicElm")
+        if (Objects.equals(n, "UserDefinedLogicElm") || Objects.equals(n, "CustomLogicElm")) {
             return new CustomLogicElm(x1, y1);
+        }
 
-        if (n == "TestPointElm")
+        if (Objects.equals(n, "TestPointElm")) {
             return new TestPointElm(x1, y1);
-        if (n == "AmmeterElm")
+        }
+        if (Objects.equals(n, "AmmeterElm")) {
             return new AmmeterElm(x1, y1);
-        if (n == "DataRecorderElm")
+        }
+        if (Objects.equals(n, "DataRecorderElm")) {
             return new DataRecorderElm(x1, y1);
-        if (n == "AudioOutputElm")
+        }
+        if (Objects.equals(n, "AudioOutputElm")) {
             return new AudioOutputElm(x1, y1);
-        if (n == "NDarlingtonElm" || n == "DarlingtonElm")
+        }
+        if (Objects.equals(n, "NDarlingtonElm") || Objects.equals(n, "DarlingtonElm")) {
             return new NDarlingtonElm(x1, y1);
-        if (n == "PDarlingtonElm")
+        }
+        if (Objects.equals(n, "PDarlingtonElm")) {
             return new PDarlingtonElm(x1, y1);
-        if (n == "ComparatorElm")
+        }
+        if (Objects.equals(n, "ComparatorElm")) {
             return new ComparatorElm(x1, y1);
-        if (n == "OTAElm")
+        }
+        if (Objects.equals(n, "OTAElm")) {
             return new OTAElm(x1, y1);
-        if (n == "NoiseElm")
+        }
+        if (Objects.equals(n, "NoiseElm")) {
             return new NoiseElm(x1, y1);
-        if (n == "VCVSElm")
+        }
+        if (Objects.equals(n, "VCVSElm")) {
             return new VCVSElm(x1, y1);
-        if (n == "VCCSElm")
+        }
+        if (Objects.equals(n, "VCCSElm")) {
             return new VCCSElm(x1, y1);
-        if (n == "CCVSElm")
+        }
+        if (Objects.equals(n, "CCVSElm")) {
             return new CCVSElm(x1, y1);
-        if (n == "CCCSElm")
+        }
+        if (Objects.equals(n, "CCCSElm")) {
             return new CCCSElm(x1, y1);
-        if (n == "OhmMeterElm")
+        }
+        if (Objects.equals(n, "OhmMeterElm")) {
             return new OhmMeterElm(x1, y1);
-        if (n == "ScopeElm")
+        }
+        if (Objects.equals(n, "ScopeElm")) {
             return new ScopeElm(x1, y1);
-        if (n == "FuseElm")
+        }
+        if (Objects.equals(n, "FuseElm")) {
             return new FuseElm(x1, y1);
-        if (n == "LEDArrayElm")
+        }
+        if (Objects.equals(n, "LEDArrayElm")) {
             return new LEDArrayElm(x1, y1);
-        if (n == "CustomTransformerElm")
+        }
+        if (Objects.equals(n, "CustomTransformerElm")) {
             return new CustomTransformerElm(x1, y1);
-        if (n == "OptocouplerElm")
+        }
+        if (Objects.equals(n, "OptocouplerElm")) {
             return new OptocouplerElm(x1, y1);
-        if (n == "StopTriggerElm")
+        }
+        if (Objects.equals(n, "StopTriggerElm")) {
             return new StopTriggerElm(x1, y1);
-        if (n == "OpAmpRealElm")
+        }
+        if (Objects.equals(n, "OpAmpRealElm")) {
             return new OpAmpRealElm(x1, y1);
-        if (n == "CustomCompositeElm")
+        }
+        if (Objects.equals(n, "CustomCompositeElm")) {
             return new CustomCompositeElm(x1, y1);
-        if (n == "AudioInputElm")
+        }
+        if (Objects.equals(n, "AudioInputElm")) {
             return new AudioInputElm(x1, y1);
-        if (n == "CrystalElm")
+        }
+        if (Objects.equals(n, "CrystalElm")) {
             return new CrystalElm(x1, y1);
-        if (n == "SRAMElm")
+        }
+        if (Objects.equals(n, "SRAMElm")) {
             return new SRAMElm(x1, y1);
+        }
         return null;
     }
 
     public void updateModels() {
         int i;
-        for (i = 0; i != elmList.size(); i++)
+        for (i = 0; i != elmList.size(); i++) {
             elmList.get(i).updateModels();
+        }
     }
 
 
@@ -5213,21 +5665,25 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     }-*/;
 
     static String LS(String s) {
-        if (s == null)
+        if (s == null) {
             return null;
+        }
         String sm = localizationMap.get(s);
-        if (sm != null)
+        if (sm != null) {
             return sm;
+        }
 
         // use trailing ~ to differentiate strings that are the same in English but need different translations.
         // remove these if there's no translation.
         int ix = s.indexOf('~');
-        if (ix < 0)
+        if (ix < 0) {
             return s;
+        }
         s = s.substring(0, ix);
         sm = localizationMap.get(s);
-        if (sm != null)
+        if (sm != null) {
             return sm;
+        }
         return s;
     }
 
@@ -5259,15 +5715,18 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             cs = e.getDumpClass().toString();
             int p = cs.lastIndexOf('.');
             cs = cs.substring(p + 1);
-            if (cs == "WireElm")
+            if (Objects.equals(cs, "WireElm")) {
                 continue;
-            if (cs == "LabeledNodeElm")
+            }
+            if (Objects.equals(cs, "LabeledNodeElm")) {
                 cs = cs + " " + ((LabeledNodeElm) e).text;
-            if (cs == "TransistorElm") {
-                if (((TransistorElm) e).pnp == -1)
+            }
+            if (Objects.equals(cs, "TransistorElm")) {
+                if (((TransistorElm) e).pnp == -1) {
                     cs = "PTransistorElm";
-                else
+                } else {
                     cs = "NTransistorElm";
+                }
             }
             s = cs;
             for (j = 0; j < e.getPostCount(); j++) {
@@ -5322,8 +5781,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         // turn on white background, turn off current display
         boolean p = printableCheckItem.getState();
         boolean c = dotsCheckItem.getState();
-        if (print)
+        if (print) {
             printableCheckItem.setState(true);
+        }
         if (printableCheckItem.getState()) {
             CircuitElm.whiteColor = Color.black;
             CircuitElm.lightGrayColor = Color.black;
@@ -5336,9 +5796,10 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         }
         dotsCheckItem.setState(false);
 
-        if (bounds != null)
+        if (bounds != null) {
             scale = Math.min(w / (double) (bounds.width + wmargin),
                     h / (double) (bounds.height + hmargin));
+        }
         scale = Math.min(scale, 1.5); // Limit scale so we don't create enormous circuits in big windows
 
         // ScopeElms need the transform array to be updated
@@ -5365,9 +5826,11 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     }
 
     boolean isSelection() {
-        for (int i = 0; i != elmList.size(); i++)
-            if (getElm(i).isSelected())
+        for (int i = 0; i != elmList.size(); i++) {
+            if (getElm(i).isSelected()) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -5392,8 +5855,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         // find all the labeled nodes, get a list of them, and create a node number map
         for (i = 0; i != elmList.size(); i++) {
             CircuitElm ce = getElm(i);
-            if (sel && !ce.isSelected())
+            if (sel && !ce.isSelected()) {
                 continue;
+            }
             if (ce instanceof LabeledNodeElm) {
                 LabeledNodeElm lne = (LabeledNodeElm) ce;
                 String label = lne.text;
@@ -5412,8 +5876,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 nodeNameHash.put(label, lne.getNode(0));
                 // put an entry in nodeNumberHash so we can detect if we try to map it to something else later
                 nodeNumberHash.put(lne.getNode(0), lne.getNode(0));
-                if (lne.isInternal())
+                if (lne.isInternal()) {
                     continue;
+                }
                 // create ext list entry for external nodes
                 ExtListEntry ent = new ExtListEntry(label, ce.getNode(0));
                 extList.add(ent);
@@ -5423,16 +5888,20 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         // output all the elements
         for (i = 0; i != elmList.size(); i++) {
             CircuitElm ce = getElm(i);
-            if (sel && !ce.isSelected())
+            if (sel && !ce.isSelected()) {
                 continue;
+            }
             // don't need these elements dumped
-            if (ce instanceof WireElm || ce instanceof LabeledNodeElm || ce instanceof ScopeElm)
+            if (ce instanceof WireElm || ce instanceof LabeledNodeElm || ce instanceof ScopeElm) {
                 continue;
-            if (ce instanceof GraphicElm)
+            }
+            if (ce instanceof GraphicElm) {
                 continue;
+            }
             int j;
-            if (nodeDump.length() > 0)
+            if (nodeDump.length() > 0) {
                 nodeDump += "\r";
+            }
             nodeDump += ce.getClass().getSimpleName();
             for (j = 0; j != ce.getPostCount(); j++) {
                 int n = ce.getNode(j);
@@ -5459,8 +5928,9 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             ce.y = y1;
             ce.x2 = x2;
             ce.y2 = y2;
-            if (dump.length() > 0)
+            if (dump.length() > 0) {
                 dump += " ";
+            }
             dump += CustomLogicModel.escape(tstring);
         }
 
@@ -5488,17 +5958,21 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
         // solve for each column of identity matrix
         for (i = 0; i != n; i++) {
-            for (j = 0; j != n; j++)
+            for (j = 0; j != n; j++) {
                 b[j] = 0;
+            }
             b[i] = 1;
             lu_solve(a, n, ipvt, b);
-            for (j = 0; j != n; j++)
+            for (j = 0; j != n; j++) {
                 inva[j][i] = b[j];
+            }
         }
 
         // return in original matrix
-        for (i = 0; i != n; i++)
-            for (j = 0; j != n; j++)
+        for (i = 0; i != n; i++) {
+            for (j = 0; j != n; j++) {
                 a[i][j] = inva[i][j];
+            }
+        }
     }
 }

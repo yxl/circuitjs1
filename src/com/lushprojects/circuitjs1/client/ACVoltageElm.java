@@ -24,6 +24,7 @@ class ACVoltageElm extends VoltageElm {
         super(xx, yy, WF_AC);
     }
 
+    @Override
     Class getDumpClass() {
         return VoltageElm.class;
     }

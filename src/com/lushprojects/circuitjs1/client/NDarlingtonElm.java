@@ -8,6 +8,7 @@ public class NDarlingtonElm extends DarlingtonElm {
     }
 
 
+    @Override
     Class getDumpClass() {
         return DarlingtonElm.class;
     }

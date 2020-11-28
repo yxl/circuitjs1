@@ -24,6 +24,7 @@ class NJfetElm extends JfetElm {
         super(xx, yy, false);
     }
 
+    @Override
     Class getDumpClass() {
         return JfetElm.class;
     }
@@ -34,6 +35,7 @@ class PJfetElm extends JfetElm {
         super(xx, yy, true);
     }
 
+    @Override
     Class getDumpClass() {
         return JfetElm.class;
     }

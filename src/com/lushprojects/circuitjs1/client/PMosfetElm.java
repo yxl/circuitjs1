@@ -24,6 +24,7 @@ class PMosfetElm extends MosfetElm {
         super(xx, yy, true);
     }
 
+    @Override
     Class getDumpClass() {
         return MosfetElm.class;
     }

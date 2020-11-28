@@ -35,16 +35,19 @@ class ResistorElm extends CircuitElm {
         resistance = new Double(st.nextToken()).doubleValue();
     }
 
+    @Override
     int getDumpType() {
         return 'r';
     }
 
+    @Override
     String dump() {
         return super.dump() + " " + resistance;
     }
 
     Point ps3, ps4;
 
+    @Override
     void setPoints() {
         super.setPoints();
         calcLeads(32);
@@ -52,6 +55,7 @@ class ResistorElm extends CircuitElm {
         ps4 = new Point();
     }
 
+    @Override
     void draw(Graphics g) {
         int segments = 16;
         int i;
@@ -97,15 +101,17 @@ class ResistorElm extends CircuitElm {
         drawPosts(g);
     }
 
+    @Override
     void calculateCurrent() {
         current = (volts[0] - volts[1]) / resistance;
-        //System.out.print(this + " res current set to " + current + "\n");
     }
 
+    @Override
     void stamp() {
         sim.stampResistor(nodes[0], nodes[1], resistance);
     }
 
+    @Override
     void getInfo(String[] arr) {
         arr[0] = "resistor";
         getBasicInfo(arr);
@@ -118,6 +124,7 @@ class ResistorElm extends CircuitElm {
         return CirSim.LS("resistor") + ", " + getUnitText(resistance, CirSim.ohmString);
     }
 
+    @Override
     public EditInfo getEditInfo(int n) {
         // ohmString doesn't work here on linux
         if (n == 0)
@@ -125,11 +132,13 @@ class ResistorElm extends CircuitElm {
         return null;
     }
 
+    @Override
     public void setEditValue(int n, EditInfo ei) {
         if (ei.value > 0)
             resistance = ei.value;
     }
 
+    @Override
     int getShortcut() {
         return 'r';
     }
