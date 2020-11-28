@@ -17,16 +17,23 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.MenuItem;
+import com.lushprojects.circuitjs1.client.entrypoint.circuitjs1;
 
-public class CheckboxAlignedMenuItem extends MenuItem {
+public class MyCommand implements Command {
+    private final String menuName;
+    private final String itemName;
 
-    public CheckboxAlignedMenuItem(String s, Command cmd) {
-        super(SafeHtmlUtils.fromTrustedString(CheckboxMenuItem.checkBoxHtml + "&nbsp;</div>" + s), cmd);
+    public MyCommand(String name, String item) {
+        menuName = name;
+        itemName = item;
+    }
+
+    @Override
+    public void execute() {
+        circuitjs1.mysim.menuPerformed(menuName, itemName);
     }
 
 }

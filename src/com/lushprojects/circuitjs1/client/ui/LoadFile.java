@@ -17,11 +17,12 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.FileUpload;
+import com.lushprojects.circuitjs1.client.CirSim;
 
 public class LoadFile extends FileUpload implements ChangeHandler {
 
@@ -70,7 +71,7 @@ public class LoadFile extends FileUpload implements ChangeHandler {
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     var text = reader.result;
-                    @com.lushprojects.circuitjs1.client.LoadFile::doLoadCallback(Ljava/lang/String;Ljava/lang/String;)(text, oFiles[0].name);
+                    @com.lushprojects.circuitjs1.client.ui.LoadFile::doLoadCallback(Ljava/lang/String;Ljava/lang/String;)(text, oFiles[0].name);
                 };
 
                 reader.readAsText(oFiles[0]);

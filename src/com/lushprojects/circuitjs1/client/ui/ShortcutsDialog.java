@@ -20,7 +20,6 @@
 package com.lushprojects.circuitjs1.client.ui;
 
 import com.google.gwt.user.client.ui.*;
-import com.lushprojects.circuitjs1.client.CheckboxMenuItem;
 import com.lushprojects.circuitjs1.client.CirSim;
 
 import java.util.Vector;
