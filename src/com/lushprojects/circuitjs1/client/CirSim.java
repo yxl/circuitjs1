@@ -50,6 +50,9 @@ import com.google.gwt.user.client.ui.*;
 import com.lushprojects.circuitjs1.client.element.*;
 import com.lushprojects.circuitjs1.client.entrypoint.circuitjs1;
 import com.lushprojects.circuitjs1.client.ui.*;
+import com.lushprojects.circuitjs1.client.ui.canvas.*;
+import com.lushprojects.circuitjs1.client.util.QueryParameters;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 import java.util.*;
 
@@ -3427,7 +3430,7 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
                 }
             }
             String line = new String(b, p, linelen);
-            com.lushprojects.circuitjs1.client.StringTokenizer st = new com.lushprojects.circuitjs1.client.StringTokenizer(line, " +\t\n\r\f");
+            com.lushprojects.circuitjs1.client.util.StringTokenizer st = new com.lushprojects.circuitjs1.client.util.StringTokenizer(line, " +\t\n\r\f");
             while (st.hasMoreTokens()) {
                 String type = st.nextToken();
                 int tint = type.charAt(0);
@@ -3537,13 +3540,13 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         }
     }
 
-    void readHint(com.lushprojects.circuitjs1.client.StringTokenizer st) {
+    void readHint(com.lushprojects.circuitjs1.client.util.StringTokenizer st) {
         hintType = new Integer(st.nextToken());
         hintItem1 = new Integer(st.nextToken());
         hintItem2 = new Integer(st.nextToken());
     }
 
-    void readOptions(com.lushprojects.circuitjs1.client.StringTokenizer st) {
+    void readOptions(com.lushprojects.circuitjs1.client.util.StringTokenizer st) {
         int flags = new Integer(st.nextToken());
         dotsCheckItem.setState((flags & 1) != 0);
         smallGridCheckItem.setState((flags & 2) != 0);

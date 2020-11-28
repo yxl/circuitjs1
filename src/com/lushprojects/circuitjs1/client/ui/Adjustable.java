@@ -2,8 +2,10 @@ package com.lushprojects.circuitjs1.client.ui;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Label;
-import com.lushprojects.circuitjs1.client.*;
+import com.lushprojects.circuitjs1.client.CirSim;
+import com.lushprojects.circuitjs1.client.CustomLogicModel;
 import com.lushprojects.circuitjs1.client.element.CircuitElm;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 // values with sliders
 public class Adjustable implements Command {

@@ -3,8 +3,14 @@ package com.lushprojects.circuitjs1.client.element;
 import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.lushprojects.circuitjs1.client.*;
+import com.lushprojects.circuitjs1.client.CirSim;
+import com.lushprojects.circuitjs1.client.ui.Choice;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.canvas.Color;
+import com.lushprojects.circuitjs1.client.ui.canvas.Font;
+import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
+import com.lushprojects.circuitjs1.client.ui.canvas.Point;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class AudioOutputElm extends CircuitElm {
     int dataCount, dataPtr;

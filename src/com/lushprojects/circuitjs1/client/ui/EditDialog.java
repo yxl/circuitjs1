@@ -23,7 +23,7 @@ package com.lushprojects.circuitjs1.client.ui;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.ui.*;
-import com.lushprojects.circuitjs1.client.*;
+import com.lushprojects.circuitjs1.client.CirSim;
 import com.lushprojects.circuitjs1.client.element.CircuitElm;
 import com.lushprojects.circuitjs1.client.element.VoltageElm;
 

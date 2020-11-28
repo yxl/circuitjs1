@@ -20,9 +20,14 @@
 package com.lushprojects.circuitjs1.client.element;
 
 import com.google.gwt.user.client.Window;
-import com.lushprojects.circuitjs1.client.*;
+import com.lushprojects.circuitjs1.client.CirSim;
+import com.lushprojects.circuitjs1.client.CustomLogicModel;
+import com.lushprojects.circuitjs1.client.Inductor;
 import com.lushprojects.circuitjs1.client.ui.Checkbox;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
+import com.lushprojects.circuitjs1.client.ui.canvas.Point;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class CustomTransformerElm extends CircuitElm {
     double[] coilCurrents;

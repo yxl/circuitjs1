@@ -27,9 +27,13 @@ package com.lushprojects.circuitjs1.client.element;
 // 3n+1 = coil
 // 3n+2 = end of coil resistor
 
-import com.lushprojects.circuitjs1.client.*;
+import com.lushprojects.circuitjs1.client.Inductor;
 import com.lushprojects.circuitjs1.client.ui.Checkbox;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.canvas.Color;
+import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
+import com.lushprojects.circuitjs1.client.ui.canvas.Point;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class RelayElm extends CircuitElm {
     double inductance;

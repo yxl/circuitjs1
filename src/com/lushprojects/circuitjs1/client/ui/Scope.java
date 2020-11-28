@@ -23,8 +23,14 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.storage.client.Storage;
-import com.lushprojects.circuitjs1.client.*;
+import com.lushprojects.circuitjs1.client.CirSim;
+import com.lushprojects.circuitjs1.client.CustomLogicModel;
+import com.lushprojects.circuitjs1.client.FFT;
 import com.lushprojects.circuitjs1.client.element.*;
+import com.lushprojects.circuitjs1.client.ui.canvas.Color;
+import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
+import com.lushprojects.circuitjs1.client.ui.canvas.Rectangle;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 import java.util.Vector;
 

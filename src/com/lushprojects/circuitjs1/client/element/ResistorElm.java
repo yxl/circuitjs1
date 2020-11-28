@@ -21,10 +21,10 @@ package com.lushprojects.circuitjs1.client.element;
 
 import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.lushprojects.circuitjs1.client.CirSim;
-import com.lushprojects.circuitjs1.client.Graphics;
-import com.lushprojects.circuitjs1.client.Point;
-import com.lushprojects.circuitjs1.client.StringTokenizer;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
+import com.lushprojects.circuitjs1.client.ui.canvas.Point;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class ResistorElm extends CircuitElm {
     public double resistance;

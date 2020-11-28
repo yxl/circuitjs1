@@ -22,9 +22,11 @@ package com.lushprojects.circuitjs1.client.element;
 import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.canvas.dom.client.Context2d.LineCap;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.lushprojects.circuitjs1.client.*;
+import com.lushprojects.circuitjs1.client.CirSim;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.Editable;
 import com.lushprojects.circuitjs1.client.ui.Scope;
+import com.lushprojects.circuitjs1.client.ui.canvas.*;
 
 // circuit element class
 public abstract class CircuitElm implements Editable {
@@ -707,7 +709,7 @@ public abstract class CircuitElm implements Editable {
     }
 
     public void drawCoil(Graphics g, int hs, Point p1, Point p2,
-                  double v1, double v2) {
+                         double v1, double v2) {
         double len = distance(p1, p2);
 
         g.context.save();

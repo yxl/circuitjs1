@@ -21,7 +21,6 @@ package com.lushprojects.circuitjs1.client.ui;
 
 import com.google.gwt.user.client.ui.*;
 import com.lushprojects.circuitjs1.client.CirSim;
-import com.lushprojects.circuitjs1.client.ui.Checkbox;
 
 public class ImportFromTextDialog extends DialogBox {
 

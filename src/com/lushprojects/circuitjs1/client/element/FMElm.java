@@ -21,8 +21,12 @@ package com.lushprojects.circuitjs1.client.element;
 
 // contributed by Edward Calver
 
-import com.lushprojects.circuitjs1.client.*;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.canvas.Color;
+import com.lushprojects.circuitjs1.client.ui.canvas.Font;
+import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
+import com.lushprojects.circuitjs1.client.ui.canvas.Point;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class FMElm extends CircuitElm {
     static final int FLAG_COS = 2;

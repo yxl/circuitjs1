@@ -19,8 +19,13 @@
 
 package com.lushprojects.circuitjs1.client.element;
 
-import com.lushprojects.circuitjs1.client.*;
+import com.lushprojects.circuitjs1.client.CustomLogicModel;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
+import com.lushprojects.circuitjs1.client.util.Expr;
+import com.lushprojects.circuitjs1.client.util.ExprParser;
+import com.lushprojects.circuitjs1.client.util.ExprState;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class VCCSElm extends ChipElm {
     double gain;

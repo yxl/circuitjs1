@@ -25,7 +25,7 @@ import com.google.gwt.http.client.*;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window;
 import com.lushprojects.circuitjs1.client.CirSim;
-import com.lushprojects.circuitjs1.client.QueryParameters;
+import com.lushprojects.circuitjs1.client.util.QueryParameters;
 
 import java.util.HashMap;
 

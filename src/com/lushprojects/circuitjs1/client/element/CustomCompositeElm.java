@@ -2,9 +2,15 @@ package com.lushprojects.circuitjs1.client.element;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.lushprojects.circuitjs1.client.*;
+import com.lushprojects.circuitjs1.client.CirSim;
+import com.lushprojects.circuitjs1.client.CustomCompositeModel;
+import com.lushprojects.circuitjs1.client.CustomLogicModel;
+import com.lushprojects.circuitjs1.client.ui.Choice;
 import com.lushprojects.circuitjs1.client.ui.EditCompositeModelDialog;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.ExtListEntry;
+import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 import java.util.Vector;
 

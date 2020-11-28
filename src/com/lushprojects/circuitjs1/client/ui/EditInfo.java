@@ -23,7 +23,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.lushprojects.circuitjs1.client.Choice;
 import com.lushprojects.circuitjs1.client.CirSim;
 
 public class EditInfo {

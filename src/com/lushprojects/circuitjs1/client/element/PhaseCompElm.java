@@ -20,7 +20,7 @@
 package com.lushprojects.circuitjs1.client.element;
 
 
-import com.lushprojects.circuitjs1.client.StringTokenizer;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class PhaseCompElm extends ChipElm {
     public PhaseCompElm(int xx, int yy) {

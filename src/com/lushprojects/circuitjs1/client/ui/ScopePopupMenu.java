@@ -21,7 +21,7 @@ package com.lushprojects.circuitjs1.client.ui;
 
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
-import com.lushprojects.circuitjs1.client.*;
+import com.lushprojects.circuitjs1.client.CirSim;
 
 public class ScopePopupMenu {
 

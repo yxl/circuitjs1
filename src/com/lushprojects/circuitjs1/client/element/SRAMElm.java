@@ -20,8 +20,8 @@
 package com.lushprojects.circuitjs1.client.element;
 
 import com.google.gwt.user.client.ui.TextArea;
-import com.lushprojects.circuitjs1.client.StringTokenizer;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 import java.util.HashMap;
 

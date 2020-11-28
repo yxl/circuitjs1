@@ -19,8 +19,8 @@
 
 package com.lushprojects.circuitjs1.client.element;
 
-import com.lushprojects.circuitjs1.client.ExprState;
-import com.lushprojects.circuitjs1.client.StringTokenizer;
+import com.lushprojects.circuitjs1.client.util.ExprState;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class VCVSElm extends VCCSElm {
     public VCVSElm(int xa, int ya, int xb, int yb, int f,

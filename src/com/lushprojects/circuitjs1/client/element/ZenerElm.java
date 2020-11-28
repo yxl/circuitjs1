@@ -20,8 +20,13 @@
 package com.lushprojects.circuitjs1.client.element;
 
 import com.google.gwt.user.client.Window;
-import com.lushprojects.circuitjs1.client.*;
+import com.lushprojects.circuitjs1.client.CirSim;
+import com.lushprojects.circuitjs1.client.DiodeModel;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
+import com.lushprojects.circuitjs1.client.ui.canvas.Point;
+import com.lushprojects.circuitjs1.client.ui.canvas.Polygon;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 // Zener code contributed by J. Mike Rollins
 // http://www.camotruck.net/rollins/simulator.html

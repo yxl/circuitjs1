@@ -19,8 +19,8 @@
 
 package com.lushprojects.circuitjs1.client.element;
 
-import com.lushprojects.circuitjs1.client.StringTokenizer;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class RingCounterElm extends ChipElm {
     boolean justLoaded;

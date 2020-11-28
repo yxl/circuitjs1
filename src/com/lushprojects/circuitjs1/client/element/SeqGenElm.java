@@ -21,9 +21,9 @@ package com.lushprojects.circuitjs1.client.element;
 
 // contributed by Edward Calver
 
-import com.lushprojects.circuitjs1.client.StringTokenizer;
 import com.lushprojects.circuitjs1.client.ui.Checkbox;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class SeqGenElm extends ChipElm {
     boolean hasReset() {

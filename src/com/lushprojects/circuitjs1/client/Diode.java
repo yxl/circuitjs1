@@ -19,9 +19,6 @@
 
 package com.lushprojects.circuitjs1.client;
 
-import com.lushprojects.circuitjs1.client.CirSim;
-import com.lushprojects.circuitjs1.client.DiodeModel;
-
 // diode that can be embedded in other elements.  series resistance is handled in DiodeElm, not here.
 public class Diode {
     int[] nodes;

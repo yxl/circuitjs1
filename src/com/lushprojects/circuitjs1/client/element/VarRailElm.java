@@ -23,9 +23,9 @@ import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.lushprojects.circuitjs1.client.CirSim;
-import com.lushprojects.circuitjs1.client.StringTokenizer;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
 import com.lushprojects.circuitjs1.client.ui.Scrollbar;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class VarRailElm extends RailElm implements MouseWheelHandler {
     Scrollbar slider;

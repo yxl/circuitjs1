@@ -3,6 +3,8 @@ package com.lushprojects.circuitjs1.client;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.TextArea;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.Editable;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 import java.util.HashMap;
 import java.util.Map;

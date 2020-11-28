@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client.element;
 
-import com.lushprojects.circuitjs1.client.StringTokenizer;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class NoiseElm extends RailElm {
     public NoiseElm(int xx, int yy) {

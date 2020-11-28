@@ -21,7 +21,7 @@ package com.lushprojects.circuitjs1.client.element;
 
 // contributed by Edward Calver
 
-import com.lushprojects.circuitjs1.client.StringTokenizer;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class SipoShiftElm extends ChipElm {
     boolean hasReset() {

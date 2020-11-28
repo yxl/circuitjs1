@@ -1,6 +1,8 @@
 package com.lushprojects.circuitjs1.client;
 
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.Editable;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 import java.util.Collections;
 import java.util.HashMap;

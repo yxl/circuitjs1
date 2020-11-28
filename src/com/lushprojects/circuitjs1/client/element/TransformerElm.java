@@ -19,12 +19,12 @@
 
 package com.lushprojects.circuitjs1.client.element;
 
-import com.lushprojects.circuitjs1.client.Graphics;
 import com.lushprojects.circuitjs1.client.Inductor;
-import com.lushprojects.circuitjs1.client.Point;
-import com.lushprojects.circuitjs1.client.StringTokenizer;
 import com.lushprojects.circuitjs1.client.ui.Checkbox;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
+import com.lushprojects.circuitjs1.client.ui.canvas.Point;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class TransformerElm extends CircuitElm {
     double inductance, ratio, couplingCoef;

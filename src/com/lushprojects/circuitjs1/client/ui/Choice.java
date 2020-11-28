@@ -17,9 +17,10 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.ui;
 
 import com.google.gwt.user.client.ui.ListBox;
+import com.lushprojects.circuitjs1.client.CirSim;
 
 public class Choice extends ListBox {
 

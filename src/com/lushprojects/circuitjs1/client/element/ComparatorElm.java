@@ -1,7 +1,11 @@
 package com.lushprojects.circuitjs1.client.element;
 
 
-import com.lushprojects.circuitjs1.client.*;
+import com.lushprojects.circuitjs1.client.ui.canvas.Font;
+import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
+import com.lushprojects.circuitjs1.client.ui.canvas.Point;
+import com.lushprojects.circuitjs1.client.ui.canvas.Polygon;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class ComparatorElm extends CompositeElm {
 

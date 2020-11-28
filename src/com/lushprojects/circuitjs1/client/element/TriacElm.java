@@ -27,8 +27,13 @@ package com.lushprojects.circuitjs1.client.element;
 // 2,1 = resistor
 // MT1 and MT2 are nodes 1 and 0 (instead of 0 and 1) so that MT1 will be at the bottom when drawn bottom-to-top
 
-import com.lushprojects.circuitjs1.client.*;
+import com.lushprojects.circuitjs1.client.Diode;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.canvas.Color;
+import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
+import com.lushprojects.circuitjs1.client.ui.canvas.Point;
+import com.lushprojects.circuitjs1.client.ui.canvas.Polygon;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class TriacElm extends CircuitElm {
     final int mt1node = 1;

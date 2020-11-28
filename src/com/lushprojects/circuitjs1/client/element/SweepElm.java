@@ -19,11 +19,11 @@
 
 package com.lushprojects.circuitjs1.client.element;
 
-import com.lushprojects.circuitjs1.client.Color;
-import com.lushprojects.circuitjs1.client.Graphics;
-import com.lushprojects.circuitjs1.client.StringTokenizer;
 import com.lushprojects.circuitjs1.client.ui.Checkbox;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.canvas.Color;
+import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class SweepElm extends CircuitElm {
     double maxV, maxF, minF, sweepTime, frequency;

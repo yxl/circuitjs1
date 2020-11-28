@@ -21,12 +21,9 @@ package com.lushprojects.circuitjs1.client.ui;
 
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window;
-import com.lushprojects.circuitjs1.client.Choice;
 import com.lushprojects.circuitjs1.client.CirSim;
-import com.lushprojects.circuitjs1.client.Editable;
 import com.lushprojects.circuitjs1.client.element.AudioOutputElm;
 import com.lushprojects.circuitjs1.client.element.CircuitElm;
-import com.lushprojects.circuitjs1.client.ui.EditInfo;
 
 public class EditOptions implements Editable {
     CirSim sim;

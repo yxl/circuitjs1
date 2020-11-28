@@ -3,9 +3,9 @@ package com.lushprojects.circuitjs1.client.element;
 import com.google.gwt.user.client.ui.Button;
 import com.lushprojects.circuitjs1.client.CirSim;
 import com.lushprojects.circuitjs1.client.CustomLogicModel;
-import com.lushprojects.circuitjs1.client.StringTokenizer;
 import com.lushprojects.circuitjs1.client.ui.EditDialog;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class CustomLogicElm extends ChipElm {
     String modelName;

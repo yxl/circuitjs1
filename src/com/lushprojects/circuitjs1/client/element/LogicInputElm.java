@@ -19,9 +19,12 @@
 
 package com.lushprojects.circuitjs1.client.element;
 
-import com.lushprojects.circuitjs1.client.*;
 import com.lushprojects.circuitjs1.client.ui.Checkbox;
 import com.lushprojects.circuitjs1.client.ui.EditInfo;
+import com.lushprojects.circuitjs1.client.ui.canvas.Font;
+import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
+import com.lushprojects.circuitjs1.client.ui.canvas.Rectangle;
+import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class LogicInputElm extends SwitchElm {
     final int FLAG_TERNARY = 1;
