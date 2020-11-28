@@ -17,7 +17,7 @@
     along with CircuitJS1.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lushprojects.circuitjs1.client;
+package com.lushprojects.circuitjs1.client.entrypoint;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -26,6 +26,8 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.http.client.*;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window;
+import com.lushprojects.circuitjs1.client.CirSim;
+import com.lushprojects.circuitjs1.client.QueryParameters;
 
 import java.util.HashMap;
 
@@ -69,9 +71,10 @@ public class circuitjs1 implements EntryPoint {
     // Set to true if the server runs the shortrelay.php file in the same directory as the circuit simulator
     public static final boolean shortRelaySupported = true;
 
-    static CirSim mysim;
+    public static CirSim mysim;
     HashMap<String, String> localizationMap;
 
+    @Override
     public void onModuleLoad() {
         localizationMap = new HashMap<String, String>();
 
@@ -112,10 +115,12 @@ public class circuitjs1 implements EntryPoint {
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         try {
             requestBuilder.sendRequest(null, new RequestCallback() {
+                @Override
                 public void onError(Request request, Throwable exception) {
                     GWT.log("File Error Response", exception);
                 }
 
+                @Override
                 public void onResponseReceived(Request request, Response response) {
                     // processing goes here
                     if (response.getStatusCode() == Response.SC_OK) {
@@ -165,6 +170,7 @@ public class circuitjs1 implements EntryPoint {
 
         Window.addResizeHandler(new ResizeHandler() {
 
+            @Override
             public void onResize(ResizeEvent event) {
                 mysim.setCanvasSize();
                 mysim.setiFrameHeight();

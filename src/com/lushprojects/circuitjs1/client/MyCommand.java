@@ -20,6 +20,7 @@
 package com.lushprojects.circuitjs1.client;
 
 import com.google.gwt.user.client.Command;
+import com.lushprojects.circuitjs1.client.entrypoint.circuitjs1;
 
 public class MyCommand implements Command {
     private final String menuName;

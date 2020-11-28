@@ -48,6 +48,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.Navigator;
 import com.google.gwt.user.client.ui.*;
+import com.lushprojects.circuitjs1.client.entrypoint.circuitjs1;
 
 import java.util.*;
 
@@ -99,7 +100,7 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     MenuItem scopeRemovePlotMenuItem;
     MenuItem scopeSelectYMenuItem;
     ScopePopupMenu scopePopupMenu;
-    static HashMap<String, String> localizationMap;
+    public static HashMap<String, String> localizationMap;
 
     String lastCursorStyle;
     boolean mouseWasOverSplitter = false;
@@ -268,7 +269,7 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
 //    Circuit applet;
 
-    CirSim() {
+    public CirSim() {
 //	super("Circuit Simulator v1.6d");
 //	applet = a;
 //	useFrame = false;

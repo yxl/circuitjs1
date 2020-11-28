@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.*;
+import com.lushprojects.circuitjs1.client.entrypoint.circuitjs1;
 
 public class ExportAsUrlDialog extends DialogBox {
 
