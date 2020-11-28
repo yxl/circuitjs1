@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.ListBox;
 
 public class Choice extends ListBox {
 
-    Choice() {
+    public Choice() {
         super();
     }
 

@@ -6,6 +6,8 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.*;
 import com.lushprojects.circuitjs1.client.*;
+import com.lushprojects.circuitjs1.client.element.CircuitElm;
+import com.lushprojects.circuitjs1.client.element.TransistorElm;
 
 class ScopeCheckBox extends CheckBox {
     String menuCmd;

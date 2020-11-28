@@ -47,6 +47,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Navigator;
 import com.google.gwt.user.client.ui.*;
+import com.lushprojects.circuitjs1.client.element.*;
 import com.lushprojects.circuitjs1.client.entrypoint.circuitjs1;
 import com.lushprojects.circuitjs1.client.ui.*;
 

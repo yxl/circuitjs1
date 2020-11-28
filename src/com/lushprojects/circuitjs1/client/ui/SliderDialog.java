@@ -24,7 +24,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.ui.*;
 import com.lushprojects.circuitjs1.client.CirSim;
-import com.lushprojects.circuitjs1.client.CircuitElm;
+import com.lushprojects.circuitjs1.client.element.CircuitElm;
 
 // class EditDialog extends Dialog implements AdjustmentListener, ActionListener, ItemListener {
 public class SliderDialog extends DialogBox {

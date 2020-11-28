@@ -21,10 +21,10 @@ package com.lushprojects.circuitjs1.client;
 
 
 public class Font {
-    static final int BOLD = 1;
+    public static final int BOLD = 1;
 
-    String fontname;
-    int size;
+    public String fontname;
+    public int size;
 
     public Font(String name, int style, int size) {
         String styleStr = "normal ";

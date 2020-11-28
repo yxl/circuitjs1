@@ -12,21 +12,21 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
     static HashMap<String, DiodeModel> modelMap;
 
     int flags;
-    String name, description;
-    double saturationCurrent, seriesResistance, emissionCoefficient, breakdownVoltage;
-    boolean dumped;
-    boolean readOnly;
-    boolean builtIn;
-    boolean oldStyle;
+    public String name, description;
+    public double saturationCurrent, seriesResistance, emissionCoefficient, breakdownVoltage;
+    public boolean dumped;
+    public boolean readOnly;
+    public boolean builtIn;
+    public boolean oldStyle;
 
     // Electron thermal voltage at SPICE's default temperature of 27 C (300.15 K):
     static final double vt = 0.025865;
     // The diode's "scale voltage", the voltage increase which will raise current by a factor of e.
-    double vscale;
+    public double vscale;
     // The multiplicative equivalent of dividing by vscale (for speed).
-    double vdcoef;
+    public double vdcoef;
     // voltage drop @ 1A
-    double fwdrop;
+    public double fwdrop;
 
     protected DiodeModel(double sc, double sr, double ec, double bv, String d) {
         saturationCurrent = sc;
@@ -39,7 +39,7 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
         updateModel();
     }
 
-    static DiodeModel getModelWithName(String name) {
+    public static DiodeModel getModelWithName(String name) {
         createModelMap();
         DiodeModel lm = modelMap.get(name);
         if (lm != null)
@@ -50,7 +50,7 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
         return lm;
     }
 
-    static DiodeModel getModelWithNameOrCopy(String name, DiodeModel oldmodel) {
+    public static DiodeModel getModelWithNameOrCopy(String name, DiodeModel oldmodel) {
         createModelMap();
         DiodeModel lm = modelMap.get(name);
         if (lm != null)
@@ -99,7 +99,7 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
 
     // create a new model using given parameters, keeping backward compatibility.  The method we use has problems, as explained below, but we don't want to
     // change circuit behavior
-    static DiodeModel getModelWithParameters(double fwdrop, double zvoltage) {
+    public static DiodeModel getModelWithParameters(double fwdrop, double zvoltage) {
         createModelMap();
 
         final double emcoef = 2;
@@ -133,7 +133,7 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
 
     // create a new model using given fwdrop, using older method (pre-Aug 2017) that keeps a constant leakage current, but changes the emission coefficient.
     // We discovered that changing the leakage current to get a given fwdrop does not work well; the leakage currents can be way too high or low.
-    static DiodeModel getModelWithVoltageDrop(double fwdrop) {
+    public static DiodeModel getModelWithVoltageDrop(double fwdrop) {
         createModelMap();
 
         // look for existing model with same parameters
@@ -159,7 +159,7 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
     }
 
     // create a new model using given zener voltage, otherwise the same as default
-    static DiodeModel getZenerModel(double zvoltage) {
+    public static DiodeModel getZenerModel(double zvoltage) {
         createModelMap();
 
         // look for existing model with same parameters
@@ -182,7 +182,7 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
         return dm;
     }
 
-    static DiodeModel getDefaultModel() {
+    public static DiodeModel getDefaultModel() {
         return getModelWithName("default");
     }
 
@@ -195,7 +195,7 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
         }
     }
 
-    static Vector<DiodeModel> getModelList(boolean zener) {
+    public static Vector<DiodeModel> getModelList(boolean zener) {
         Vector<DiodeModel> vector = new Vector<>();
         for (Map.Entry<String, DiodeModel> stringDiodeModelEntry : modelMap.entrySet()) {
             Map.Entry<String, DiodeModel> pair = stringDiodeModelEntry;
@@ -213,13 +213,13 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
         return name.compareTo(dm.name);
     }
 
-    String getDescription() {
+    public String getDescription() {
         if (description == null)
             return name;
         return name + " (" + CirSim.LS(description) + ")";
     }
 
-    DiodeModel() {
+    public DiodeModel() {
         saturationCurrent = 1e-14;
         seriesResistance = 0;
         emissionCoefficient = 1;
@@ -227,7 +227,7 @@ public class DiodeModel implements Editable, Comparable<DiodeModel> {
         updateModel();
     }
 
-    DiodeModel(DiodeModel copy) {
+    public DiodeModel(DiodeModel copy) {
         flags = copy.flags;
         saturationCurrent = copy.saturationCurrent;
         seriesResistance = copy.seriesResistance;

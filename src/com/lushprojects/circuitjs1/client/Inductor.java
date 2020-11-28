@@ -19,7 +19,7 @@
 
 package com.lushprojects.circuitjs1.client;
 
-class Inductor {
+public class Inductor {
     public static final int FLAG_BACK_EULER = 2;
     int[] nodes;
     int flags;
@@ -29,18 +29,18 @@ class Inductor {
     double compResistance, current;
     double curSourceValue;
 
-    Inductor(CirSim s) {
+    public Inductor(CirSim s) {
         sim = s;
         nodes = new int[2];
     }
 
-    void setup(double ic, double cr, int f) {
+    public void setup(double ic, double cr, int f) {
         inductance = ic;
         current = cr;
         flags = f;
     }
 
-    boolean isTrapezoidal() {
+    public boolean isTrapezoidal() {
         return (flags & FLAG_BACK_EULER) == 0;
     }
 
@@ -51,7 +51,7 @@ class Inductor {
         current = curSourceValue = 0;
     }
 
-    void stamp(int n0, int n1) {
+    public void stamp(int n0, int n1) {
         // inductor companion model using trapezoidal or backward euler
         // approximations (Norton equivalent) consists of a current
         // source in parallel with a resistor.  Trapezoidal is more
@@ -68,18 +68,18 @@ class Inductor {
         sim.stampRightSide(nodes[1]);
     }
 
-    boolean nonLinear() {
+    public boolean nonLinear() {
         return false;
     }
 
-    void startIteration(double voltdiff) {
+    public void startIteration(double voltdiff) {
         if (isTrapezoidal())
             curSourceValue = voltdiff / compResistance + current;
         else // backward euler
             curSourceValue = current;
     }
 
-    double calculateCurrent(double voltdiff) {
+    public double calculateCurrent(double voltdiff) {
         // we check compResistance because this might get called
         // before stamp(), which sets compResistance, causing
         // infinite current
@@ -88,7 +88,7 @@ class Inductor {
         return current;
     }
 
-    void doStep(double voltdiff) {
+    public void doStep(double voltdiff) {
         sim.stampCurrentSource(nodes[0], nodes[1], curSourceValue);
     }
 }

@@ -1,5 +1,7 @@
 package com.lushprojects.circuitjs1.client;
 
+import com.lushprojects.circuitjs1.client.element.ChipElm;
+
 public class ExtListEntry {
     public ExtListEntry(String s, int n) {
         name = s;

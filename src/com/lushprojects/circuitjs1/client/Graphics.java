@@ -24,9 +24,9 @@ import com.google.gwt.canvas.dom.client.Context2d;
 public class Graphics {
 
     public Context2d context;
-    int currentFontSize;
-    Font currentFont = null;
-    Color lastColor;
+    public int currentFontSize;
+    public Font currentFont = null;
+    public Color lastColor;
 
     public Graphics(Context2d context) {
         this.context = context;
@@ -131,7 +131,7 @@ public class Graphics {
         }
     }
 
-    Font getFont() {
+    public Font getFont() {
         return currentFont;
     }
 
@@ -141,7 +141,7 @@ public class Graphics {
         return x2 * x2 + y2 * y2;
     }
 
-    void setLineDash(int a, int b) {
+    public void setLineDash(int a, int b) {
         setLineDash(context, a, b);
     }
 

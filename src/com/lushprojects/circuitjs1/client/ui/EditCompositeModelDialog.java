@@ -25,7 +25,10 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.lushprojects.circuitjs1.client.*;
-import com.lushprojects.circuitjs1.client.ChipElm.Pin;
+import com.lushprojects.circuitjs1.client.element.ChipElm;
+import com.lushprojects.circuitjs1.client.element.ChipElm.Pin;
+import com.lushprojects.circuitjs1.client.element.CustomCompositeChipElm;
+import com.lushprojects.circuitjs1.client.element.CustomCompositeElm;
 
 import java.util.Collections;
 import java.util.Date;

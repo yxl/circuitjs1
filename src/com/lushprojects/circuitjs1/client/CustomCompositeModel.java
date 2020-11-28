@@ -1,5 +1,7 @@
 package com.lushprojects.circuitjs1.client;
 
+import com.lushprojects.circuitjs1.client.element.CustomCompositeElm;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +18,7 @@ public class CustomCompositeModel implements Comparable<CustomCompositeModel> {
     public String nodeList;
     public Vector<ExtListEntry> extList;
     public String elmDump;
-    boolean dumped;
+    public boolean dumped;
 
     public void setName(String n) {
         modelMap.remove(name);
@@ -57,7 +59,7 @@ public class CustomCompositeModel implements Comparable<CustomCompositeModel> {
         }
     }
 
-    static Vector<CustomCompositeModel> getModelList() {
+    public static Vector<CustomCompositeModel> getModelList() {
         Vector<CustomCompositeModel> vector = new Vector<>();
         for (Map.Entry<String, CustomCompositeModel> stringCustomCompositeModelEntry : modelMap.entrySet()) {
             Map.Entry<String, CustomCompositeModel> pair = stringCustomCompositeModelEntry;

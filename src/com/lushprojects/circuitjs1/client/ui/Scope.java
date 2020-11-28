@@ -24,6 +24,7 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.storage.client.Storage;
 import com.lushprojects.circuitjs1.client.*;
+import com.lushprojects.circuitjs1.client.element.*;
 
 import java.util.Vector;
 
