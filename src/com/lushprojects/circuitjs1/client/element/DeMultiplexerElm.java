@@ -29,10 +29,6 @@ public class DeMultiplexerElm extends ChipElm {
     int outputCount;
     int qPin;
 
-    boolean hasReset() {
-        return false;
-    }
-
     public DeMultiplexerElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -46,6 +42,10 @@ public class DeMultiplexerElm extends ChipElm {
             setPoints();
         } catch (Exception e) {
         }
+    }
+
+    boolean hasReset() {
+        return false;
     }
 
     @Override

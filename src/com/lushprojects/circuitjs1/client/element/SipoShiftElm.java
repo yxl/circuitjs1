@@ -24,9 +24,8 @@ package com.lushprojects.circuitjs1.client.element;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class SipoShiftElm extends ChipElm {
-    boolean hasReset() {
-        return false;
-    }
+    short data = 0;//This has to be a short because there's no unsigned byte and it's screwing with my code
+    boolean clockstate = false;
 
     public SipoShiftElm(int xx, int yy) {
         super(xx, yy);
@@ -37,8 +36,9 @@ public class SipoShiftElm extends ChipElm {
         super(xa, ya, xb, yb, f, st);
     }
 
-    short data = 0;//This has to be a short because there's no unsigned byte and it's screwing with my code
-    boolean clockstate = false;
+    boolean hasReset() {
+        return false;
+    }
 
     @Override
     public String getChipName() {

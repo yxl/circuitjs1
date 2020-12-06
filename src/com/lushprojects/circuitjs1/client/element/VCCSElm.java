@@ -28,12 +28,14 @@ import com.lushprojects.circuitjs1.client.util.ExprState;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class VCCSElm extends ChipElm {
+    public boolean broken;
     double gain;
     int inputCount;
     Expr expr;
     ExprState exprState;
     String exprString;
-    public boolean broken;
+    double[] lastVolts;
+    double lastvd;
 
     public VCCSElm(int xa, int ya, int xb, int yb, int f,
                    StringTokenizer st) {
@@ -56,8 +58,6 @@ public class VCCSElm extends ChipElm {
     public String dump() {
         return super.dump() + " " + inputCount + " " + CustomLogicModel.escape(exprString);
     }
-
-    double[] lastVolts;
 
     @Override
     public void setupPins() {
@@ -88,8 +88,6 @@ public class VCCSElm extends ChipElm {
         sim.stampNonLinear(nodes[inputCount]);
         sim.stampNonLinear(nodes[inputCount + 1]);
     }
-
-    double lastvd;
 
     double sign(double a, double b) {
         return a > 0 ? b : -b;

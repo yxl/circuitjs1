@@ -28,6 +28,8 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 public class AnalogSwitchElm extends CircuitElm {
     final int FLAG_INVERT = 1;
     double resistance, r_on, r_off;
+    boolean open;
+    Point ps, point3, lead3;
 
     public AnalogSwitchElm(int xx, int yy) {
         super(xx, yy);
@@ -57,10 +59,6 @@ public class AnalogSwitchElm extends CircuitElm {
     public int getDumpType() {
         return 159;
     }
-
-    boolean open;
-
-    Point ps, point3, lead3;
 
     @Override
     public void setPoints() {

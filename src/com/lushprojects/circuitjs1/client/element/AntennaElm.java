@@ -24,6 +24,8 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class AntennaElm extends RailElm {
+    double fmphase;
+
     public AntennaElm(int xx, int yy) {
         super(xx, yy, WF_AC);
     }
@@ -33,8 +35,6 @@ public class AntennaElm extends RailElm {
         super(xa, ya, xb, yb, f, st);
         waveform = WF_AC;
     }
-
-    double fmphase;
 
     @Override
     public void drawRail(Graphics g) {

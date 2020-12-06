@@ -24,6 +24,8 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class LatchElm extends ChipElm {
     final int FLAG_STATE = 2;
+    int loadPin;
+    boolean lastLoad = false;
 
     public LatchElm(int xx, int yy) {
         super(xx, yy);
@@ -52,8 +54,6 @@ public class LatchElm extends ChipElm {
         return true;
     }
 
-    int loadPin;
-
     @Override
     public void setupPins() {
         sizeX = 2;
@@ -70,8 +70,6 @@ public class LatchElm extends ChipElm {
         pins[loadPin = bits * 2] = new Pin(bits, SIDE_W, "Ld");
         allocNodes();
     }
-
-    boolean lastLoad = false;
 
     @Override
     public void execute() {

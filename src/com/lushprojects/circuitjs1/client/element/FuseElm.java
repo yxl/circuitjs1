@@ -26,11 +26,11 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class FuseElm extends CircuitElm {
+    final double blownResistance = 1e9;
     double resistance;
     double heat;
     double i2t;
     boolean blown;
-    final double blownResistance = 1e9;
 
     public FuseElm(int xx, int yy) {
         super(xx, yy);

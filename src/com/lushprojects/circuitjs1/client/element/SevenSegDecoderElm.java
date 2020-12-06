@@ -42,10 +42,6 @@ public class SevenSegDecoderElm extends ChipElm {
             {true, false, false, false, true, true, true},//F
     };
 
-    boolean hasReset() {
-        return false;
-    }
-
     public SevenSegDecoderElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -53,6 +49,10 @@ public class SevenSegDecoderElm extends ChipElm {
     public SevenSegDecoderElm(int xa, int ya, int xb, int yb, int f,
                               StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
+    }
+
+    boolean hasReset() {
+        return false;
     }
 
     @Override

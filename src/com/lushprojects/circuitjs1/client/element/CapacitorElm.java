@@ -28,11 +28,14 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Point;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class CapacitorElm extends CircuitElm {
+    public static final int FLAG_BACK_EULER = 2;
     public double capacitance;
     double compResistance, voltdiff;
     Point[] plate1;
     Point[] plate2;
-    public static final int FLAG_BACK_EULER = 2;
+    // used for PolarCapacitorElm
+    Point[] platePoints;
+    double curSourceValue;
 
     public CapacitorElm(int xx, int yy) {
         super(xx, yy);
@@ -79,9 +82,6 @@ public class CapacitorElm extends CircuitElm {
         return super.dump() + " " + capacitance + " " + voltdiff;
     }
 
-    // used for PolarCapacitorElm
-    Point[] platePoints;
-
     @Override
     public void setPoints() {
         super.setPoints();
@@ -106,7 +106,7 @@ public class CapacitorElm extends CircuitElm {
         drawThickLine(g, point1, lead1);
         setPowerColor(g, false);
         drawThickLine(g, plate1[0], plate1[1]);
-        if (sim.powerCheckItem.getState())
+        if (sim.topMenuBar.powerCheckItem.getState())
             g.setColor(Color.gray);
 
         // draw second lead and plate
@@ -127,7 +127,7 @@ public class CapacitorElm extends CircuitElm {
             drawDots(g, point2, lead2, -curcount);
         }
         drawPosts(g);
-        if (sim.showValuesCheckItem.getState()) {
+        if (sim.topMenuBar.showValuesCheckItem.getState()) {
             String s = getShortUnitText(capacitance, "F");
             drawValues(g, s, hs);
         }
@@ -177,8 +177,6 @@ public class CapacitorElm extends CircuitElm {
         if (compResistance > 0)
             current = voltdiff / compResistance + curSourceValue;
     }
-
-    double curSourceValue;
 
     @Override
     public void doStep() {

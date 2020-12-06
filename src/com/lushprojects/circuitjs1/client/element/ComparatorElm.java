@@ -22,7 +22,7 @@ public class ComparatorElm extends CompositeElm {
     public ComparatorElm(int xx, int yy) {
         super(xx, yy, modelString, modelExternalNodes);
         noDiagonal = true;
-        setSize(sim.smallGridCheckItem.getState() ? 1 : 2);
+        setSize(sim.topMenuBar.smallGridCheckItem.getState() ? 1 : 2);
     }
 
 

@@ -9,6 +9,14 @@ public class ExprParser {
     int tlen;
     boolean err;
 
+    public ExprParser(String s) {
+        text = s.toLowerCase();
+        tlen = text.length();
+        pos = 0;
+        err = false;
+        getToken();
+    }
+
     void getToken() {
         while (pos < tlen && text.charAt(pos) == ' ')
             pos++;
@@ -189,14 +197,6 @@ public class ExprParser {
             CirSim.console("unrecognized token: " + token + "\n");
             return new Expr(Expr.E_VAL, 0);
         }
-    }
-
-    public ExprParser(String s) {
-        text = s.toLowerCase();
-        tlen = text.length();
-        pos = 0;
-        err = false;
-        getToken();
     }
 
     boolean gotError() {

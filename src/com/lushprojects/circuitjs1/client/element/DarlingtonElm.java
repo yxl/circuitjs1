@@ -14,18 +14,16 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class DarlingtonElm extends CompositeElm {
 
+    private static final String modelString = "NTransistorElm 0 1 3\rNTransistorElm 3 1 2";
+    private static final int[] modelExternalNodes = {0, 1, 2};
+    private final int pnp; // +1 for NPN, -1 for PNP;
     private Polygon rectPoly, arrowPoly;
     private Point[] rect;
     private Point[] coll;
     private Point[] emit;
     private Point base;
     private Point[] coll2;
-
-
-    private final int pnp; // +1 for NPN, -1 for PNP;
     private double curcount_c, curcount_e, curcount_b;
-    private static final String modelString = "NTransistorElm 0 1 3\rNTransistorElm 3 1 2";
-    private static final int[] modelExternalNodes = {0, 1, 2};
 
     DarlingtonElm(int xx, int yy, boolean pnpflag) {
         super(xx, yy, modelString, modelExternalNodes);
@@ -77,7 +75,7 @@ public class DarlingtonElm extends CompositeElm {
         g.fillPolygon(arrowPoly);
         // draw base
         setVoltageColor(g, volts[0]);
-        if (sim.powerCheckItem.getState())
+        if (sim.topMenuBar.powerCheckItem.getState())
             g.setColor(Color.gray);
         drawThickLine(g, point1, base);
         // draw dots

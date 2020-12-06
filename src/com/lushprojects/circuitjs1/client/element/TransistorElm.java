@@ -30,6 +30,13 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Polygon;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class TransistorElm extends CircuitElm {
+    static final double leakage = 1e-13; // 1e-6;
+    // Electron thermal voltage at SPICE's default temperature of 27 C (300.15 K):
+    static final double vt = 0.025865;
+    static final double vdcoef = 1 / vt;
+    static final double rgain = .5;
+    static final double inv_rgain = 1 / rgain;
+    final int FLAG_FLIP = 1;
     // node 0 = base
     // node 1 = collector
     // node 2 = emitter
@@ -37,7 +44,14 @@ public class TransistorElm extends CircuitElm {
     double beta;
     double fgain, inv_fgain;
     double gmin;
-    final int FLAG_FLIP = 1;
+    double ic, ie, ib, curcount_c, curcount_e, curcount_b;
+    Polygon rectPoly, arrowPoly;
+    Point[] rect;
+    Point[] coll;
+    Point[] emit;
+    Point base;
+    double vcrit;
+    double lastvbc, lastvbe;
 
     TransistorElm(int xx, int yy, boolean pnpflag) {
         super(xx, yy);
@@ -45,7 +59,6 @@ public class TransistorElm extends CircuitElm {
         beta = 100;
         setup();
     }
-
     public TransistorElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
         super(xa, ya, xb, yb, f);
         pnp = new Integer(st.nextToken()).intValue();
@@ -91,10 +104,6 @@ public class TransistorElm extends CircuitElm {
                 (volts[0] - volts[2]) + " " + beta;
     }
 
-    double ic, ie, ib, curcount_c, curcount_e, curcount_b;
-
-    Polygon rectPoly, arrowPoly;
-
     @Override
     public void draw(Graphics g) {
         setBbox(point1, point2, 16);
@@ -110,7 +119,7 @@ public class TransistorElm extends CircuitElm {
         g.fillPolygon(arrowPoly);
         // draw base
         setVoltageColor(g, volts[0]);
-        if (sim.powerCheckItem.getState())
+        if (sim.topMenuBar.powerCheckItem.getState())
             g.setColor(Color.gray);
         drawThickLine(g, point1, base);
         // draw dots
@@ -152,11 +161,6 @@ public class TransistorElm extends CircuitElm {
         return (volts[0] - volts[2]) * ib + (volts[1] - volts[2]) * ic;
     }
 
-    Point[] rect;
-    Point[] coll;
-    Point[] emit;
-    Point base;
-
     @Override
     public void setPoints() {
         super.setPoints();
@@ -188,15 +192,6 @@ public class TransistorElm extends CircuitElm {
             arrowPoly = calcArrow(emit[0], pt, 8, 4);
         }
     }
-
-    static final double leakage = 1e-13; // 1e-6;
-    // Electron thermal voltage at SPICE's default temperature of 27 C (300.15 K):
-    static final double vt = 0.025865;
-    static final double vdcoef = 1 / vt;
-    static final double rgain = .5;
-    static final double inv_rgain = 1 / rgain;
-    double vcrit;
-    double lastvbc, lastvbe;
 
     double limitStep(double vnew, double vold) {
         double arg;

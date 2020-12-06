@@ -5,6 +5,35 @@ import com.lushprojects.circuitjs1.client.CirSim;
 import java.util.Vector;
 
 public class Expr {
+    static final int E_ADD = 1;
+    static final int E_SUB = 2;
+    static final int E_T = 3;
+    static final int E_VAL = 6;
+    static final int E_MUL = 7;
+    static final int E_DIV = 8;
+    static final int E_POW = 9;
+    static final int E_UMINUS = 10;
+    static final int E_SIN = 11;
+    static final int E_COS = 12;
+    static final int E_ABS = 13;
+    static final int E_EXP = 14;
+    static final int E_LOG = 15;
+    static final int E_SQRT = 16;
+    static final int E_TAN = 17;
+    static final int E_R = 18;
+    static final int E_MAX = 19;
+    static final int E_MIN = 20;
+    static final int E_CLAMP = 21;
+    static final int E_PWL = 22;
+    static final int E_TRIANGLE = 23;
+    static final int E_SAWTOOTH = 24;
+    static final int E_MOD = 25;
+    static final int E_STEP = 26;
+    static final int E_SELECT = 27;
+    static final int E_A = 28; // should be at end
+    Vector<Expr> children;
+    double value;
+    int type;
     public Expr(Expr e1, Expr e2, int v) {
         children = new Vector<>();
         children.add(e1);
@@ -12,12 +41,10 @@ public class Expr {
             children.add(e2);
         type = v;
     }
-
     public Expr(int v, double vv) {
         type = v;
         value = vv;
     }
-
     public Expr(int v) {
         type = v;
     }
@@ -134,35 +161,5 @@ public class Expr {
         x %= y;
         return (x >= 0) ? x : x + y;
     }
-
-    Vector<Expr> children;
-    double value;
-    int type;
-    static final int E_ADD = 1;
-    static final int E_SUB = 2;
-    static final int E_T = 3;
-    static final int E_VAL = 6;
-    static final int E_MUL = 7;
-    static final int E_DIV = 8;
-    static final int E_POW = 9;
-    static final int E_UMINUS = 10;
-    static final int E_SIN = 11;
-    static final int E_COS = 12;
-    static final int E_ABS = 13;
-    static final int E_EXP = 14;
-    static final int E_LOG = 15;
-    static final int E_SQRT = 16;
-    static final int E_TAN = 17;
-    static final int E_R = 18;
-    static final int E_MAX = 19;
-    static final int E_MIN = 20;
-    static final int E_CLAMP = 21;
-    static final int E_PWL = 22;
-    static final int E_TRIANGLE = 23;
-    static final int E_SAWTOOTH = 24;
-    static final int E_MOD = 25;
-    static final int E_STEP = 26;
-    static final int E_SELECT = 27;
-    static final int E_A = 28; // should be at end
 }
 

@@ -66,29 +66,25 @@ public class StringTokenizer implements Enumeration<Object> {
 // comments in vm/reference/java/lang/Runtime for implications of this fact.
 
     /**
-     * The position in the str, where we currently are.
-     */
-    private int pos;
-
-    /**
      * The string that should be split into tokens.
      */
     private final String str;
-
     /**
      * The length of the string.
      */
     private final int len;
-
-    /**
-     * The string containing the delimiter characters.
-     */
-    private String delim;
-
     /**
      * Tells, if we should return the delimiters.
      */
     private final boolean retDelims;
+    /**
+     * The position in the str, where we currently are.
+     */
+    private int pos;
+    /**
+     * The string containing the delimiter characters.
+     */
+    private String delim;
 
     /**
      * Creates a new StringTokenizer for the string <code>str</code>,

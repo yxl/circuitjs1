@@ -7,6 +7,7 @@ import com.lushprojects.circuitjs1.client.CirSim;
 public class ImportFromDropboxDialog extends DialogBox {
 
 
+    static CirSim sim;
     VerticalPanel vp;
     Button cancelButton;
     Button chooserButton;
@@ -15,47 +16,7 @@ public class ImportFromDropboxDialog extends DialogBox {
     Label la;
     HorizontalPanel hp;
     ImportFromDropbox importFromDropbox;
-    static CirSim sim;
 
-
-    static public void setSim(CirSim csim) {
-        sim = csim;
-    }
-
-    static public void doLoadCallback(String s) {
-        sim.pushUndo();
-        sim.readCircuit(s);
-        sim.allowSave(false);
-    }
-
-
-    static public final native void doDropboxImport(String link)  /*-{
-        try {
-            var xhr = new XMLHttpRequest();
-            xhr.addEventListener("load", function reqListener() {
-                //			console.log(xhr.responseText);
-                var text = xhr.responseText;
-                @com.lushprojects.circuitjs1.client.ui.ImportFromDropboxDialog::doLoadCallback(Ljava/lang/String;)(text);
-            });
-            xhr.open("GET", link, false);
-            xhr.send();
-        } catch (err) {
-
-        }
-
-    }-*/;
-
-    static public void doImportDropboxLink(String link, Boolean validateIsDropbox) {
-        if (validateIsDropbox && link.indexOf("https://www.dropbox.com/") != 0) {
-            Window.alert("Dropbox links must start https://www.dropbox.com/");
-            return;
-        }
-        // Work-around to allow CORS access to dropbox links - see
-        // https://www.dropboxforum.com/t5/API-support/CORS-issue-when-trying-to-download-shared-file/m-p/82466
-        link = link.replace("www.dropbox.com", "dl.dropboxusercontent.com");
-        doDropboxImport(link);
-
-    }
 
     public ImportFromDropboxDialog(CirSim csim) {
         super();
@@ -99,6 +60,44 @@ public class ImportFromDropboxDialog extends DialogBox {
         hp.add(cancelButton);
         cancelButton.addClickHandler(event -> closeDialog());
         this.center();
+    }
+
+    static public void setSim(CirSim csim) {
+        sim = csim;
+    }
+
+    static public void doLoadCallback(String s) {
+        sim.pushUndo();
+        sim.readCircuit(s);
+        sim.allowSave(false);
+    }
+
+    static public final native void doDropboxImport(String link)  /*-{
+        try {
+            var xhr = new XMLHttpRequest();
+            xhr.addEventListener("load", function reqListener() {
+                //			console.log(xhr.responseText);
+                var text = xhr.responseText;
+                @com.lushprojects.circuitjs1.client.ui.ImportFromDropboxDialog::doLoadCallback(Ljava/lang/String;)(text);
+            });
+            xhr.open("GET", link, false);
+            xhr.send();
+        } catch (err) {
+
+        }
+
+    }-*/;
+
+    static public void doImportDropboxLink(String link, Boolean validateIsDropbox) {
+        if (validateIsDropbox && link.indexOf("https://www.dropbox.com/") != 0) {
+            Window.alert("Dropbox links must start https://www.dropbox.com/");
+            return;
+        }
+        // Work-around to allow CORS access to dropbox links - see
+        // https://www.dropboxforum.com/t5/API-support/CORS-issue-when-trying-to-download-shared-file/m-p/82466
+        link = link.replace("www.dropbox.com", "dl.dropboxusercontent.com");
+        doDropboxImport(link);
+
     }
 
     protected void closeDialog() {

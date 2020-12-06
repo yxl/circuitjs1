@@ -55,6 +55,7 @@ public class CustomTransformerElm extends CircuitElm {
 
     Point[] dots;
     int width;
+    double[][] xformMatrix;
 
     public CustomTransformerElm(int xx, int yy) {
         super(xx, yy);
@@ -320,8 +321,6 @@ public class CustomTransformerElm extends CircuitElm {
         for (i = 0; i != nodeCount; i++)
             volts[i] = nodeCurrents[i] = nodeCurCounts[i] = 0;
     }
-
-    double[][] xformMatrix;
 
     @Override
     public void stamp() {

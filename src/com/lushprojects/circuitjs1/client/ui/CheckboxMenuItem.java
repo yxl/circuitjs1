@@ -24,19 +24,11 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.lushprojects.circuitjs1.client.element.CircuitElm;
 
 public class CheckboxMenuItem extends MenuItem implements Command {
+    public static String checkBoxHtml = "<div style=\"display:inline-block;width:15px;\">";
     private boolean on = false;
     private String name = "";
     private String shortcut = "";
     private Command extcmd = null;
-    public static String checkBoxHtml = "<div style=\"display:inline-block;width:15px;\">";
-
-    public String getName() {
-        return name;
-    }
-
-    public String getShortcut() {
-        return shortcut;
-    }
 
     public CheckboxMenuItem(String s) {
         super(s, (Command) null);
@@ -63,6 +55,14 @@ public class CheckboxMenuItem extends MenuItem implements Command {
         shortcut = c;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getShortcut() {
+        return shortcut;
+    }
+
     public void setShortcut(String s) {
         shortcut = s;
     }
@@ -79,6 +79,10 @@ public class CheckboxMenuItem extends MenuItem implements Command {
     @Override
     public void setTitle(String s) {
         name = s;
+    }
+
+    public boolean getState() {
+        return on;
     }
 
     public void setState(boolean newstate) {
@@ -99,10 +103,6 @@ public class CheckboxMenuItem extends MenuItem implements Command {
                 s = s + "<div style=\"display:inline-block;right:10px;text-align:right;position:absolute;\">" + shortcut + "</div>";
             }
         setHTML(s);
-    }
-
-    public boolean getState() {
-        return on;
     }
 
 }

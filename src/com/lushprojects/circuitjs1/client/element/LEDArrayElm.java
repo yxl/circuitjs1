@@ -27,6 +27,10 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class LEDArrayElm extends ChipElm {
+    Diode[] diodes;
+    double[] currents;
+    double[] brightness;
+
     public LEDArrayElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -68,10 +72,6 @@ public class LEDArrayElm extends ChipElm {
             pins[i + sizeX] = new Pin(i, SIDE_W, "");
         brightness = new double[sizeX * sizeY];
     }
-
-    Diode[] diodes;
-    double[] currents;
-    double[] brightness;
 
     @Override
     public void stamp() {

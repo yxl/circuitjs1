@@ -30,12 +30,12 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 import java.util.Vector;
 
 public class TextElm extends GraphicElm {
-    String text;
-    Vector<String> lines;
-    int size;
     final int FLAG_CENTER = 1;
     final int FLAG_BAR = 2;
     final int FLAG_ESCAPE = 4;
+    String text;
+    Vector<String> lines;
+    int size;
 
     public TextElm(int xx, int yy) {
         super(xx, yy);

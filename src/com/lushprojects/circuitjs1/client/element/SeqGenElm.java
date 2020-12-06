@@ -26,14 +26,14 @@ import com.lushprojects.circuitjs1.client.ui.EditInfo;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class SeqGenElm extends ChipElm {
-    boolean hasReset() {
-        return false;
-    }
-
+    short data = 0;
+    byte position = 0;
+    boolean oneshot = false;
+    double lastchangetime = 0;
+    boolean clockstate = false;
     public SeqGenElm(int xx, int yy) {
         super(xx, yy);
     }
-
     public SeqGenElm(int xa, int ya, int xb, int yb, int f,
                      StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
@@ -44,11 +44,9 @@ public class SeqGenElm extends ChipElm {
         }
     }
 
-    short data = 0;
-    byte position = 0;
-    boolean oneshot = false;
-    double lastchangetime = 0;
-    boolean clockstate = false;
+    boolean hasReset() {
+        return false;
+    }
 
     @Override
     public String getChipName() {

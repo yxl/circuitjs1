@@ -28,6 +28,7 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class ResistorElm extends CircuitElm {
     public double resistance;
+    Point ps3, ps4;
 
     public ResistorElm(int xx, int yy) {
         super(xx, yy);
@@ -49,8 +50,6 @@ public class ResistorElm extends CircuitElm {
     public String dump() {
         return super.dump() + " " + resistance;
     }
-
-    Point ps3, ps4;
 
     @Override
     public void setPoints() {
@@ -77,14 +76,14 @@ public class ResistorElm extends CircuitElm {
         g.context.save();
         g.context.setLineWidth(3.0);
         g.context.transform(((double) (lead2.x - lead1.x)) / len, ((double) (lead2.y - lead1.y)) / len, -((double) (lead2.y - lead1.y)) / len, ((double) (lead2.x - lead1.x)) / len, lead1.x, lead1.y);
-        if (sim.voltsCheckItem.getState()) {
+        if (sim.topMenuBar.voltsCheckItem.getState()) {
             CanvasGradient grad = g.context.createLinearGradient(0, 0, len, 0);
             grad.addColorStop(0, getVoltageColor(g, v1).getHexValue());
             grad.addColorStop(1.0, getVoltageColor(g, v2).getHexValue());
             g.context.setStrokeStyle(grad);
         } else
             setPowerColor(g, true);
-        if (!sim.euroResistorCheckItem.getState()) {
+        if (!sim.topMenuBar.euroResistorCheckItem.getState()) {
             g.context.beginPath();
             g.context.moveTo(0, 0);
             for (i = 0; i < 4; i++) {
@@ -98,7 +97,7 @@ public class ResistorElm extends CircuitElm {
             g.context.strokeRect(0, -hs, len, 2.0 * hs);
         }
         g.context.restore();
-        if (sim.showValuesCheckItem.getState()) {
+        if (sim.topMenuBar.showValuesCheckItem.getState()) {
             String s = getShortUnitText(resistance, "");
             drawValues(g, s, hs + 2);
         }

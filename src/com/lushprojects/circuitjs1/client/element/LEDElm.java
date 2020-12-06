@@ -28,8 +28,9 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Point;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class LEDElm extends DiodeElm {
-    double colorR, colorG, colorB, maxBrightnessCurrent;
     static String lastLEDModelName = "default-led";
+    double colorR, colorG, colorB, maxBrightnessCurrent;
+    Point ledLead1, ledLead2, ledCenter;
 
     public LEDElm(int xx, int yy) {
         super(xx, yy);
@@ -70,8 +71,6 @@ public class LEDElm extends DiodeElm {
         return super.dump() + " " + colorR + " " + colorG + " " + colorB + " " +
                 maxBrightnessCurrent;
     }
-
-    Point ledLead1, ledLead2, ledCenter;
 
     @Override
     public void setPoints() {

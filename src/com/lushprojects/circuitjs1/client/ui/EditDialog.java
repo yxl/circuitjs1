@@ -29,16 +29,17 @@ import com.lushprojects.circuitjs1.client.element.VoltageElm;
 
 // class EditDialog extends Dialog implements AdjustmentListener, ActionListener, ItemListener {
 public class EditDialog extends DialogBox {
+    static final double ROOT2 = 1.41421356237309504880;
+    static NumberFormat noCommaFormat = NumberFormat.getFormat("####.##########");
+    final int barmax = 1000;
     Editable elm;
     CirSim cframe;
     Button applyButton, okButton, cancelButton;
     EditInfo[] einfos;
     int einfocount;
-    final int barmax = 1000;
     VerticalPanel vp;
     HorizontalPanel hp;
     boolean closeOnEnter = true;
-    static NumberFormat noCommaFormat = NumberFormat.getFormat("####.##########");
 
     public EditDialog(Editable ce, CirSim f) {
 //		super(f, "Edit Component", false);
@@ -72,65 +73,6 @@ public class EditDialog extends DialogBox {
         this.center();
     }
 
-    void buildDialog() {
-        int i;
-        int idx;
-        for (i = 0; ; i++) {
-            Label l = null;
-            einfos[i] = elm.getEditInfo(i);
-            if (einfos[i] == null)
-                break;
-            EditInfo ei = einfos[i];
-            idx = vp.getWidgetIndex(hp);
-            String name = CirSim.LS(ei.name);
-            if (ei.name.startsWith("<"))
-                vp.insert(l = new HTML(name), idx);
-            else
-                vp.insert(l = new Label(name), idx);
-            if (i != 0 && l != null)
-                l.setStyleName("topSpace");
-            idx = vp.getWidgetIndex(hp);
-            if (ei.choice != null) {
-                vp.insert(ei.choice, idx);
-                ei.choice.addChangeHandler(e -> itemStateChanged(e));
-            } else if (ei.checkbox != null) {
-                vp.insert(ei.checkbox, idx);
-                ei.checkbox.addValueChangeHandler(e -> itemStateChanged(e));
-            } else if (ei.button != null) {
-                vp.insert(ei.button, idx);
-                ei.button.addClickHandler(event -> itemStateChanged(event));
-            } else if (ei.textArea != null) {
-                vp.insert(ei.textArea, idx);
-                closeOnEnter = false;
-            } else if (ei.widget != null) {
-                vp.insert(ei.widget, idx);
-            } else {
-                vp.insert(ei.textf = new TextBox(), idx);
-                if (ei.text != null)
-                    ei.textf.setText(ei.text);
-                if (ei.text == null) {
-                    ei.textf.setText(unitString(ei));
-                }
-            }
-        }
-        einfocount = i;
-    }
-
-    static final double ROOT2 = 1.41421356237309504880;
-
-    double diffFromInteger(double x) {
-        return Math.abs(x - Math.round(x));
-    }
-
-    String unitString(EditInfo ei) {
-        // for voltage elements, express values in rms if that would be shorter
-        if (elm != null && elm instanceof VoltageElm &&
-                Math.abs(ei.value) > 1e-4 &&
-                diffFromInteger(ei.value * 1e4) > diffFromInteger(ei.value * 1e4 / ROOT2))
-            return unitString(ei, ei.value / ROOT2) + "rms";
-        return unitString(ei, ei.value);
-    }
-
     public static String unitString(EditInfo ei, double v) {
         double va = Math.abs(v);
         if (ei != null && ei.dimensionless)
@@ -151,11 +93,6 @@ public class EditDialog extends DialogBox {
         if (va < 1e9)
             return noCommaFormat.format(v * 1e-6) + "M";
         return noCommaFormat.format(v * 1e-9) + "G";
-    }
-
-    double parseUnits(EditInfo ei) throws java.text.ParseException {
-        String s = ei.textf.getText();
-        return parseUnits(s);
     }
 
     public static double parseUnits(String s) throws java.text.ParseException {
@@ -204,6 +141,68 @@ public class EditDialog extends DialogBox {
         if (mult != 1)
             s = s.substring(0, len - 1).trim();
         return noCommaFormat.parse(s) * mult * rmsMult;
+    }
+
+    void buildDialog() {
+        int i;
+        int idx;
+        for (i = 0; ; i++) {
+            Label l = null;
+            einfos[i] = elm.getEditInfo(i);
+            if (einfos[i] == null)
+                break;
+            EditInfo ei = einfos[i];
+            idx = vp.getWidgetIndex(hp);
+            String name = CirSim.LS(ei.name);
+            if (ei.name.startsWith("<"))
+                vp.insert(l = new HTML(name), idx);
+            else
+                vp.insert(l = new Label(name), idx);
+            if (i != 0 && l != null)
+                l.setStyleName("topSpace");
+            idx = vp.getWidgetIndex(hp);
+            if (ei.choice != null) {
+                vp.insert(ei.choice, idx);
+                ei.choice.addChangeHandler(e -> itemStateChanged(e));
+            } else if (ei.checkbox != null) {
+                vp.insert(ei.checkbox, idx);
+                ei.checkbox.addValueChangeHandler(e -> itemStateChanged(e));
+            } else if (ei.button != null) {
+                vp.insert(ei.button, idx);
+                ei.button.addClickHandler(event -> itemStateChanged(event));
+            } else if (ei.textArea != null) {
+                vp.insert(ei.textArea, idx);
+                closeOnEnter = false;
+            } else if (ei.widget != null) {
+                vp.insert(ei.widget, idx);
+            } else {
+                vp.insert(ei.textf = new TextBox(), idx);
+                if (ei.text != null)
+                    ei.textf.setText(ei.text);
+                if (ei.text == null) {
+                    ei.textf.setText(unitString(ei));
+                }
+            }
+        }
+        einfocount = i;
+    }
+
+    double diffFromInteger(double x) {
+        return Math.abs(x - Math.round(x));
+    }
+
+    String unitString(EditInfo ei) {
+        // for voltage elements, express values in rms if that would be shorter
+        if (elm != null && elm instanceof VoltageElm &&
+                Math.abs(ei.value) > 1e-4 &&
+                diffFromInteger(ei.value * 1e4) > diffFromInteger(ei.value * 1e4 / ROOT2))
+            return unitString(ei, ei.value / ROOT2) + "rms";
+        return unitString(ei, ei.value);
+    }
+
+    double parseUnits(EditInfo ei) throws java.text.ParseException {
+        String s = ei.textf.getText();
+        return parseUnits(s);
     }
 
     void apply() {

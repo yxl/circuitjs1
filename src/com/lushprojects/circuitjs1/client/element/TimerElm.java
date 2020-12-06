@@ -34,13 +34,8 @@ public class TimerElm extends ChipElm {
     final int N_OUT = 5;
     final int N_RST = 6;
     final int N_GND = 7;
-
-    @Override
-    public int getDefaultFlags() {
-        return FLAG_RESET | FLAG_GROUND;
-    }
-
     int ground;
+    boolean out;
 
     public TimerElm(int xx, int yy) {
         super(xx, yy);
@@ -49,6 +44,11 @@ public class TimerElm extends ChipElm {
     public TimerElm(int xa, int ya, int xb, int yb, int f,
                     StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
+    }
+
+    @Override
+    public int getDefaultFlags() {
+        return FLAG_RESET | FLAG_GROUND;
     }
 
     @Override
@@ -117,8 +117,6 @@ public class TimerElm extends ChipElm {
                 pins[N_GND].current += (volts[N_DIS] - groundVolts) / 10 + (volts[N_OUT] - groundVolts);
         }
     }
-
-    boolean out;
 
     @Override
     public void startIteration() {

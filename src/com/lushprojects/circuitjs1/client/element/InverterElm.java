@@ -28,6 +28,10 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 public class InverterElm extends CircuitElm {
     double slewRate; // V/ns
     double highVoltage;
+    Point center;
+    Polygon gatePoly;
+    Point pcircle;
+    double lastOutputVoltage;
 
     public InverterElm(int xx, int yy) {
         super(xx, yy);
@@ -61,8 +65,6 @@ public class InverterElm extends CircuitElm {
         return 'I';
     }
 
-    Point center;
-
     @Override
     public void draw(Graphics g) {
         drawPosts(g);
@@ -75,9 +77,6 @@ public class InverterElm extends CircuitElm {
         curcount = updateDotCount(current, curcount);
         drawDots(g, lead2, point2, curcount);
     }
-
-    Polygon gatePoly;
-    Point pcircle;
 
     @Override
     public void setPoints() {
@@ -115,8 +114,6 @@ public class InverterElm extends CircuitElm {
     public void stamp() {
         sim.stampVoltageSource(0, nodes[1], voltSource);
     }
-
-    double lastOutputVoltage;
 
     @Override
     public void startIteration() {

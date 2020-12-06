@@ -28,6 +28,15 @@ public class LoadFile extends FileUpload implements ChangeHandler {
 
     static CirSim sim;
 
+    public LoadFile(CirSim s) {
+        super();
+        sim = s;
+        this.setName("Import");
+        this.getElement().setId("LoadFileElement");
+        this.addChangeHandler(this);
+        this.addStyleName("offScreen");
+    }
+
     static public final native boolean isSupported()
         /*-{
             return !!($wnd.File && $wnd.FileReader);
@@ -40,28 +49,6 @@ public class LoadFile extends FileUpload implements ChangeHandler {
         sim.setCircuitTitle(t);
         sim.unsavedChanges = false;
     }
-
-    public LoadFile(CirSim s) {
-        super();
-        sim = s;
-        this.setName("Import");
-        this.getElement().setId("LoadFileElement");
-        this.addChangeHandler(this);
-        this.addStyleName("offScreen");
-    }
-
-
-    @Override
-    public void onChange(ChangeEvent e) {
-        doLoad();
-    }
-
-
-    @Override
-    public final native void click()
-        /*-{
-            $doc.getElementById("LoadFileElement").click();
-        }-*/;
 
     static public final native void doLoad()
         /*-{
@@ -76,6 +63,17 @@ public class LoadFile extends FileUpload implements ChangeHandler {
 
                 reader.readAsText(oFiles[0]);
             }
+        }-*/;
+
+    @Override
+    public void onChange(ChangeEvent e) {
+        doLoad();
+    }
+
+    @Override
+    public final native void click()
+        /*-{
+            $doc.getElementById("LoadFileElement").click();
         }-*/;
 
 }

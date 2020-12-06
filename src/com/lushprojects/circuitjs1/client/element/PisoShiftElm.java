@@ -24,22 +24,21 @@ package com.lushprojects.circuitjs1.client.element;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class PisoShiftElm extends ChipElm {
-    boolean hasReset() {
-        return false;
-    }
+    short data = 0;//Lack of unsigned types sucks
+    boolean clockstate = false;
+    boolean modestate = false;
 
     public PisoShiftElm(int xx, int yy) {
         super(xx, yy);
     }
-
     public PisoShiftElm(int xa, int ya, int xb, int yb, int f,
                         StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
     }
 
-    short data = 0;//Lack of unsigned types sucks
-    boolean clockstate = false;
-    boolean modestate = false;
+    boolean hasReset() {
+        return false;
+    }
 
     @Override
     public String getChipName() {

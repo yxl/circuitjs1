@@ -17,12 +17,13 @@ import java.util.Vector;
 // instances of subcircuits
 
 public class CustomCompositeElm extends CompositeElm {
+    public static String lastModelName = "default";
     String modelName;
     CustomCompositeChipElm chip;
     int postCount;
     int inputCount, outputCount;
     CustomCompositeModel model;
-    public static String lastModelName = "default";
+    Vector<CustomCompositeModel> models;
 
     public CustomCompositeElm(int xx, int yy) {
         super(xx, yy);
@@ -132,8 +133,6 @@ public class CustomCompositeElm extends CompositeElm {
     public int getPostCount() {
         return postCount;
     }
-
-    Vector<CustomCompositeModel> models;
 
     @Override
     public EditInfo getEditInfo(int n) {

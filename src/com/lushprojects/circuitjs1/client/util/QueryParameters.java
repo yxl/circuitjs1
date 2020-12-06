@@ -40,7 +40,7 @@ public class QueryParameters {
     }
 
     public String getValue(String key) {
-        return (String) map.get(key);
+        return map.get(key);
     }
 
 

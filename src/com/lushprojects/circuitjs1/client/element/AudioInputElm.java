@@ -34,6 +34,10 @@ class AudioFileEntry {
 }
 
 public class AudioInputElm extends RailElm {
+    static int lastSamplingRate;
+    // cache to preserve audio data when doing cut/paste, or undo/redo
+    static int fileNumCounter = 1;
+    static HashMap<Integer, AudioFileEntry> audioFileMap = new HashMap<>();
     JsArrayNumber data;
     double timeOffset;
     int samplingRate;
@@ -41,12 +45,7 @@ public class AudioInputElm extends RailElm {
     String fileName;
     double maxVoltage;
     double startPosition;
-
-    static int lastSamplingRate;
-
-    // cache to preserve audio data when doing cut/paste, or undo/redo
-    static int fileNumCounter = 1;
-    static HashMap<Integer, AudioFileEntry> audioFileMap = new HashMap<>();
+    double fmphase;
 
     public AudioInputElm(int xx, int yy) {
         super(xx, yy, WF_AC);
@@ -69,7 +68,30 @@ public class AudioInputElm extends RailElm {
         samplingRate = lastSamplingRate;
     }
 
-    double fmphase;
+    // fetch audio data for a selected file
+    static native String fetchLoadFileData(AudioInputElm elm, Element uploadElement) /*-{
+        var oFiles = uploadElement.files;
+        var context = new (window.AudioContext || window.webkitAudioContext)();
+        elm.@com.lushprojects.circuitjs1.client.element.AudioInputElm::setSamplingRate(I)(context.sampleRate);
+        if (oFiles.length >= 1) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                context.decodeAudioData(reader.result, function (buffer) {
+                        var data = buffer.getChannelData(0);
+                        elm.@com.lushprojects.circuitjs1.client.element.AudioInputElm::gotAudioData(*)(data);
+                    },
+                    function (e) {
+                        console.log("Error with decoding audio data" + e.err);
+                    });
+            };
+
+            reader.readAsArrayBuffer(oFiles[0]);
+        }
+    }-*/;
+
+    public static void clearCache() {
+        audioFileMap.clear();
+    }
 
     @Override
     public String dump() {
@@ -162,27 +184,6 @@ public class AudioInputElm extends RailElm {
             startPosition = ei.value;
     }
 
-    // fetch audio data for a selected file
-    static native String fetchLoadFileData(AudioInputElm elm, Element uploadElement) /*-{
-        var oFiles = uploadElement.files;
-        var context = new (window.AudioContext || window.webkitAudioContext)();
-        elm.@com.lushprojects.circuitjs1.client.element.AudioInputElm::setSamplingRate(I)(context.sampleRate);
-        if (oFiles.length >= 1) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                context.decodeAudioData(reader.result, function (buffer) {
-                        var data = buffer.getChannelData(0);
-                        elm.@com.lushprojects.circuitjs1.client.element.AudioInputElm::gotAudioData(*)(data);
-                    },
-                    function (e) {
-                        console.log("Error with decoding audio data" + e.err);
-                    });
-            };
-
-            reader.readAsArrayBuffer(oFiles[0]);
-        }
-    }-*/;
-
     void gotAudioData(JsArrayNumber d) {
         data = d;
         lastSamplingRate = samplingRate;
@@ -200,9 +201,5 @@ public class AudioInputElm extends RailElm {
         arr[2] = "pos = " + getUnitText(timeOffset, "s");
         double dur = data.length() / (double) samplingRate;
         arr[3] = "dur = " + getUnitText(dur, "s");
-    }
-
-    public static void clearCache() {
-        audioFileMap.clear();
     }
 }

@@ -8,6 +8,7 @@ import com.lushprojects.circuitjs1.client.ui.EditInfo;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class CustomLogicElm extends ChipElm {
+    static String lastModelName = "default";
     String modelName;
     int postCount;
     int inputCount, outputCount;
@@ -15,7 +16,6 @@ public class CustomLogicElm extends ChipElm {
     boolean[] lastValues;
     boolean[] patternValues;
     boolean[] highImpedance;
-    static String lastModelName = "default";
 
     public CustomLogicElm(int xx, int yy) {
         super(xx, yy);

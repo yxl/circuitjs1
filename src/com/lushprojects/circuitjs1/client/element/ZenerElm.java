@@ -32,13 +32,16 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 // http://www.camotruck.net/rollins/simulator.html
 public class ZenerElm extends DiodeElm {
     static String lastZenerModelName = "default-zener";
-
+    final int hs = 8;
+    final double default_zvoltage = 5.6;
+    Polygon poly;
+    Point[] cathode;
+    Point[] wing;
     public ZenerElm(int xx, int yy) {
         super(xx, yy);
         modelName = lastZenerModelName;
         setup();
     }
-
     public ZenerElm(int xa, int ya, int xb, int yb, int f,
                     StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
@@ -55,11 +58,6 @@ public class ZenerElm extends DiodeElm {
     public int getDumpType() {
         return 'z';
     }
-
-    final int hs = 8;
-    Polygon poly;
-    Point[] cathode;
-    Point[] wing;
 
     @Override
     public void setPoints() {
@@ -100,8 +98,6 @@ public class ZenerElm extends DiodeElm {
         doDots(g);
         drawPosts(g);
     }
-
-    final double default_zvoltage = 5.6;
 
     @Override
     public void getInfo(String[] arr) {

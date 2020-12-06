@@ -36,14 +36,19 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 import java.util.Vector;
 
 public class DiodeElm extends CircuitElm {
-    Diode diode;
     static final int FLAG_FWDROP = 1;
     static final int FLAG_MODEL = 2;
+    static String lastModelName = "default";
+    final int hs = 8;
+    Diode diode;
     String modelName;
     DiodeModel model;
-    static String lastModelName = "default";
     boolean hasResistance;
     int diodeEndNode;
+    Polygon poly;
+    Point[] cathode;
+    boolean customModelUI;
+    Vector<DiodeModel> models;
 
     public DiodeElm(int xx, int yy) {
         super(xx, yy);
@@ -121,10 +126,6 @@ public class DiodeElm extends CircuitElm {
             return null;
         return model.dump();
     }
-
-    final int hs = 8;
-    Polygon poly;
-    Point[] cathode;
 
     @Override
     public void setPoints() {
@@ -205,9 +206,6 @@ public class DiodeElm extends CircuitElm {
         if (model.oldStyle)
             arr[4] = "Vf = " + getVoltageText(model.fwdrop);
     }
-
-    boolean customModelUI;
-    Vector<DiodeModel> models;
 
     @Override
     public EditInfo getEditInfo(int n) {

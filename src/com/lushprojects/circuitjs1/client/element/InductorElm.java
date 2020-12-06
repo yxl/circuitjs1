@@ -26,8 +26,8 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class InductorElm extends CircuitElm {
-    Inductor ind;
     public double inductance;
+    Inductor ind;
 
     public InductorElm(int xx, int yy) {
         super(xx, yy);
@@ -71,7 +71,7 @@ public class InductorElm extends CircuitElm {
         draw2Leads(g);
         setPowerColor(g, false);
         drawCoil(g, 8, lead1, lead2, v1, v2);
-        if (sim.showValuesCheckItem.getState()) {
+        if (sim.topMenuBar.showValuesCheckItem.getState()) {
             String s = getShortUnitText(inductance, "H");
             drawValues(g, s, hs);
         }

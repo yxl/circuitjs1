@@ -40,7 +40,15 @@ public class SCRElm extends CircuitElm {
     final int gnode = 2;
     final int inode = 3;
     final int FLAG_GATE_FIX = 1;
+    final int hs = 8;
     Diode diode;
+    double ia, ic, ig, curcount_a, curcount_c, curcount_g;
+    double lastvac, lastvag;
+    double cresistance, triggerI, holdingI;
+    Polygon poly;
+    Point[] cathode;
+    Point[] gate;
+    double aresistance;
 
     public SCRElm(int xx, int yy) {
         super(xx, yy);
@@ -48,7 +56,6 @@ public class SCRElm extends CircuitElm {
         flags |= FLAG_GATE_FIX;
         setup();
     }
-
     public SCRElm(int xa, int ya, int xb, int yb, int f,
                   StringTokenizer st) {
         super(xa, ya, xb, yb, f);
@@ -101,15 +108,6 @@ public class SCRElm extends CircuitElm {
                 (volts[anode] - volts[gnode]) + " " + triggerI + " " + holdingI + " " +
                 cresistance;
     }
-
-    double ia, ic, ig, curcount_a, curcount_c, curcount_g;
-    double lastvac, lastvag;
-    double cresistance, triggerI, holdingI;
-
-    final int hs = 8;
-    Polygon poly;
-    Point[] cathode;
-    Point[] gate;
 
     boolean applyGateFix() {
         return (flags & FLAG_GATE_FIX) != 0;
@@ -211,7 +209,6 @@ public class SCRElm extends CircuitElm {
         return -ig;
     }
 
-
     @Override
     public Point getPost(int n) {
         return (n == 0) ? point1 : (n == 1) ? point2 : gate[1];
@@ -231,8 +228,6 @@ public class SCRElm extends CircuitElm {
     public double getPower() {
         return (volts[anode] - volts[gnode]) * ia + (volts[cnode] - volts[gnode]) * ic;
     }
-
-    double aresistance;
 
     @Override
     public void stamp() {

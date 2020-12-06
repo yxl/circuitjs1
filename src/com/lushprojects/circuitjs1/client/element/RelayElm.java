@@ -36,6 +36,10 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Point;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class RelayElm extends CircuitElm {
+    final int nSwitch0 = 0;
+    final int nSwitch1 = 1;
+    final int nSwitch2 = 2;
+    final int FLAG_SWAP_COIL = 1;
     double inductance;
     Inductor ind;
     double r_on, r_off, onCurrent;
@@ -53,11 +57,8 @@ public class RelayElm extends CircuitElm {
     int i_position;
     int poleCount;
     int openhs;
-    final int nSwitch0 = 0;
-    final int nSwitch1 = 1;
-    final int nSwitch2 = 2;
     int nCoil1, nCoil2, nCoil3;
-    final int FLAG_SWAP_COIL = 1;
+    double a1, a2, a3, a4;
 
     public RelayElm(int xx, int yy) {
         super(xx, yy);
@@ -252,8 +253,6 @@ public class RelayElm extends CircuitElm {
         for (i = 0; i != poleCount; i++)
             switchCurrent[i] = switchCurCount[i] = 0;
     }
-
-    double a1, a2, a3, a4;
 
     @Override
     public void stamp() {

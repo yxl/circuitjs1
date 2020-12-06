@@ -29,17 +29,14 @@ public abstract class CompositeElm extends CircuitElm {
 
     // need to use escape() instead of converting spaces to _'s so composite elements can be nested
     final int FLAG_ESCAPE = 1;
-
-    // list of elements contained in this subcircuit
-    Vector<CircuitElm> compElmList;
-
     // list of nodes, mapping each one to a list of elements that reference that node
     protected Vector<CircuitNode> compNodeList;
-
     protected int numPosts = 0;
     protected int numNodes = 0;
     protected Point[] posts;
     protected Vector<VoltageSourceRecord> voltageSources;
+    // list of elements contained in this subcircuit
+    Vector<CircuitElm> compElmList;
 
     CompositeElm(int xx, int yy) {
         super(xx, yy);

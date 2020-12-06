@@ -28,9 +28,11 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 // SPST switch
 public class SwitchElm extends CircuitElm {
+    final int openhs = 16;
     public boolean momentary;
     // position 0 == closed, position 1 == open
     int position, posCount;
+    Point ps, ps2;
 
     public SwitchElm(int xx, int yy) {
         super(xx, yy);
@@ -70,8 +72,6 @@ public class SwitchElm extends CircuitElm {
         return super.dump() + " " + position + " " + momentary;
     }
 
-    Point ps, ps2;
-
     @Override
     public void setPoints() {
         super.setPoints();
@@ -79,8 +79,6 @@ public class SwitchElm extends CircuitElm {
         ps = new Point();
         ps2 = new Point();
     }
-
-    final int openhs = 16;
 
     @Override
     public void draw(Graphics g) {

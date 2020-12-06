@@ -27,13 +27,19 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Polygon;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class OpAmpElm extends CircuitElm {
-    int opsize, opheight, opwidth, opaddtext;
-    double maxOut, minOut, gain, gbw;
-    boolean reset;
     final int FLAG_SWAP = 1;
     final int FLAG_SMALL = 2;
     final int FLAG_LOWGAIN = 4;
     final int FLAG_GAIN = 8;
+    int opsize, opheight, opwidth, opaddtext;
+    double maxOut, minOut, gain, gbw;
+    boolean reset;
+    Point[] in1p;
+    Point[] in2p;
+    Point[] textp;
+    Polygon triangle;
+    Font plusFont;
+    double lastvd;
 
     public OpAmpElm(int xx, int yy) {
         super(xx, yy);
@@ -43,7 +49,7 @@ public class OpAmpElm extends CircuitElm {
         gbw = 1e6;
         flags = FLAG_GAIN; // need to do this before setSize()
         gain = 100000;
-        setSize(sim.smallGridCheckItem.getState() ? 1 : 2);
+        setSize(sim.topMenuBar.smallGridCheckItem.getState() ? 1 : 2);
     }
 
     public OpAmpElm(int xa, int ya, int xb, int yb, int f,
@@ -113,12 +119,6 @@ public class OpAmpElm extends CircuitElm {
         return volts[2] * current;
     }
 
-    Point[] in1p;
-    Point[] in2p;
-    Point[] textp;
-    Polygon triangle;
-    Font plusFont;
-
     void setSize(int s) {
         opsize = s;
         opheight = 8 * s;
@@ -178,8 +178,6 @@ public class OpAmpElm extends CircuitElm {
         arr[5] = "range = " + getVoltageText(minOut) + " to " +
                 getVoltageText(maxOut);
     }
-
-    double lastvd;
 
     @Override
     public void stamp() {

@@ -28,14 +28,16 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 import java.util.HashMap;
 
 public class LabeledNodeElm extends CircuitElm {
+    static HashMap<String, Integer> nodeList;
     final int FLAG_ESCAPE = 4;
     final int FLAG_INTERNAL = 1;
-
+    final int circleSize = 17;
+    public String text;
+    int nodeNumber;
     public LabeledNodeElm(int xx, int yy) {
         super(xx, yy);
         text = "label";
     }
-
     public LabeledNodeElm(int xa, int ya, int xb, int yb, int f,
                           StringTokenizer st) {
         super(xa, ya, xb, yb, f);
@@ -50,20 +52,6 @@ public class LabeledNodeElm extends CircuitElm {
         }
     }
 
-    @Override
-    public String dump() {
-        flags |= FLAG_ESCAPE;
-        return super.dump() + " " + CustomLogicModel.escape(text);
-    }
-
-    public String text;
-    static HashMap<String, Integer> nodeList;
-    int nodeNumber;
-
-    public boolean isInternal() {
-        return (flags & FLAG_INTERNAL) != 0;
-    }
-
     public static native void console(String text)
         /*-{
             console.log(text);
@@ -73,7 +61,15 @@ public class LabeledNodeElm extends CircuitElm {
         nodeList = new HashMap<>();
     }
 
-    final int circleSize = 17;
+    @Override
+    public String dump() {
+        flags |= FLAG_ESCAPE;
+        return super.dump() + " " + CustomLogicModel.escape(text);
+    }
+
+    public boolean isInternal() {
+        return (flags & FLAG_INTERNAL) != 0;
+    }
 
     @Override
     public void setPoints() {

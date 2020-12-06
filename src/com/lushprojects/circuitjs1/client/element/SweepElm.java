@@ -26,9 +26,13 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class SweepElm extends CircuitElm {
-    double maxV, maxF, minF, sweepTime, frequency;
     final int FLAG_LOG = 1;
     final int FLAG_BIDIR = 2;
+    final int circleSize = 17;
+    double maxV, maxF, minF, sweepTime, frequency;
+    double fadd, fmul, freqTime, savedTimeStep;
+    int dir = 1;
+    double v;
 
     public SweepElm(int xx, int yy) {
         super(xx, yy);
@@ -58,8 +62,6 @@ public class SweepElm extends CircuitElm {
     public int getPostCount() {
         return 1;
     }
-
-    final int circleSize = 17;
 
     @Override
     public String dump() {
@@ -109,7 +111,7 @@ public class SweepElm extends CircuitElm {
         g.context.stroke();
         g.context.setLineWidth(1.0);
 
-        if (sim.showValuesCheckItem.getState()) {
+        if (sim.topMenuBar.showValuesCheckItem.getState()) {
             String s = getShortUnitText(frequency, "Hz");
             if (dx == 0 || dy == 0)
                 drawValues(g, s, circleSize);
@@ -125,9 +127,6 @@ public class SweepElm extends CircuitElm {
     public void stamp() {
         sim.stampVoltageSource(0, nodes[0], voltSource);
     }
-
-    double fadd, fmul, freqTime, savedTimeStep;
-    int dir = 1;
 
     void setParams() {
         if (frequency < minF || frequency > maxF) {
@@ -152,8 +151,6 @@ public class SweepElm extends CircuitElm {
         dir = 1;
         setParams();
     }
-
-    double v;
 
     @Override
     public void startIteration() {

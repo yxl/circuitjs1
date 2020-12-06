@@ -25,6 +25,17 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Polygon;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class TunnelDiodeElm extends CircuitElm {
+    static final double pvp = .1;
+    static final double pip = 4.7e-3;
+    static final double pvv = .37;
+    static final double pvt = .026;
+    static final double pvpp = .525;
+    static final double piv = 370e-6;
+    final int hs = 8;
+    Polygon poly;
+    Point[] cathode;
+    double lastvoltdiff;
+
     public TunnelDiodeElm(int xx, int yy) {
         super(xx, yy);
         setup();
@@ -48,10 +59,6 @@ public class TunnelDiodeElm extends CircuitElm {
     public int getDumpType() {
         return 175;
     }
-
-    final int hs = 8;
-    Polygon poly;
-    Point[] cathode;
 
     @Override
     public void setPoints() {
@@ -94,8 +101,6 @@ public class TunnelDiodeElm extends CircuitElm {
         lastvoltdiff = volts[0] = volts[1] = curcount = 0;
     }
 
-    double lastvoltdiff;
-
     double limitStep(double vnew, double vold) {
         // Prevent voltage changes of more than 1V when iterating.  Wow, I thought it would be
         // much harder than this to prevent convergence problems.
@@ -111,13 +116,6 @@ public class TunnelDiodeElm extends CircuitElm {
         sim.stampNonLinear(nodes[0]);
         sim.stampNonLinear(nodes[1]);
     }
-
-    static final double pvp = .1;
-    static final double pip = 4.7e-3;
-    static final double pvv = .37;
-    static final double pvt = .026;
-    static final double pvpp = .525;
-    static final double piv = 370e-6;
 
     @Override
     public void doStep() {

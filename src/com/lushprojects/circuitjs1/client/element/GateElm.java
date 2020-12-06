@@ -27,14 +27,22 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Polygon;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 abstract class GateElm extends CircuitElm {
+    public static double lastHighVoltage = 5;
+    static boolean lastSchmitt = false;
     final int FLAG_SMALL = 1;
     final int FLAG_SCHMITT = 2;
     int inputCount = 2;
     boolean lastOutput;
     double highVoltage;
-    public static double lastHighVoltage = 5;
-    static boolean lastSchmitt = false;
-
+    int gsize, gwidth, gwidth2, gheight, hs2;
+    Point[] inPosts;
+    Point[] inGates;
+    boolean[] inputStates;
+    int ww;
+    Polygon gatePoly, schmittPoly;
+    Point pcircle;
+    Point[] linePoints;
+    int oscillationCount;
     public GateElm(int xx, int yy) {
         super(xx, yy);
         noDiagonal = true;
@@ -45,7 +53,7 @@ abstract class GateElm extends CircuitElm {
         if (lastSchmitt)
             flags |= FLAG_SCHMITT;
 
-        setSize(sim.smallGridCheckItem.getState() ? 1 : 2);
+        setSize(sim.topMenuBar.smallGridCheckItem.getState() ? 1 : 2);
     }
 
     public GateElm(int xa, int ya, int xb, int yb, int f,
@@ -63,11 +71,13 @@ abstract class GateElm extends CircuitElm {
         setSize((f & FLAG_SMALL) != 0 ? 1 : 2);
     }
 
+    static boolean useEuroGates() {
+        return sim.topMenuBar.euroGatesCheckItem.getState();
+    }
+
     boolean isInverting() {
         return false;
     }
-
-    int gsize, gwidth, gwidth2, gheight, hs2;
 
     void setSize(int s) {
         gsize = s;
@@ -82,11 +92,6 @@ abstract class GateElm extends CircuitElm {
     public String dump() {
         return super.dump() + " " + inputCount + " " + volts[inputCount] + " " + highVoltage;
     }
-
-    Point[] inPosts;
-    Point[] inGates;
-    boolean[] inputStates;
-    int ww;
 
     @Override
     public void setPoints() {
@@ -130,10 +135,6 @@ abstract class GateElm extends CircuitElm {
         return null;
     }
 
-    static boolean useEuroGates() {
-        return sim.euroGatesCheckItem.getState();
-    }
-
     @Override
     public void draw(Graphics g) {
         int i;
@@ -162,10 +163,6 @@ abstract class GateElm extends CircuitElm {
         drawDots(g, lead2, point2, curcount);
         drawPosts(g);
     }
-
-    Polygon gatePoly, schmittPoly;
-    Point pcircle;
-    Point[] linePoints;
 
     @Override
     public int getPostCount() {
@@ -211,8 +208,6 @@ abstract class GateElm extends CircuitElm {
     }
 
     abstract boolean calcFunction();
-
-    int oscillationCount;
 
     @Override
     public void doStep() {

@@ -26,6 +26,19 @@ import com.google.gwt.user.client.ui.Widget;
 import com.lushprojects.circuitjs1.client.CirSim;
 
 public class EditInfo {
+    public String name, text;
+    public double value;
+    public TextBox textf;
+    public Choice choice;
+    public Checkbox checkbox;
+    public Button button;
+    public TextArea textArea;
+    public Widget widget;
+    public boolean newDialog;
+    public boolean dimensionless;
+    public boolean noSliders;
+    // for slider dialog
+    public TextBox minBox, maxBox, labelBox;
     // mn/mx were used in the java version to create sliders in the edit dialog but we don't do that in the javascript version, so this
     // constructor is deprecated
     public EditInfo(String n, double val, double mn, double mx) {
@@ -33,11 +46,14 @@ public class EditInfo {
         value = val;
         dimensionless = false;
     }
-
     public EditInfo(String n, double val) {
         name = n;
         value = val;
         dimensionless = false;
+    }
+
+    public static String makeLink(String file, String text) {
+        return "<a href=\"" + file + "\" target=\"_blank\">" + CirSim.LS(text) + "</a>";
     }
 
     public EditInfo setDimensionless() {
@@ -56,27 +72,8 @@ public class EditInfo {
         return flags & ~bit;
     }
 
-    public String name, text;
-    public double value;
-    public TextBox textf;
-    public Choice choice;
-    public Checkbox checkbox;
-    public Button button;
-    public TextArea textArea;
-    public Widget widget;
-    public boolean newDialog;
-    public boolean dimensionless;
-    public boolean noSliders;
-
-    // for slider dialog
-    public TextBox minBox, maxBox, labelBox;
-
     public boolean canCreateAdjustable() {
         return choice == null && checkbox == null && button == null && textArea == null &&
                 widget == null && !noSliders;
-    }
-
-    public static String makeLink(String file, String text) {
-        return "<a href=\"" + file + "\" target=\"_blank\">" + CirSim.LS(text) + "</a>";
     }
 }

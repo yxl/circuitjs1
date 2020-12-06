@@ -28,21 +28,30 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Point;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public abstract class ChipElm extends CircuitElm {
-    int csize, cspc, cspc2;
-    int bits;
+    public static final int SIDE_N = 0;
+    public static final int SIDE_S = 1;
+    public static final int SIDE_W = 2;
+    public static final int SIDE_E = 3;
     final int FLAG_SMALL = 1;
     final int FLAG_FLIP_X = 1024;
     final int FLAG_FLIP_Y = 2048;
-
+    public Pin[] pins;
+    public int sizeX, sizeY;
+    int csize, cspc, cspc2;
+    int bits;
+    int[] rectPointsX;
+    int[] rectPointsY;
+    int[] clockPointsX;
+    int[] clockPointsY;
+    boolean lastClock;
     public ChipElm(int xx, int yy) {
         super(xx, yy);
         if (needsBits())
             bits = (this instanceof RingCounterElm) ? 10 : 4;
         noDiagonal = true;
         setupPins();
-        setSize(sim.smallGridCheckItem.getState() ? 1 : 2);
+        setSize(sim.topMenuBar.smallGridCheckItem.getState() ? 1 : 2);
     }
-
     public ChipElm(int xa, int ya, int xb, int yb, int f,
                    StringTokenizer st) {
         super(xa, ya, xb, yb, f);
@@ -96,7 +105,7 @@ public abstract class ChipElm extends CircuitElm {
             p.curcount = updateDotCount(p.current, p.curcount);
             drawDots(g, b, a, p.curcount);
             if (p.bubble) {
-                g.setColor(sim.printableCheckItem.getState() ?
+                g.setColor(sim.topMenuBar.printableCheckItem.getState() ?
                         Color.white : Color.black);
                 drawThickCircle(g, p.bubbleX, p.bubbleY, 1);
                 g.setColor(lightGrayColor);
@@ -130,14 +139,6 @@ public abstract class ChipElm extends CircuitElm {
         drawPosts(g);
         g.setFont(oldfont);
     }
-
-    int[] rectPointsX;
-    int[] rectPointsY;
-    int[] clockPointsX;
-    int[] clockPointsY;
-    public Pin[] pins;
-    public int sizeX, sizeY;
-    boolean lastClock;
 
     @Override
     public void drag(int xx, int yy) {
@@ -382,24 +383,18 @@ public abstract class ChipElm extends CircuitElm {
         }
     }
 
-    public static final int SIDE_N = 0;
-    public static final int SIDE_S = 1;
-    public static final int SIDE_W = 2;
-    public static final int SIDE_E = 3;
-
     public class Pin {
+        public Point textloc;
+        public int pos, side, voltSource, bubbleX, bubbleY;
+        public boolean lineOver, bubble, clock, output, value, state, selected;
+        Point post, stub;
+        String text;
+        double curcount, current;
         Pin(int p, int s, String t) {
             pos = p;
             side = s;
             text = t;
         }
-
-        Point post, stub;
-        public Point textloc;
-        public int pos, side, voltSource, bubbleX, bubbleY;
-        String text;
-        public boolean lineOver, bubble, clock, output, value, state, selected;
-        double curcount, current;
 
         void setPoint(int px, int py, int dx, int dy, int dax, int day,
                       int sx, int sy) {

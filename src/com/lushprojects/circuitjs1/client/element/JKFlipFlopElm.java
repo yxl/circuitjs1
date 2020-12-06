@@ -27,14 +27,6 @@ public class JKFlipFlopElm extends ChipElm {
     final int FLAG_RESET = 2;
     final int FLAG_POSITIVE_EDGE = 4;
 
-    boolean hasReset() {
-        return (flags & FLAG_RESET) != 0;
-    }
-
-    boolean positiveEdgeTriggered() {
-        return (flags & FLAG_POSITIVE_EDGE) != 0;
-    }
-
     public JKFlipFlopElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -43,6 +35,14 @@ public class JKFlipFlopElm extends ChipElm {
                          StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
         pins[4].value = !pins[3].value;
+    }
+
+    boolean hasReset() {
+        return (flags & FLAG_RESET) != 0;
+    }
+
+    boolean positiveEdgeTriggered() {
+        return (flags & FLAG_POSITIVE_EDGE) != 0;
     }
 
     @Override

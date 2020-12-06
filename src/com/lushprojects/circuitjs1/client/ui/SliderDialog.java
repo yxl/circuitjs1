@@ -28,12 +28,12 @@ import com.lushprojects.circuitjs1.client.element.CircuitElm;
 
 // class EditDialog extends Dialog implements AdjustmentListener, ActionListener, ItemListener {
 public class SliderDialog extends DialogBox {
+    final int barmax = 1000;
     CircuitElm elm;
     CirSim sim;
     Button applyButton, okButton, cancelButton;
     EditInfo[] einfos;
     int einfocount;
-    final int barmax = 1000;
     VerticalPanel vp;
     HorizontalPanel hp;
     NumberFormat noCommaFormat;

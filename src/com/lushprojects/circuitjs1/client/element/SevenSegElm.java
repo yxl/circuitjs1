@@ -29,22 +29,64 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Point;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class SevenSegElm extends ChipElm {
-    // base segment count not including decimal point or colon
-    int baseSegmentCount;
-
-    // segment count including decimal point or colon
-    int segmentCount;
-
-    int extraSegment;
     static final int ES_NONE = 0;
     static final int ES_DP = 1;
     static final int ES_COLON = 2;
-
+    static int[] display7 = {
+            // x1, y1, x2, y2 for each segment
+            0, 0, 2, 0,
+            2, 0, 2, 1,
+            2, 1, 2, 2,
+            0, 2, 2, 2,
+            0, 1, 0, 2,
+            0, 0, 0, 1,
+            0, 1, 2, 1
+    };
+    static int[] display16 = {
+            0, 0, 1, 0,
+            1, 0, 2, 0,
+            2, 0, 2, 1,
+            2, 1, 2, 2,
+            2, 2, 1, 2,
+            1, 2, 0, 2,
+            0, 2, 0, 1,
+            0, 1, 0, 0,
+            0, 0, 1, 1,
+            1, 0, 1, 1,
+            2, 0, 1, 1,
+            1, 1, 2, 1,
+            1, 1, 2, 2,
+            1, 1, 1, 2,
+            1, 1, 0, 2,
+            0, 1, 1, 1
+    };
+    static int[] display14 = {
+            0, 0, 2, 0,
+            2, 0, 2, 1,
+            2, 1, 2, 2,
+            2, 2, 0, 2,
+            0, 2, 0, 1,
+            0, 1, 0, 0,
+            0, 0, 1, 1,
+            1, 0, 1, 1,
+            2, 0, 1, 1,
+            1, 1, 2, 1,
+            1, 1, 2, 2,
+            1, 1, 1, 2,
+            1, 1, 0, 2,
+            0, 1, 1, 1
+    };
+    // base segment count not including decimal point or colon
+    int baseSegmentCount;
+    // segment count including decimal point or colon
+    int segmentCount;
+    int extraSegment;
     int pinCount;
     int commonPin;
-
     // 1 = common cathode, -1 = common anode, 0 = no diodes
     int diodeDirection;
+    Color darkred;
+    Diode[] diodes;
 
     public SevenSegElm(int xx, int yy) {
         super(xx, yy);
@@ -79,8 +121,6 @@ public class SevenSegElm extends ChipElm {
     public String getChipName() {
         return segmentCount + "-segment display";
     }
-
-    Color darkred;
 
     @Override
     public void setupPins() {
@@ -156,53 +196,6 @@ public class SevenSegElm extends ChipElm {
         g.context.lineTo(x, y - sp);
         g.context.fill();
     }
-
-    static int[] display7 = {
-            // x1, y1, x2, y2 for each segment
-            0, 0, 2, 0,
-            2, 0, 2, 1,
-            2, 1, 2, 2,
-            0, 2, 2, 2,
-            0, 1, 0, 2,
-            0, 0, 0, 1,
-            0, 1, 2, 1
-    };
-    static int[] display16 = {
-            0, 0, 1, 0,
-            1, 0, 2, 0,
-            2, 0, 2, 1,
-            2, 1, 2, 2,
-            2, 2, 1, 2,
-            1, 2, 0, 2,
-            0, 2, 0, 1,
-            0, 1, 0, 0,
-            0, 0, 1, 1,
-            1, 0, 1, 1,
-            2, 0, 1, 1,
-            1, 1, 2, 1,
-            1, 1, 2, 2,
-            1, 1, 1, 2,
-            1, 1, 0, 2,
-            0, 1, 1, 1
-    };
-    static int[] display14 = {
-            0, 0, 2, 0,
-            2, 0, 2, 1,
-            2, 1, 2, 2,
-            2, 2, 0, 2,
-            0, 2, 0, 1,
-            0, 1, 0, 0,
-            0, 0, 1, 1,
-            1, 0, 1, 1,
-            2, 0, 1, 1,
-            1, 1, 2, 1,
-            1, 1, 2, 2,
-            1, 1, 1, 2,
-            1, 1, 0, 2,
-            0, 1, 1, 1
-    };
-
-    Diode[] diodes;
 
     @Override
     public void stamp() {
@@ -310,7 +303,7 @@ public class SevenSegElm extends ChipElm {
     void setColor(Graphics g, int p) {
         if (diodeDirection == 0) {
             g.setColor(pins[p].value ? Color.red :
-                    sim.printableCheckItem.getState() ? Color.white : darkred);
+                    sim.topMenuBar.printableCheckItem.getState() ? Color.white : darkred);
             return;
         }
         // 10mA current = max brightness

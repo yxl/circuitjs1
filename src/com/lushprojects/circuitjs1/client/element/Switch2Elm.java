@@ -28,9 +28,12 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Rectangle;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class Switch2Elm extends SwitchElm {
+    static final int FLAG_CENTER_OFF = 1;
+    final int openhs = 16;
     int link;
     int throwCount;
-    static final int FLAG_CENTER_OFF = 1;
+    Point[] swposts;
+    Point[] swpoles;
 
     public Switch2Elm(int xx, int yy) {
         super(xx, yy, false);
@@ -65,10 +68,6 @@ public class Switch2Elm extends SwitchElm {
     public String dump() {
         return super.dump() + " " + link + " " + throwCount;
     }
-
-    final int openhs = 16;
-    Point[] swposts;
-    Point[] swpoles;
 
     @Override
     public void setPoints() {

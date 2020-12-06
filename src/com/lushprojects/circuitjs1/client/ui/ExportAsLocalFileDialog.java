@@ -29,24 +29,6 @@ public class ExportAsLocalFileDialog extends DialogBox {
 
     VerticalPanel vp;
 
-    static public final native boolean downloadIsSupported()
-        /*-{
-            return !!(("download" in $doc.createElement("a")));
-        }-*/;
-
-    static public final native String getBlobUrl(String data)
-        /*-{
-            var datain = [""];
-            datain[0] = data;
-            var oldblob = $doc.exportBlob;
-            if (oldblob)
-                URL.revokeObjectURL(oldblob);
-            var blob = new Blob(datain, {type: 'text/plain'});
-            var url = URL.createObjectURL(blob);
-            $doc.exportBlob = url;
-            return url;
-        }-*/;
-
     public ExportAsLocalFileDialog(String data) {
         super();
         Button okButton;
@@ -67,6 +49,24 @@ public class ExportAsLocalFileDialog extends DialogBox {
         okButton.addClickHandler(event -> closeDialog());
         this.center();
     }
+
+    static public final native boolean downloadIsSupported()
+        /*-{
+            return !!(("download" in $doc.createElement("a")));
+        }-*/;
+
+    static public final native String getBlobUrl(String data)
+        /*-{
+            var datain = [""];
+            datain[0] = data;
+            var oldblob = $doc.exportBlob;
+            if (oldblob)
+                URL.revokeObjectURL(oldblob);
+            var blob = new Blob(datain, {type: 'text/plain'});
+            var url = URL.createObjectURL(blob);
+            $doc.exportBlob = url;
+            return url;
+        }-*/;
 
     protected void closeDialog() {
         this.hide();

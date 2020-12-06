@@ -40,16 +40,24 @@ public class TriacElm extends CircuitElm {
     final int mt2node = 0;
     final int gnode = 2;
     final int mtinode = 3;
-
+    final int hs = 8;
     Diode diode03, diode30;
     boolean state;
+    double i1, i2, ig, curcount_1, curcount_2, curcount_g;
+    double cresistance, triggerI, holdingI;
+    Polygon poly;
+    Point[] cathode;
+    Point[] gate;
+    Polygon[] arrows;
+    Point[] plate1;
+    Point[] plate2;
+    double aresistance;
 
     public TriacElm(int xx, int yy) {
         super(xx, yy);
         setDefaults();
         setup();
     }
-
     public TriacElm(int xa, int ya, int xb, int yb, int f,
                     StringTokenizer st) {
         super(xa, ya, xb, yb, f);
@@ -96,18 +104,6 @@ public class TriacElm extends CircuitElm {
     public String dump() {
         return super.dump() + " " + triggerI + " " + holdingI + " " + cresistance + " " + state;
     }
-
-    double i1, i2, ig, curcount_1, curcount_2, curcount_g;
-    double cresistance, triggerI, holdingI;
-
-    final int hs = 8;
-    Polygon poly;
-    Point[] cathode;
-    Point[] gate;
-
-    Polygon[] arrows;
-    Point[] plate1;
-    Point[] plate2;
 
     @Override
     public void setPoints() {
@@ -224,8 +220,6 @@ public class TriacElm extends CircuitElm {
     public int getInternalNodeCount() {
         return 1;
     }
-
-    double aresistance;
 
     @Override
     public void stamp() {

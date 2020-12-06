@@ -6,16 +6,15 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Polygon;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class OptocouplerElm extends CompositeElm {
+    private static final String modelString = "DiodeElm 6 1\rCCCSElm 1 2 3 4\rNTransistorElm 3 4 5";
+    private static final int[] modelExternalNodes = {6, 2, 4, 5};
     int csize, cspc, cspc2;
     int[] rectPointsX;
     int[] rectPointsY;
     double[] curCounts;
-
-    private static final String modelString = "DiodeElm 6 1\rCCCSElm 1 2 3 4\rNTransistorElm 3 4 5";
-    private static final int[] modelExternalNodes = {6, 2, 4, 5};
-
     DiodeElm diode;
     TransistorElm transistor;
+    Point[] stubs;
 
     public OptocouplerElm(int xx, int yy) {
         super(xx, yy, modelString, modelExternalNodes);
@@ -95,8 +94,6 @@ public class OptocouplerElm extends CompositeElm {
             g.drawLine(sx + 10, y, sx + 15, y);
         }
     }
-
-    Point[] stubs;
 
     @Override
     public void setPoints() {

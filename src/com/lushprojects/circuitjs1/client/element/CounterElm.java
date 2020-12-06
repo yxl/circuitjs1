@@ -24,9 +24,9 @@ import com.lushprojects.circuitjs1.client.ui.EditInfo;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class CounterElm extends ChipElm {
+    final int FLAG_UP_DOWN = 4;
     boolean invertreset;
     int modulus;
-    final int FLAG_UP_DOWN = 4;
 
     public CounterElm(int xx, int yy) {
         super(xx, yy);

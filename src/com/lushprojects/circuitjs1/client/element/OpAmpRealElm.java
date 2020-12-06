@@ -11,6 +11,9 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class OpAmpRealElm extends CompositeElm {
 
+    static final int MODEL_741 = 0;
+    static final int MODEL_324 = 1;
+    // 0 = input -, 1 = input +, 2 = output, 3 = V+, 4 = V-, 5, 6 = offset null
     // from https://commons.wikimedia.org/wiki/File:OpAmpTransistorLevel_Colored_Labeled.svg
     private static final String model741String =
             "NTransistorElm 3 8 9\rNTransistorElm 2 8 10\rPTransistorElm 11 12 9\rPTransistorElm 11 13 10\rNTransistorElm 14 12 1\r" + // Q1-5
@@ -22,8 +25,6 @@ public class OpAmpRealElm extends CompositeElm {
                     "ResistorElm 4 1\rResistorElm 4 14\rResistorElm 4 5\rResistorElm 4 16\rResistorElm 4 24\rResistorElm 4 23\rResistorElm 17 18\r" +
                     "ResistorElm 22 21\rResistorElm 21 20\r";
     private static final int[] model741ExternalNodes = {2, 3, 6, 7, 4}; // , 1, 5 };
-    // 0 = input -, 1 = input +, 2 = output, 3 = V+, 4 = V-, 5, 6 = offset null
-
     private static final String lm324ModelString =
             "TransistorElm 1 2 3\rCurrentElm 4 3\rTransistorElm 2 2 5\rTransistorElm 2 6 5\rCapacitorElm 6 7\rCurrentElm 4 8\rCurrentElm 4 7\rTransistorElm 8 4 9\r" +
                     "TransistorElm 7 4 10\rTransistorElm 10 4 11\rTransistorElm 11 7 12\rResistorElm 11 12\rTransistorElm 7 5 12\rCurrentElm 12 5\rTransistorElm 6 5 8\r" +
@@ -32,21 +33,23 @@ public class OpAmpRealElm extends CompositeElm {
     private static final String lm324ModelDump =
             "0 -1 -0 0 10000/0 0.000006/0 1 0 0 100/0 1 0 0 100/0 1e-11 0/0 0.000004/0 0.0001/0 1 0 0 100/0 1 0 0 100/0 1 0 0 100/0 1 0 0 100/0 25/0 -1 0 0 100/0 0.00005/" +
                     "0 -1 0 0 100/0 10000/0 1 0 0 100/0 -1 0 0 10000";
-
-    static final int MODEL_741 = 0;
-    static final int MODEL_324 = 1;
-
     private static final double[] model741resistances = {50, 25, 1e3, 50e3, 1e3, 5e3, 50e3, 50, 39e3, 7500, 4500};
-
-    int modelType;
     final int opheight = 16;
     final int opwidth = 32;
+    final double defaultCurrentLimit = .0231;
+    final int FLAG_SWAP = 2;
+    int modelType;
     double[] curCounts;
     double slewRate;
     double currentLimit;
     double capValue;
-    final double defaultCurrentLimit = .0231;
-    final int FLAG_SWAP = 2;
+    Point[] in1p;
+    Point[] in2p;
+    Point[] textp;
+    Point[] rail1p;
+    Point[] rail2p;
+    Polygon triangle;
+    Font plusFont;
 
     public OpAmpRealElm(int xx, int yy) {
         super(xx, yy); // , model741String, model741ExternalNodes);
@@ -170,14 +173,6 @@ public class OpAmpRealElm extends CompositeElm {
         drawDots(g, rail2p[0], rail2p[1], -curCounts[4]);
         drawPosts(g);
     }
-
-    Point[] in1p;
-    Point[] in2p;
-    Point[] textp;
-    Point[] rail1p;
-    Point[] rail2p;
-    Polygon triangle;
-    Font plusFont;
 
     @Override
     public void setPoints() {

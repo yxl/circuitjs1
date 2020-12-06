@@ -30,14 +30,16 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 public class JfetElm extends MosfetElm {
     Diode diode;
     double gateCurrent;
-
+    Polygon gatePoly;
+    Polygon arrowPoly;
+    Point gatePt;
+    double curcountg, curcounts, curcountd;
     JfetElm(int xx, int yy, boolean pnpflag) {
         super(xx, yy, pnpflag);
         noDiagonal = true;
         diode = new Diode(sim);
         diode.setupForDefaultModel();
     }
-
     public JfetElm(int xa, int ya, int xb, int yb, int f,
                    StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
@@ -51,11 +53,6 @@ public class JfetElm extends MosfetElm {
         super.reset();
         diode.reset();
     }
-
-    Polygon gatePoly;
-    Polygon arrowPoly;
-    Point gatePt;
-    double curcountg, curcounts, curcountd;
 
     @Override
     public void draw(Graphics g) {

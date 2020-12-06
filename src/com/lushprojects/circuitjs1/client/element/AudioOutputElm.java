@@ -13,6 +13,8 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Point;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class AudioOutputElm extends CircuitElm {
+    public static boolean okToChangeTimeStep;
+    static int lastSamplingRate = 8000;
     int dataCount, dataPtr;
     double[] data;
     boolean dataFull;
@@ -22,8 +24,10 @@ public class AudioOutputElm extends CircuitElm {
     double duration;
     double sampleStep;
     double dataStart;
-    static int lastSamplingRate = 8000;
-    public static boolean okToChangeTimeStep;
+    int dataSampleCount = 0;
+    double nextDataSample = 0;
+    double dataSample;
+    int[] samplingRateChoices = {8000, 11025, 16000, 22050, 44100};
 
     public AudioOutputElm(int xx, int yy) {
         super(xx, yy);
@@ -42,206 +46,6 @@ public class AudioOutputElm extends CircuitElm {
         labelNum = Integer.parseInt(st.nextToken());
         setDataCount();
         createButton();
-    }
-
-    @Override
-    public String dump() {
-        return super.dump() + " " + duration + " " + samplingRate + " " + labelNum;
-    }
-
-    @Override
-    public void draggingDone() {
-        setTimeStep();
-    }
-
-    // get next unused labelNum value
-    int getNextLabelNum() {
-        int i;
-        int num = 1;
-        if (sim.elmList == null)
-            return 0;
-        for (i = 0; i != sim.elmList.size(); i++) {
-            CircuitElm ce = sim.getElm(i);
-            if (!(ce instanceof AudioOutputElm))
-                continue;
-            int ln = ((AudioOutputElm) ce).labelNum;
-            if (ln >= num)
-                num = ln + 1;
-        }
-        return num;
-    }
-
-    @Override
-    public int getDumpType() {
-        return 211;
-    }
-
-    @Override
-    public int getPostCount() {
-        return 1;
-    }
-
-    @Override
-    public void reset() {
-        dataPtr = 0;
-        dataFull = false;
-        dataSampleCount = 0;
-        nextDataSample = 0;
-        dataSample = 0;
-    }
-
-    @Override
-    public void setPoints() {
-        super.setPoints();
-        lead1 = new Point();
-    }
-
-    @Override
-    public void draw(Graphics g) {
-        boolean selected = (needsHighlight());
-        Font f = new Font("SansSerif", selected ? Font.BOLD : 0, 14);
-        String s = "Audio Out";
-        if (labelNum > 1)
-            s = "Audio " + labelNum;
-        g.setFont(f);
-        int textWidth = (int) g.context.measureText(s).getWidth();
-        g.setColor(Color.darkGray);
-        int pct = (dataFull) ? textWidth : textWidth * dataPtr / dataCount;
-        g.fillRect(x2 - textWidth / 2, y2 - 10, pct, 20);
-        g.setColor(selected ? selectColor : whiteColor);
-        interpPoint(point1, point2, lead1, 1 - (textWidth / 2. + 8) / dn);
-        setBbox(point1, lead1, 0);
-        drawCenteredText(g, s, x2, y2, true);
-        setVoltageColor(g, volts[0]);
-        if (selected)
-            g.setColor(selectColor);
-        drawThickLine(g, point1, lead1);
-        drawPosts(g);
-    }
-
-    @Override
-    public double getVoltageDiff() {
-        return volts[0];
-    }
-
-    @Override
-    public void getInfo(String[] arr) {
-        arr[0] = "audio output";
-        arr[1] = "V = " + getVoltageText(volts[0]);
-        int ct = (dataFull ? dataCount : dataPtr);
-        double dur = sampleStep * ct;
-        arr[2] = "start = " + getUnitText(dataFull ? sim.t - duration : dataStart, "s");
-        arr[3] = "dur = " + getUnitText(dur, "s");
-        arr[4] = "samples = " + ct + (dataFull ? "" : "/" + dataCount);
-    }
-
-    int dataSampleCount = 0;
-    double nextDataSample = 0;
-    double dataSample;
-
-    @Override
-    public void stepFinished() {
-        dataSample += volts[0];
-        dataSampleCount++;
-        if (sim.t >= nextDataSample) {
-            nextDataSample += sampleStep;
-            data[dataPtr++] = dataSample / dataSampleCount;
-            dataSampleCount = 0;
-            dataSample = 0;
-            if (dataPtr >= dataCount) {
-                dataPtr = 0;
-                dataFull = true;
-            }
-        }
-    }
-
-    void setDataCount() {
-        dataCount = (int) (samplingRate * duration);
-        data = new double[dataCount];
-        dataStart = sim.t;
-        dataPtr = 0;
-        dataFull = false;
-        sampleStep = 1. / samplingRate;
-        nextDataSample = sim.t + sampleStep;
-    }
-
-    int[] samplingRateChoices = {8000, 11025, 16000, 22050, 44100};
-
-    @Override
-    public EditInfo getEditInfo(int n) {
-        if (n == 0) {
-            return new EditInfo("Duration (s)", duration, 0, 5);
-        }
-        if (n == 1) {
-            EditInfo ei = new EditInfo("Sampling Rate", 0, -1, -1);
-            ei.choice = new Choice();
-            int i;
-            for (i = 0; i != samplingRateChoices.length; i++) {
-                ei.choice.add(samplingRateChoices[i] + "");
-                if (samplingRateChoices[i] == samplingRate)
-                    ei.choice.select(i);
-            }
-            return ei;
-        }
-        return null;
-    }
-
-    @Override
-    public void setEditValue(int n, EditInfo ei) {
-        if (n == 0 && ei.value > 0) {
-            duration = ei.value;
-            setDataCount();
-        }
-        if (n == 1) {
-            int nsr = samplingRateChoices[ei.choice.getSelectedIndex()];
-            if (nsr != samplingRate) {
-                samplingRate = nsr;
-                lastSamplingRate = nsr;
-                setDataCount();
-                setTimeStep();
-            }
-        }
-    }
-
-    void setTimeStep() {
-	    /*
-	    // timestep must be smaller than 1/sampleRate
-	    if (sim.timeStep > sampleStep)
-		sim.timeStep = sampleStep;
-	    else {
-		// make sure sampleStep/timeStep is an integer.  otherwise we get distortion
-//		int frac = (int)Math.round(sampleStep/sim.timeStep);
-//		sim.timeStep = sampleStep / frac;
-		
-		// actually, just make timestep = 1/sampleRate
-		sim.timeStep = sampleStep;
-	    }
-	    */
-
-//	    int frac = (int)Math.round(Math.max(sampleStep*33000, 1));
-        double target = sampleStep / 8;
-        if (sim.timeStep != target) {
-            if (okToChangeTimeStep || Window.confirm(CirSim.LS("Adjust timestep for best audio quality and performance?"))) {
-                sim.timeStep = target;
-                okToChangeTimeStep = true;
-            }
-        }
-    }
-
-    void createButton() {
-        String label = "&#9654; " + CirSim.LS("Play Audio");
-        if (labelNum > 1)
-            label += " " + labelNum;
-        sim.addWidgetToVerticalPanel(button = new Button(label));
-        button.setStylePrimaryName("topButton");
-        button.addClickHandler(event -> play());
-
-    }
-
-    @Override
-    public void delete() {
-        sim.removeWidgetFromVerticalPanel(button);
-        super.delete();
     }
 
     public static native void playJS(JsArrayInteger samples, int sampleRate)
@@ -357,6 +161,200 @@ public class AudioOutputElm extends CircuitElm {
             $doc.body.appendChild(audio);
             audio.play();
         }-*/;
+
+    @Override
+    public String dump() {
+        return super.dump() + " " + duration + " " + samplingRate + " " + labelNum;
+    }
+
+    @Override
+    public void draggingDone() {
+        setTimeStep();
+    }
+
+    // get next unused labelNum value
+    int getNextLabelNum() {
+        int i;
+        int num = 1;
+        if (sim.elmList == null)
+            return 0;
+        for (i = 0; i != sim.elmList.size(); i++) {
+            CircuitElm ce = sim.getElm(i);
+            if (!(ce instanceof AudioOutputElm))
+                continue;
+            int ln = ((AudioOutputElm) ce).labelNum;
+            if (ln >= num)
+                num = ln + 1;
+        }
+        return num;
+    }
+
+    @Override
+    public int getDumpType() {
+        return 211;
+    }
+
+    @Override
+    public int getPostCount() {
+        return 1;
+    }
+
+    @Override
+    public void reset() {
+        dataPtr = 0;
+        dataFull = false;
+        dataSampleCount = 0;
+        nextDataSample = 0;
+        dataSample = 0;
+    }
+
+    @Override
+    public void setPoints() {
+        super.setPoints();
+        lead1 = new Point();
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        boolean selected = (needsHighlight());
+        Font f = new Font("SansSerif", selected ? Font.BOLD : 0, 14);
+        String s = "Audio Out";
+        if (labelNum > 1)
+            s = "Audio " + labelNum;
+        g.setFont(f);
+        int textWidth = (int) g.context.measureText(s).getWidth();
+        g.setColor(Color.darkGray);
+        int pct = (dataFull) ? textWidth : textWidth * dataPtr / dataCount;
+        g.fillRect(x2 - textWidth / 2, y2 - 10, pct, 20);
+        g.setColor(selected ? selectColor : whiteColor);
+        interpPoint(point1, point2, lead1, 1 - (textWidth / 2. + 8) / dn);
+        setBbox(point1, lead1, 0);
+        drawCenteredText(g, s, x2, y2, true);
+        setVoltageColor(g, volts[0]);
+        if (selected)
+            g.setColor(selectColor);
+        drawThickLine(g, point1, lead1);
+        drawPosts(g);
+    }
+
+    @Override
+    public double getVoltageDiff() {
+        return volts[0];
+    }
+
+    @Override
+    public void getInfo(String[] arr) {
+        arr[0] = "audio output";
+        arr[1] = "V = " + getVoltageText(volts[0]);
+        int ct = (dataFull ? dataCount : dataPtr);
+        double dur = sampleStep * ct;
+        arr[2] = "start = " + getUnitText(dataFull ? sim.t - duration : dataStart, "s");
+        arr[3] = "dur = " + getUnitText(dur, "s");
+        arr[4] = "samples = " + ct + (dataFull ? "" : "/" + dataCount);
+    }
+
+    @Override
+    public void stepFinished() {
+        dataSample += volts[0];
+        dataSampleCount++;
+        if (sim.t >= nextDataSample) {
+            nextDataSample += sampleStep;
+            data[dataPtr++] = dataSample / dataSampleCount;
+            dataSampleCount = 0;
+            dataSample = 0;
+            if (dataPtr >= dataCount) {
+                dataPtr = 0;
+                dataFull = true;
+            }
+        }
+    }
+
+    void setDataCount() {
+        dataCount = (int) (samplingRate * duration);
+        data = new double[dataCount];
+        dataStart = sim.t;
+        dataPtr = 0;
+        dataFull = false;
+        sampleStep = 1. / samplingRate;
+        nextDataSample = sim.t + sampleStep;
+    }
+
+    @Override
+    public EditInfo getEditInfo(int n) {
+        if (n == 0) {
+            return new EditInfo("Duration (s)", duration, 0, 5);
+        }
+        if (n == 1) {
+            EditInfo ei = new EditInfo("Sampling Rate", 0, -1, -1);
+            ei.choice = new Choice();
+            int i;
+            for (i = 0; i != samplingRateChoices.length; i++) {
+                ei.choice.add(samplingRateChoices[i] + "");
+                if (samplingRateChoices[i] == samplingRate)
+                    ei.choice.select(i);
+            }
+            return ei;
+        }
+        return null;
+    }
+
+    @Override
+    public void setEditValue(int n, EditInfo ei) {
+        if (n == 0 && ei.value > 0) {
+            duration = ei.value;
+            setDataCount();
+        }
+        if (n == 1) {
+            int nsr = samplingRateChoices[ei.choice.getSelectedIndex()];
+            if (nsr != samplingRate) {
+                samplingRate = nsr;
+                lastSamplingRate = nsr;
+                setDataCount();
+                setTimeStep();
+            }
+        }
+    }
+
+    void setTimeStep() {
+	    /*
+	    // timestep must be smaller than 1/sampleRate
+	    if (sim.timeStep > sampleStep)
+		sim.timeStep = sampleStep;
+	    else {
+		// make sure sampleStep/timeStep is an integer.  otherwise we get distortion
+//		int frac = (int)Math.round(sampleStep/sim.timeStep);
+//		sim.timeStep = sampleStep / frac;
+
+		// actually, just make timestep = 1/sampleRate
+		sim.timeStep = sampleStep;
+	    }
+	    */
+
+//	    int frac = (int)Math.round(Math.max(sampleStep*33000, 1));
+        double target = sampleStep / 8;
+        if (sim.timeStep != target) {
+            if (okToChangeTimeStep || Window.confirm(CirSim.LS("Adjust timestep for best audio quality and performance?"))) {
+                sim.timeStep = target;
+                okToChangeTimeStep = true;
+            }
+        }
+    }
+
+    void createButton() {
+        String label = "&#9654; " + CirSim.LS("Play Audio");
+        if (labelNum > 1)
+            label += " " + labelNum;
+        sim.addWidgetToVerticalPanel(button = new Button(label));
+        button.setStylePrimaryName("topButton");
+        button.addClickHandler(event -> play());
+
+    }
+
+    @Override
+    public void delete() {
+        sim.removeWidgetFromVerticalPanel(button);
+        super.delete();
+    }
 
     void play() {
         int i;

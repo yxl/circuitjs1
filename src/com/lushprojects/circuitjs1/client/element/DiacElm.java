@@ -33,6 +33,9 @@ public class DiacElm extends CircuitElm {
     double onresistance, offresistance, breakdown, holdcurrent;
     boolean state;
     Diode diode1, diode2;
+    Polygon[] arrows;
+    Point[] plate1;
+    Point[] plate2;
 
     public DiacElm(int xx, int yy) {
         super(xx, yy);
@@ -76,10 +79,6 @@ public class DiacElm extends CircuitElm {
         return super.dump() + " " + onresistance + " " + offresistance + " "
                 + breakdown + " " + holdcurrent;
     }
-
-    Polygon[] arrows;
-    Point[] plate1;
-    Point[] plate2;
 
     @Override
     public void setPoints() {

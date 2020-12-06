@@ -27,14 +27,6 @@ public class DFlipFlopElm extends ChipElm {
     final int FLAG_RESET = 2;
     final int FLAG_SET = 4;
 
-    boolean hasReset() {
-        return (flags & FLAG_RESET) != 0 || hasSet();
-    }
-
-    boolean hasSet() {
-        return (flags & FLAG_SET) != 0;
-    }
-
     public DFlipFlopElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -43,6 +35,14 @@ public class DFlipFlopElm extends ChipElm {
                         StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
         pins[2].value = !pins[1].value;
+    }
+
+    boolean hasReset() {
+        return (flags & FLAG_RESET) != 0 || hasSet();
+    }
+
+    boolean hasSet() {
+        return (flags & FLAG_SET) != 0;
     }
 
     @Override

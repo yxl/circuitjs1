@@ -22,10 +22,6 @@ package com.lushprojects.circuitjs1.client.element;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class FullAdderElm extends ChipElm {
-    boolean hasReset() {
-        return false;
-    }
-
     public FullAdderElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -33,6 +29,10 @@ public class FullAdderElm extends ChipElm {
     public FullAdderElm(int xa, int ya, int xb, int yb, int f,
                         StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
+    }
+
+    boolean hasReset() {
+        return false;
     }
 
     @Override

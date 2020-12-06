@@ -28,10 +28,14 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Point;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class LampElm extends CircuitElm {
-    double resistance;
     final double roomTemp = 300;
+    final int filament_len = 24;
+    double resistance;
     double temp, nom_pow, nom_v, warmTime, coolTime;
-
+    Point[] bulbLead;
+    Point[] filament;
+    Point bulb;
+    int bulbR;
     public LampElm(int xx, int yy) {
         super(xx, yy);
         temp = roomTemp;
@@ -40,7 +44,6 @@ public class LampElm extends CircuitElm {
         warmTime = .4;
         coolTime = .4;
     }
-
     public LampElm(int xa, int ya, int xb, int yb, int f,
                    StringTokenizer st) {
         super(xa, ya, xb, yb, f);
@@ -64,11 +67,6 @@ public class LampElm extends CircuitElm {
         return 181;
     }
 
-    Point[] bulbLead;
-    Point[] filament;
-    Point bulb;
-    int bulbR;
-
     @Override
     public void reset() {
         super.reset();
@@ -78,8 +76,6 @@ public class LampElm extends CircuitElm {
         // to call startIteration()
         resistance = 100;
     }
-
-    final int filament_len = 24;
 
     @Override
     public void setPoints() {

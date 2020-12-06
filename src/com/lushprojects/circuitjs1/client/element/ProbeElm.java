@@ -33,9 +33,6 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class ProbeElm extends CircuitElm {
     static final int FLAG_SHOWVOLTAGE = 1;
-    int meter;
-    int units;
-    int scale;
     final int TP_VOL = 0;
     final int TP_RMS = 1;
     final int TP_MAX = 2;
@@ -46,7 +43,22 @@ public class ProbeElm extends CircuitElm {
     final int TP_PER = 7;
     final int TP_PWI = 8;
     final int TP_DUT = 9; //mark to space ratio
-
+    int meter;
+    int units;
+    int scale;
+    double rmsV = 0, total, count;
+    double binaryLevel = 0;//0 or 1 - double because we only pass doubles back to the web page
+    int zerocount = 0;
+    double maxV = 0, lastMaxV;
+    double minV = 0, lastMinV;
+    double frequency = 0;
+    double period = 0;
+    double pulseWidth = 0;
+    double dutyCycle = 0;
+    double selectedValue = 0;
+    boolean increasingV = true, decreasingV = true;
+    long periodStart, periodLength, pulseStart;//time between consecutive max values
+    Point center;
     public ProbeElm(int xx, int yy) {
         super(xx, yy);
         meter = TP_VOL;
@@ -55,7 +67,6 @@ public class ProbeElm extends CircuitElm {
         flags = FLAG_SHOWVOLTAGE;
         scale = SCALE_AUTO;
     }
-
     public ProbeElm(int xa, int ya, int xb, int yb, int f,
                     StringTokenizer st) {
         super(xa, ya, xb, yb, f);
@@ -103,22 +114,6 @@ public class ProbeElm extends CircuitElm {
         }
         return "";
     }
-
-    double rmsV = 0, total, count;
-    double binaryLevel = 0;//0 or 1 - double because we only pass doubles back to the web page
-    int zerocount = 0;
-    double maxV = 0, lastMaxV;
-    double minV = 0, lastMinV;
-    double frequency = 0;
-    double period = 0;
-    double pulseWidth = 0;
-    double dutyCycle = 0;
-    double selectedValue = 0;
-
-    boolean increasingV = true, decreasingV = true;
-    long periodStart, periodLength, pulseStart;//time between consecutive max values
-
-    Point center;
 
     @Override
     public void setPoints() {

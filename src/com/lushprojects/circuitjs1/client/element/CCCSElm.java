@@ -24,6 +24,8 @@ import com.lushprojects.circuitjs1.client.util.ExprState;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class CCCSElm extends VCCSElm {
+    double lastCurrent;
+
     public CCCSElm(int xa, int ya, int xb, int yb, int f,
                    StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
@@ -68,8 +70,6 @@ public class CCCSElm extends VCCSElm {
         sim.stampNonLinear(nodes[2]);
         sim.stampNonLinear(nodes[3]);
     }
-
-    double lastCurrent;
 
     @Override
     public void doStep() {

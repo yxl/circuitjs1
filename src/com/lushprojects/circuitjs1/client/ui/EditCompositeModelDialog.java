@@ -44,6 +44,14 @@ public class EditCompositeModelDialog extends DialogBox implements MouseDownHand
     int postCount;
     Context2d context;
     CustomCompositeModel model;
+    TextBox modelNameTextBox = null;
+    double scale;
+    boolean dragging;
+    int selectedPin;
+
+    public EditCompositeModelDialog() {
+        super();
+    }
 
     public void setModel(CustomCompositeModel m) {
         model = m;
@@ -78,12 +86,6 @@ public class EditCompositeModelDialog extends DialogBox implements MouseDownHand
         }
         return true;
     }
-
-    public EditCompositeModelDialog() {
-        super();
-    }
-
-    TextBox modelNameTextBox = null;
 
     public void createDialog() {
         Button okButton;
@@ -177,8 +179,6 @@ public class EditCompositeModelDialog extends DialogBox implements MouseDownHand
         chip.setPoints();
     }
 
-    double scale;
-
     void drawChip() {
         Graphics g = new Graphics(context);
         double scalew = context.getCanvas().getWidth() / (double) (chip.boundingBox.width + chip.boundingBox.x * 2);
@@ -212,8 +212,6 @@ public class EditCompositeModelDialog extends DialogBox implements MouseDownHand
         this.hide();
     }
 
-    boolean dragging;
-
     @Override
     public void onMouseOver(MouseOverEvent event) {
         // TODO Auto-generated method stub
@@ -229,8 +227,6 @@ public class EditCompositeModelDialog extends DialogBox implements MouseDownHand
         // TODO Auto-generated method stub
         dragging = false;
     }
-
-    int selectedPin;
 
     @Override
     public void onMouseMove(MouseMoveEvent event) {

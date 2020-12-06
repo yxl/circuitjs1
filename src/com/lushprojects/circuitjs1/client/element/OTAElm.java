@@ -14,14 +14,12 @@ public class OTAElm extends CompositeElm {
     // private static String modelString="NTransistorElm 1 1 2\rNTransistorElm 1
     // 2 3\rNTransistorElm 1 3 4\rNTransistorElm 1 4 5";
     // private static int[] modelExternalNodes = { 1, 2, 3 , 4, 5};
-
-    Polygon arrowPoly1, arrowPoly2;
-
-    int opsize;
     final int opheight = 32;
     final int opwidth = 32;
     final int circDiam = 19;
     final int circOverlap = 8;
+    Polygon arrowPoly1, arrowPoly2;
+    int opsize;
     Point[] in1p;
     Point[] in2p;
     Point[] in3p;

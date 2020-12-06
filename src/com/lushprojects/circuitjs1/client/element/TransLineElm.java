@@ -31,6 +31,10 @@ public class TransLineElm extends CircuitElm {
     double[] voltageL;
     double[] voltageR;
     int lenSteps, ptr, width;
+    Point[] posts;
+    Point[] inner;
+    int voltSource1, voltSource2;
+    double current1, current2, curCount1, curCount2;
 
     public TransLineElm(int xx, int yy) {
         super(xx, yy);
@@ -89,9 +93,6 @@ public class TransLineElm extends CircuitElm {
         y2 = yy;
         setPoints();
     }
-
-    Point[] posts;
-    Point[] inner;
 
     @Override
     public void reset() {
@@ -169,9 +170,6 @@ public class TransLineElm extends CircuitElm {
             drawDots(g, posts[3], inner[3], curCount2);
         }
     }
-
-    int voltSource1, voltSource2;
-    double current1, current2, curCount1, curCount2;
 
     @Override
     public void setVoltageSource(int n, int v) {

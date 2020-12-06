@@ -30,6 +30,7 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class AMElm extends CircuitElm {
     static final int FLAG_COS = 2;
+    final int circleSize = 17;
     double carrierfreq, signalfreq, maxVoltage, freqTimeZero;
 
     public AMElm(int xx, int yy) {
@@ -56,15 +57,15 @@ public class AMElm extends CircuitElm {
     public int getDumpType() {
         return 200;
     }
+    /*void setCurrent(double c) {
+      current = c;
+      System.out.print("v current set to " + c + "\n");
+      }*/
 
     @Override
     public String dump() {
         return super.dump() + " " + carrierfreq + " " + signalfreq + " " + maxVoltage;
     }
-    /*void setCurrent(double c) {
-      current = c;
-      System.out.print("v current set to " + c + "\n");
-      }*/
 
     @Override
     public void reset() {
@@ -91,8 +92,6 @@ public class AMElm extends CircuitElm {
         double w = 2 * pi * (sim.t - freqTimeZero);
         return ((Math.sin(w * signalfreq) + 1) / 2) * Math.sin(w * carrierfreq) * maxVoltage;
     }
-
-    final int circleSize = 17;
 
     @Override
     public void draw(Graphics g) {

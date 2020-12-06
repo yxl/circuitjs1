@@ -31,7 +31,6 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 public class VoltageElm extends CircuitElm {
     static final int FLAG_COS = 2;
     static final int FLAG_PULSE_DUTY = 4;
-    int waveform;
     static final int WF_DC = 0;
     static final int WF_AC = 1;
     static final int WF_SQUARE = 2;
@@ -40,10 +39,11 @@ public class VoltageElm extends CircuitElm {
     static final int WF_PULSE = 5;
     static final int WF_NOISE = 6;
     static final int WF_VAR = 7;
+    static final double defaultPulseDuty = 1 / (2 * Math.PI);
+    final int circleSize = 17;
+    int waveform;
     double frequency, maxVoltage, freqTimeZero, bias,
             phaseShift, dutyCycle, noiseValue;
-
-    static final double defaultPulseDuty = 1 / (2 * Math.PI);
 
     VoltageElm(int xx, int yy, int wf) {
         super(xx, yy);
@@ -162,8 +162,6 @@ public class VoltageElm extends CircuitElm {
         }
     }
 
-    final int circleSize = 17;
-
     @Override
     public void setPoints() {
         super.setPoints();
@@ -281,7 +279,7 @@ public class VoltageElm extends CircuitElm {
                 break;
             }
         }
-        if (sim.showValuesCheckItem.getState() && waveform != WF_NOISE) {
+        if (sim.topMenuBar.showValuesCheckItem.getState() && waveform != WF_NOISE) {
             String s = getShortUnitText(frequency, "Hz");
             if (dx == 0 || dy == 0)
                 drawValues(g, s, circleSize);

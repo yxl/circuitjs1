@@ -8,6 +8,7 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class PolarCapacitorElm extends CapacitorElm {
     double maxNegativeVoltage;
+    Point plusPoint;
 
     public PolarCapacitorElm(int xx, int yy) {
         super(xx, yy);
@@ -29,8 +30,6 @@ public class PolarCapacitorElm extends CapacitorElm {
     public String dump() {
         return super.dump() + " " + maxNegativeVoltage;
     }
-
-    Point plusPoint;
 
     @Override
     public void setPoints() {

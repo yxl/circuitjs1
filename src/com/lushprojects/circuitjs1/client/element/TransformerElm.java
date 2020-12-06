@@ -27,6 +27,7 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Point;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class TransformerElm extends CircuitElm {
+    public static final int FLAG_REVERSE = 4;
     double inductance, ratio, couplingCoef;
     Point[] ptEnds;
     Point[] ptCoil;
@@ -35,7 +36,8 @@ public class TransformerElm extends CircuitElm {
     double[] curcount;
     Point[] dots;
     int width, polarity;
-    public static final int FLAG_REVERSE = 4;
+    double a1, a2, a3, a4;
+    double curSourceValue1, curSourceValue2;
 
     public TransformerElm(int xx, int yy) {
         super(xx, yy);
@@ -176,8 +178,6 @@ public class TransformerElm extends CircuitElm {
                 volts[3] = curcount[0] = curcount[1] = curSourceValue1 = curSourceValue2 = 0;
     }
 
-    double a1, a2, a3, a4;
-
     @Override
     public void stamp() {
         // equations for transformer:
@@ -239,8 +239,6 @@ public class TransformerElm extends CircuitElm {
             curSourceValue2 = current[1];
         }
     }
-
-    double curSourceValue1, curSourceValue2;
 
     @Override
     public void doStep() {

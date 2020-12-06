@@ -30,6 +30,9 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class TriStateElm extends CircuitElm {
     double resistance, r_on, r_off;
+    boolean open;
+    Point ps, point3, lead3;
+    Polygon gatePoly;
 
     public TriStateElm(int xx, int yy) {
         super(xx, yy);
@@ -58,12 +61,6 @@ public class TriStateElm extends CircuitElm {
     public int getDumpType() {
         return 180;
     }
-
-    boolean open;
-
-    Point ps, point3, lead3;
-
-    Polygon gatePoly;
 
     @Override
     public void setPoints() {

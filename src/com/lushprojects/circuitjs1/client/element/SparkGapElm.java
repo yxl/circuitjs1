@@ -29,6 +29,7 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 public class SparkGapElm extends CircuitElm {
     double resistance, onresistance, offresistance, breakdown, holdcurrent;
     boolean state;
+    Polygon arrow1, arrow2;
 
     public SparkGapElm(int xx, int yy) {
         super(xx, yy);
@@ -63,8 +64,6 @@ public class SparkGapElm extends CircuitElm {
         return super.dump() + " " + onresistance + " " + offresistance + " "
                 + breakdown + " " + holdcurrent;
     }
-
-    Polygon arrow1, arrow2;
 
     @Override
     public void setPoints() {

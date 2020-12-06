@@ -27,6 +27,8 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class CurrentElm extends CircuitElm {
     double currentValue;
+    Polygon arrow;
+    Point ashaft1, ashaft2, center;
 
     public CurrentElm(int xx, int yy) {
         super(xx, yy);
@@ -53,9 +55,6 @@ public class CurrentElm extends CircuitElm {
         return 'i';
     }
 
-    Polygon arrow;
-    Point ashaft1, ashaft2, center;
-
     @Override
     public void setPoints() {
         super.setPoints();
@@ -80,7 +79,7 @@ public class CurrentElm extends CircuitElm {
         g.fillPolygon(arrow);
         setBbox(point1, point2, cr);
         doDots(g);
-        if (sim.showValuesCheckItem.getState()) {
+        if (sim.topMenuBar.showValuesCheckItem.getState()) {
             String s = getShortUnitText(currentValue, "A");
             if (dx == 0 || dy == 0)
                 drawValues(g, s, cr);

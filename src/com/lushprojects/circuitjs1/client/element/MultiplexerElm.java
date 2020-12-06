@@ -28,10 +28,6 @@ public class MultiplexerElm extends ChipElm {
     int selectBitCount;
     int outputCount;
 
-    boolean hasReset() {
-        return false;
-    }
-
     public MultiplexerElm(int xx, int yy) {
         super(xx, yy);
         selectBitCount = 2;
@@ -47,6 +43,10 @@ public class MultiplexerElm extends ChipElm {
         } catch (Exception e) {
         }
         setupPins();
+    }
+
+    boolean hasReset() {
+        return false;
     }
 
     @Override

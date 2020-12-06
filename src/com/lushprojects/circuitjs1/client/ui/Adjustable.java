@@ -51,13 +51,6 @@ public class Adjustable implements Command {
         sim.addWidgetToVerticalPanel(slider = new Scrollbar(Scrollbar.HORIZONTAL, intValue, 1, 0, 101, this, elm));
     }
 
-    void setSliderValue(double value) {
-        int intValue = (int) ((value - minValue) * 100 / (maxValue - minValue));
-        settingValue = true; // don't recursively set value again in execute()
-        slider.setValue(intValue);
-        settingValue = false;
-    }
-
     @Override
     public void execute() {
         CircuitElm.sim.analyzeFlag = true;
@@ -71,6 +64,13 @@ public class Adjustable implements Command {
 
     double getSliderValue() {
         return minValue + (maxValue - minValue) * slider.getValue() / 100;
+    }
+
+    void setSliderValue(double value) {
+        int intValue = (int) ((value - minValue) * 100 / (maxValue - minValue));
+        settingValue = true; // don't recursively set value again in execute()
+        slider.setValue(intValue);
+        settingValue = false;
     }
 
     public void deleteSlider(CirSim sim) {

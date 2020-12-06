@@ -23,6 +23,8 @@ package com.lushprojects.circuitjs1.client.element;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class PhaseCompElm extends ChipElm {
+    boolean ff1, ff2;
+
     public PhaseCompElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -60,8 +62,6 @@ public class PhaseCompElm extends ChipElm {
         sim.stampNonLinear(0);
         sim.stampNonLinear(nodes[2]);
     }
-
-    boolean ff1, ff2;
 
     @Override
     public void doStep() {

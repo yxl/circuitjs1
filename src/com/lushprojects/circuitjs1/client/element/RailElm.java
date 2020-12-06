@@ -23,6 +23,8 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class RailElm extends VoltageElm {
+    final int FLAG_CLOCK = 1;
+
     public RailElm(int xx, int yy) {
         super(xx, yy, WF_DC);
         numHandles = 1;
@@ -34,14 +36,12 @@ public class RailElm extends VoltageElm {
         numHandles = 1;
     }
 
+
     public RailElm(int xa, int ya, int xb, int yb, int f,
                    StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
         numHandles = 1;
     }
-
-
-    final int FLAG_CLOCK = 1;
 
     @Override
     public int getDumpType() {

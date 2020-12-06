@@ -8,12 +8,18 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class VaractorElm extends DiodeElm {
     double baseCapacitance;
+    double capacitance, capCurrent;
+    // DiodeElm.lastvoltdiff = volt diff from last iteration
+    // capvoltdiff = volt diff from last timestep
+    double compResistance, capvoltdiff;
+    Point[] plate1;
+    Point[] plate2;
+    double voltSourceValue;
 
     public VaractorElm(int xx, int yy) {
         super(xx, yy);
         baseCapacitance = 4e-12;
     }
-
     public VaractorElm(int xa, int ya, int xb, int yb, int f,
                        StringTokenizer st) {
         super(xa, ya, xb, yb, f, st);
@@ -32,14 +38,6 @@ public class VaractorElm extends DiodeElm {
         arr[0] = "varactor";
         arr[5] = "C = " + getUnitText(capacitance, "F");
     }
-
-    double capacitance, capCurrent;
-
-    // DiodeElm.lastvoltdiff = volt diff from last iteration
-    // capvoltdiff = volt diff from last timestep
-    double compResistance, capvoltdiff;
-    Point[] plate1;
-    Point[] plate2;
 
     @Override
     public void setNodeVoltage(int n, double c) {
@@ -80,7 +78,6 @@ public class VaractorElm extends DiodeElm {
         interpPoint2(lead1, lead2, plate2[0], plate2[1], 1, hs);
     }
 
-
     @Override
     public void draw(Graphics g) {
         // draw leads and diode arrow
@@ -90,7 +87,7 @@ public class VaractorElm extends DiodeElm {
         setVoltageColor(g, volts[0]);
         setPowerColor(g, false);
         drawThickLine(g, plate1[0], plate1[1]);
-        if (sim.powerCheckItem.getState())
+        if (sim.topMenuBar.powerCheckItem.getState())
             g.setColor(Color.gray);
 
         // draw second plate
@@ -157,8 +154,6 @@ public class VaractorElm extends DiodeElm {
     public void setCurrent(int x, double c) {
         capCurrent = c;
     }
-
-    double voltSourceValue;
 
     @Override
     public int getVoltageSourceCount() {

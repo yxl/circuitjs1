@@ -23,6 +23,10 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class VCOElm extends ChipElm {
+    final double cResistance = 1e6;
+    double cCurrent;
+    int cDir;
+
     public VCOElm(int xx, int yy) {
         super(xx, yy);
     }
@@ -72,10 +76,6 @@ public class VCOElm extends ChipElm {
         sim.stampNonLinear(nodes[2]);
         sim.stampNonLinear(nodes[3]);
     }
-
-    final double cResistance = 1e6;
-    double cCurrent;
-    int cDir;
 
     @Override
     public void doStep() {

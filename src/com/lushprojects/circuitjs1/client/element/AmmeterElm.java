@@ -32,18 +32,20 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class AmmeterElm extends CircuitElm {
 
-    int meter;
-    int scale;
+    static final int FLAG_SHOWCURRENT = 1;
     final int AM_VOL = 0;
     final int AM_RMS = 1;
+    int meter;
+    int scale;
     int zerocount = 0;
     double rmsI = 0, total, count;
     double maxI = 0, lastMaxI;
     double minI = 0, lastMinI;
     double selectedValue = 0;
-
     double[] currents;
     boolean increasingI = true, decreasingI = true;
+    Point mid;
+    Polygon arrowPoly;
 
     public AmmeterElm(int xx, int yy) {
         super(xx, yy);
@@ -84,12 +86,9 @@ public class AmmeterElm extends CircuitElm {
         arrowPoly = calcArrow(point1, mid, 14, 7);
     }
 
-    Point mid;
-    static final int FLAG_SHOWCURRENT = 1;
-
     @Override
     public void stepFinished() {
-        count++;//how many counts are in a cycle    
+        count++;//how many counts are in a cycle
         total += current * current; //sum of squares
         if (current > maxI && increasingI) {
             maxI = current;
@@ -156,8 +155,6 @@ public class AmmeterElm extends CircuitElm {
                 break;
         }
     }
-
-    Polygon arrowPoly;
 
     @Override
     public void draw(Graphics g) {

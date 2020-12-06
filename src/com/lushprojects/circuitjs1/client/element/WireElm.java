@@ -25,19 +25,17 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Graphics;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class WireElm extends CircuitElm {
+    static final int FLAG_SHOWCURRENT = 1;
+    static final int FLAG_SHOWVOLTAGE = 2;
     public boolean hasWireInfo; // used in CirSim to calculate wire currents
 
     public WireElm(int xx, int yy) {
         super(xx, yy);
     }
-
     public WireElm(int xa, int ya, int xb, int yb, int f,
                    StringTokenizer st) {
         super(xa, ya, xb, yb, f);
     }
-
-    static final int FLAG_SHOWCURRENT = 1;
-    static final int FLAG_SHOWVOLTAGE = 2;
 
     @Override
     public void draw(Graphics g) {

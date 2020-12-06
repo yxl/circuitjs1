@@ -28,56 +28,10 @@ import com.lushprojects.circuitjs1.client.entrypoint.circuitjs1;
 
 public class ExportAsUrlDialog extends DialogBox {
 
+    static RichTextArea tb;
     VerticalPanel vp;
     Button shortButton;
-    static RichTextArea tb;
     String requrl;
-
-    public boolean shortIsSupported() {
-        return circuitjs1.shortRelaySupported;
-    }
-
-//	static public final native boolean bitlyIsSupported() 
-//	/*-{
-//		return !!($wnd.bitlytoken !==undefined && $wnd.bitlytoken !==null);
-//	}-*/;
-//	
-
-
-    static public void createShort(String urlin) {
-        String url;
-        url = "shortrelay.php" + "?v=" + urlin;
-        tb.setText("Waiting for short URL for web service...");
-        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
-        try {
-            requestBuilder.sendRequest(null, new RequestCallback() {
-                @Override
-                public void onError(Request request, Throwable exception) {
-                    GWT.log("File Error Response", exception);
-                }
-
-                @Override
-                public void onResponseReceived(Request request, Response response) {
-                    // processing goes here
-                    if (response.getStatusCode() == Response.SC_OK) {
-                        String text = response.getText();
-                        tb.setText(text);
-                        // end or processing
-                    } else {
-                        String text = "Shortner error:" + response.getStatusText();
-                        tb.setText(text);
-                        GWT.log(text);
-                    }
-                }
-            });
-        } catch (RequestException e) {
-            GWT.log("failed file reading", e);
-        }
-    }
-
-    native String compress(String dump) /*-{
-        return $wnd.LZString.compressToEncodedURIComponent(dump);
-    }-*/;
 
     public ExportAsUrlDialog(String dump) {
         super();
@@ -121,6 +75,51 @@ public class ExportAsUrlDialog extends DialogBox {
         okButton.addClickHandler(event -> closeDialog());
         this.center();
     }
+
+//	static public final native boolean bitlyIsSupported() 
+//	/*-{
+//		return !!($wnd.bitlytoken !==undefined && $wnd.bitlytoken !==null);
+//	}-*/;
+//	
+
+    static public void createShort(String urlin) {
+        String url;
+        url = "shortrelay.php" + "?v=" + urlin;
+        tb.setText("Waiting for short URL for web service...");
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+        try {
+            requestBuilder.sendRequest(null, new RequestCallback() {
+                @Override
+                public void onError(Request request, Throwable exception) {
+                    GWT.log("File Error Response", exception);
+                }
+
+                @Override
+                public void onResponseReceived(Request request, Response response) {
+                    // processing goes here
+                    if (response.getStatusCode() == Response.SC_OK) {
+                        String text = response.getText();
+                        tb.setText(text);
+                        // end or processing
+                    } else {
+                        String text = "Shortner error:" + response.getStatusText();
+                        tb.setText(text);
+                        GWT.log(text);
+                    }
+                }
+            });
+        } catch (RequestException e) {
+            GWT.log("failed file reading", e);
+        }
+    }
+
+    public boolean shortIsSupported() {
+        return circuitjs1.shortRelaySupported;
+    }
+
+    native String compress(String dump) /*-{
+        return $wnd.LZString.compressToEncodedURIComponent(dump);
+    }-*/;
 
     protected void closeDialog() {
         this.hide();

@@ -27,12 +27,13 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Point;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class CrystalElm extends CompositeElm {
+    private static final String modelString = "CapacitorElm 1 2\rCapacitorElm 1 3\rInductorElm 3 4\rResistorElm 4 2";
+    private static final int[] modelExternalNodes = {1, 2};
     double seriesCapacitance, parallelCapacitance;
     double inductance, resistance;
     Point[] plate1;
     Point[] plate2;
-    private static final String modelString = "CapacitorElm 1 2\rCapacitorElm 1 3\rInductorElm 3 4\rResistorElm 4 2";
-    private static final int[] modelExternalNodes = {1, 2};
+    Point[] sandwichPoints;
 
     public CrystalElm(int xx, int yy) {
         super(xx, yy, modelString, modelExternalNodes);
@@ -68,13 +69,10 @@ public class CrystalElm extends CompositeElm {
         r1.setResistance(resistance);
     }
 
-
     @Override
     public int getDumpType() {
         return 412;
     }
-
-    Point[] sandwichPoints;
 
     @Override
     public void setPoints() {
@@ -109,7 +107,7 @@ public class CrystalElm extends CompositeElm {
         drawThickLine(g, point1, lead1);
         setPowerColor(g, false);
         drawThickLine(g, plate1[0], plate1[1]);
-        if (sim.powerCheckItem.getState())
+        if (sim.topMenuBar.powerCheckItem.getState())
             g.setColor(Color.gray);
 
         // draw second lead and plate

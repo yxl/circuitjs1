@@ -37,11 +37,6 @@ public class ScopeElm extends CircuitElm {
         setPoints();
     }
 
-    public void setScopeElm(CircuitElm e) {
-        elmScope.setElm(e);
-        elmScope.resetGraph();
-    }
-
     public ScopeElm(int xa, int ya, int xb, int yb, int f,
                     StringTokenizer st) {
         super(xa, ya, xb, yb, f);
@@ -51,6 +46,11 @@ public class ScopeElm extends CircuitElm {
         elmScope = new Scope(sim);
         elmScope.undump(sst);
         setPoints();
+        elmScope.resetGraph();
+    }
+
+    public void setScopeElm(CircuitElm e) {
+        elmScope.setElm(e);
         elmScope.resetGraph();
     }
 

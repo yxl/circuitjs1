@@ -30,7 +30,6 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Point;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class TestPointElm extends CircuitElm {
-    int meter;
     final int TP_VOL = 0;
     final int TP_RMS = 1;
     final int TP_MAX = 2;
@@ -41,6 +40,7 @@ public class TestPointElm extends CircuitElm {
     final int TP_PER = 7;
     final int TP_PWI = 8;
     final int TP_DUT = 9; //mark to space ratio
+    int meter;
     int zerocount = 0;
     double rmsV = 0, total, count;
     double maxV = 0, lastMaxV;
@@ -66,6 +66,11 @@ public class TestPointElm extends CircuitElm {
         super(xa, ya, xb, yb, f);
         meter = new Integer(st.nextToken()).intValue(); //get meter type from saved dump
     }
+
+    //alert the user
+    public static native void alert(String msg) /*-{
+        $wnd.alert(msg);
+    }-*/;
 
     @Override
     public int getDumpType() {
@@ -168,10 +173,9 @@ public class TestPointElm extends CircuitElm {
         drawPosts(g);
     }
 
-
     @Override
     public void stepFinished() {
-        count++;//how many counts are in a cycle    
+        count++;//how many counts are in a cycle
         total += volts[0] * volts[0]; //sum of squares
 
         if (volts[0] < 2.5)
@@ -180,7 +184,7 @@ public class TestPointElm extends CircuitElm {
             binaryLevel = 1;
 
 
-        //V going up, track maximum value with 
+        //V going up, track maximum value with
         if (volts[0] > maxV && increasingV) {
             maxV = volts[0];
             increasingV = true;
@@ -276,11 +280,6 @@ public class TestPointElm extends CircuitElm {
         }
 
     }
-
-    //alert the user
-    public static native void alert(String msg) /*-{
-        $wnd.alert(msg);
-    }-*/;
 
     @Override
     public double getScopeValue(int x) {

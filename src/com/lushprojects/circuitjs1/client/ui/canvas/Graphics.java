@@ -32,6 +32,19 @@ public class Graphics {
         this.context = context;
     }
 
+    public static int distanceSq(int x1, int y1, int x2, int y2) {
+        x2 -= x1;
+        y2 -= y1;
+        return x2 * x2 + y2 * y2;
+    }
+
+    native static void setLineDash(Context2d context, int a, int b) /*-{
+        if (a == 0)
+            context.setLineDash([]);
+        else
+            context.setLineDash([a, b]);
+    }-*/;
+
     public void setColor(Color color) {
         if (color != null) {
             String colorString = color.getHexValue();
@@ -109,7 +122,6 @@ public class Graphics {
         context.stroke();
     }
 
-
     public void fillPolygon(Polygon p) {
         int i;
         context.beginPath();
@@ -123,6 +135,10 @@ public class Graphics {
         context.fill();
     }
 
+    public Font getFont() {
+        return currentFont;
+    }
+
     public void setFont(Font f) {
         if (f != null) {
             context.setFont(f.fontname);
@@ -131,24 +147,7 @@ public class Graphics {
         }
     }
 
-    public Font getFont() {
-        return currentFont;
-    }
-
-    public static int distanceSq(int x1, int y1, int x2, int y2) {
-        x2 -= x1;
-        y2 -= y1;
-        return x2 * x2 + y2 * y2;
-    }
-
     public void setLineDash(int a, int b) {
         setLineDash(context, a, b);
     }
-
-    native static void setLineDash(Context2d context, int a, int b) /*-{
-        if (a == 0)
-            context.setLineDash([]);
-        else
-            context.setLineDash([a, b]);
-    }-*/;
 }

@@ -30,6 +30,9 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Polygon;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class MosfetElm extends CircuitElm {
+    static int globalFlags;
+    static double lastBeta;
+    final int hs = 16;
     int pnp;
     int FLAG_PNP = 1;
     int FLAG_SHOWVT = 2;
@@ -40,15 +43,26 @@ public class MosfetElm extends CircuitElm {
     int FLAG_BODY_TERMINAL = 64;
     int FLAGS_GLOBAL = (FLAG_HIDE_BULK | FLAG_DIGITAL);
     int bodyTerminal;
-
     double vt;
     // beta = 1/(RdsON*(Vgs-Vt))
     double beta;
-    static int globalFlags;
     Diode diodeB1, diodeB2;
     double diodeCurrent1, diodeCurrent2, bodyCurrent;
     double curcount_body1, curcount_body2;
-    static double lastBeta;
+    int pcircler;
+    // points for source and drain (these are swapped on PNP mosfets)
+    Point[] src;
+    Point[] drn;
+    // points for gate, body, and the little circle on PNP mosfets
+    Point[] gate;
+    Point[] body;
+    Point pcircle;
+    Polygon arrowPoly;
+    double lastv1, lastv2;
+    double ids;
+    int mode = 0;
+    double gm = 0;
+    double lastv0;
 
     MosfetElm(int xx, int yy, boolean pnpflag) {
         super(xx, yy);
@@ -141,8 +155,6 @@ public class MosfetElm extends CircuitElm {
         return 'f';
     }
 
-    final int hs = 16;
-
     @Override
     public void draw(Graphics g) {
         // pick up global flags changes
@@ -161,7 +173,7 @@ public class MosfetElm extends CircuitElm {
         int segments = 6;
         int i;
         setPowerColor(g, true);
-        boolean power = sim.powerCheckItem.getState();
+        boolean power = sim.topMenuBar.powerCheckItem.getState();
         double segf = 1. / segments;
         boolean enhancement = vt > 0 && showBulk();
         for (i = 0; i != segments; i++) {
@@ -266,18 +278,6 @@ public class MosfetElm extends CircuitElm {
         return hasBodyTerminal() ? 4 : 3;
     }
 
-    int pcircler;
-
-    // points for source and drain (these are swapped on PNP mosfets)
-    Point[] src;
-    Point[] drn;
-
-    // points for gate, body, and the little circle on PNP mosfets
-    Point[] gate;
-    Point[] body;
-    Point pcircle;
-    Polygon arrowPoly;
-
     @Override
     public void setPoints() {
         super.setPoints();
@@ -326,11 +326,6 @@ public class MosfetElm extends CircuitElm {
             pcircler = 3;
         }
     }
-
-    double lastv1, lastv2;
-    double ids;
-    int mode = 0;
-    double gm = 0;
 
     @Override
     public void stamp() {
@@ -387,8 +382,6 @@ public class MosfetElm extends CircuitElm {
     public void doStep() {
         calculate(false);
     }
-
-    double lastv0;
 
     // this is called in doStep to stamp the matrix, and also called in stepFinished() to calculate the current
     void calculate(boolean finished) {

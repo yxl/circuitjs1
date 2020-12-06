@@ -26,9 +26,16 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Point;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class TriodeElm extends CircuitElm {
+    final double gridCurrentR = 6000;
     double mu, kg1;
     double curcountp, curcountc, curcountg, currentp, currentg, currentc;
-    final double gridCurrentR = 6000;
+    Point[] plate;
+    Point[] grid;
+    Point[] cath;
+    Point midgrid;
+    Point midcath;
+    int circler;
+    double lastv0, lastv1, lastv2;
 
     public TriodeElm(int xx, int yy) {
         super(xx, yy);
@@ -36,7 +43,6 @@ public class TriodeElm extends CircuitElm {
         kg1 = 680;
         setup();
     }
-
     public TriodeElm(int xa, int ya, int xb, int yb, int f,
                      StringTokenizer st) {
         super(xa, ya, xb, yb, f);
@@ -69,13 +75,6 @@ public class TriodeElm extends CircuitElm {
     public int getDumpType() {
         return 173;
     }
-
-    Point[] plate;
-    Point[] grid;
-    Point[] cath;
-    Point midgrid;
-    Point midcath;
-    int circler;
 
     @Override
     public void setPoints() {
@@ -166,8 +165,6 @@ public class TriodeElm extends CircuitElm {
     public double getPower() {
         return (volts[0] - volts[2]) * current;
     }
-
-    double lastv0, lastv1, lastv2;
 
     @Override
     public void doStep() {

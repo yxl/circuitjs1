@@ -34,6 +34,11 @@ public class InvertingSchmittElm extends CircuitElm {
     boolean state;
     double logicOnLevel;
     double logicOffLevel;
+    Polygon gatePoly;
+    Polygon symbolPoly;
+    Point pcircle;
+    double dlt;
+    double dut;
 
     public InvertingSchmittElm(int xx, int yy) {
         super(xx, yy);
@@ -45,7 +50,6 @@ public class InvertingSchmittElm extends CircuitElm {
         logicOnLevel = 5;
         logicOffLevel = 0;
     }
-
     public InvertingSchmittElm(int xa, int ya, int xb, int yb, int f,
                                StringTokenizer st) {
         super(xa, ya, xb, yb, f);
@@ -88,10 +92,6 @@ public class InvertingSchmittElm extends CircuitElm {
         curcount = updateDotCount(current, curcount);
         drawDots(g, lead2, point2, curcount);
     }
-
-    Polygon gatePoly;
-    Polygon symbolPoly;
-    Point pcircle;
 
     @Override
     public void setPoints() {
@@ -180,9 +180,6 @@ public class InvertingSchmittElm extends CircuitElm {
 
         return null;
     }
-
-    double dlt;
-    double dut;
 
     @Override
     public void setEditValue(int n, EditInfo ei) {

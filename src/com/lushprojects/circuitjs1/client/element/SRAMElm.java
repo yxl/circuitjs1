@@ -29,6 +29,7 @@ public class SRAMElm extends ChipElm {
     int addressNodes, dataNodes, internalNodes;
     int addressBits, dataBits;
     HashMap<Integer, Integer> map;
+    int address;
 
     public SRAMElm(int xx, int yy) {
         super(xx, yy);
@@ -209,8 +210,6 @@ public class SRAMElm extends ChipElm {
     public int getInternalNodeCount() {
         return dataBits;
     }
-
-    int address;
 
     @Override
     public void stamp() {

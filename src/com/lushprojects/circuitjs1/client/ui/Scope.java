@@ -36,6 +36,10 @@ import java.util.Vector;
 
 // plot of single value on a scope
 class ScopePlot {
+    static final String[] colors = {
+            "#FF0000", "#FF8000", "#FF00FF", "#7F00FF",
+            "#0000FF", "#0080FF", "#FFFF00", "#00FFFF",
+    };
     double[] minValues;
     double[] maxValues;
     int scopePointCount;
@@ -114,11 +118,6 @@ class ScopePlot {
         return null;
     }
 
-    static final String[] colors = {
-            "#FF0000", "#FF8000", "#FF00FF", "#7F00FF",
-            "#0000FF", "#0080FF", "#FFFF00", "#00FFFF",
-    };
-
     void assignColor(int count) {
         if (count > 0) {
             color = colors[(count - 1) % 8];
@@ -132,23 +131,17 @@ class ScopePlot {
                 color = "#FFFF00";
                 break;
             default:
-                color = (CirSim.theSim.printableCheckItem.getState()) ? "#000000" : "#FFFFFF";
+                color = (CirSim.theSim.topMenuBar.printableCheckItem.getState()) ? "#000000" : "#FFFFFF";
                 break;
         }
     }
 }
 
 public class Scope {
-    final int FLAG_YELM = 32;
-
-    // bunch of other flags go here, see dump()
-    final int FLAG_IVALUE = 2048; // Flag to indicate if IVALUE is included in dump
-    final int FLAG_PLOTS = 4096; // new-style dump with multiple plots
-    // other flags go here too, see dump()
-
     public static final int VAL_POWER = 7;
     public static final int VAL_POWER_OLD = 1;
     public static final int VAL_CURRENT = 3;
+    // other flags go here too, see dump()
     public static final int VAL_IB = 1;
     public static final int VAL_IC = 2;
     public static final int VAL_IE = 3;
@@ -162,14 +155,19 @@ public class Scope {
     public static final int UNITS_OHMS = 3;
     public static final int UNITS_COUNT = 4;
     public static final double[] multa = {2.0, 2.5, 2.0};
-    int scopePointCount = 128;
-    FFT fft;
+    final int FLAG_YELM = 32;
+    // bunch of other flags go here, see dump()
+    final int FLAG_IVALUE = 2048; // Flag to indicate if IVALUE is included in dump
+    final int FLAG_PLOTS = 4096; // new-style dump with multiple plots
     public int position;
     public int speed;
     public int stackCount; // number of scopes in this column
-    String text;
     public Rectangle rect;
     public boolean showI, showV, showScale, showMax, showMin, showFreq, lockScale, plot2d, plotXY, maxScale, logSpectrum;
+    public int selectedPlot;
+    int scopePointCount = 128;
+    FFT fft;
+    String text;
     boolean showFFT, showNegative, showRMS, showDutyCycle;
     Vector<ScopePlot> plots, visiblePlots;
     //    MemoryImageSource imageSource;
@@ -186,8 +184,14 @@ public class Scope {
     boolean[] reduceRange;
     double scaleX, scaleY;  // for X-Y plots
     int wheelDeltaY;
-    public int selectedPlot;
     ScopePropertiesDialog properties;
+    boolean drawGridLines;
+    boolean somethingSelected;
+    String curColor, voltColor;
+    double gridStepX, gridStepY;
+    double maxValue, minValue;
+    double mainGridMult, mainGridMid;
+    int textY;
 
     public Scope(CirSim s) {
         sim = s;
@@ -357,15 +361,6 @@ public class Scope {
         return rect.x + rect.width;
     }
 
-    public void setElm(CircuitElm ce) {
-        plots = new Vector<>();
-        if (ce instanceof TransistorElm)
-            setValue(VAL_VCE, ce);
-        else
-            setValue(0, ce);
-        initialize();
-    }
-
     void setValue(int val) {
         if (plots.size() > 2 || plots.size() == 0)
             return;
@@ -416,12 +411,12 @@ public class Scope {
         setValue(val);
     }
 
-    void setText(String s) {
-        text = s;
-    }
-
     String getText() {
         return text;
+    }
+
+    void setText(String s) {
+        text = s;
     }
 
     boolean showingValue(int v) {
@@ -435,7 +430,7 @@ public class Scope {
     }
 
     // returns true if we have a plot of voltage and nothing else (except current).
-    // The default case is a plot of voltage and current, so we're basically checking if that case is true. 
+    // The default case is a plot of voltage and current, so we're basically checking if that case is true.
     boolean showingVoltageAndMaybeCurrent() {
         int i;
         boolean gotv = false;
@@ -448,7 +443,6 @@ public class Scope {
         }
         return gotv;
     }
-
 
     public void combine(Scope s) {
 	/*
@@ -529,7 +523,7 @@ public class Scope {
             draw_ox = x2;
             draw_oy = y2;
         }
-        if (sim.printableCheckItem.getState()) {
+        if (sim.topMenuBar.printableCheckItem.getState()) {
             imageContext.setStrokeStyle("#000000");
         } else {
             imageContext.setStrokeStyle("#ffffff");
@@ -544,7 +538,7 @@ public class Scope {
 
     void clear2dView() {
         if (imageContext != null) {
-            if (sim.printableCheckItem.getState()) {
+            if (sim.topMenuBar.printableCheckItem.getState()) {
                 imageContext.setFillStyle("#ffffff");
             } else {
                 imageContext.setFillStyle("#000000");
@@ -698,7 +692,7 @@ public class Scope {
         if (alphadiv > 2) {
             alphadiv = 0;
             imageContext.setGlobalAlpha(0.01);
-            if (sim.printableCheckItem.getState()) {
+            if (sim.topMenuBar.printableCheckItem.getState()) {
                 imageContext.setFillStyle("#ffffff");
             } else {
                 imageContext.setFillStyle("#000000");
@@ -726,9 +720,6 @@ public class Scope {
         drawSettingsWheel(g);
     }
 
-    boolean drawGridLines;
-    boolean somethingSelected;
-
     boolean showSettingsWheel() {
         return rect.height > 100 && rect.width > 100;
     }
@@ -740,7 +731,6 @@ public class Scope {
                 sim.mouseCursorY >= rect.y + rect.height - 36 &&
                 sim.mouseCursorY <= rect.y + rect.height;
     }
-
 
     public void draw(Graphics g) {
         if (plots.size() == 0)
@@ -833,10 +823,6 @@ public class Scope {
 
     }
 
-    String curColor, voltColor;
-    double gridStepX, gridStepY;
-    double maxValue, minValue;
-
     // calculate maximum and minimum values for all plots of given units
     void calcMaxAndMin(int units) {
         maxValue = -1e8;
@@ -898,8 +884,6 @@ public class Scope {
         return gsx;
     }
 
-    double mainGridMult, mainGridMid;
-
     void drawPlot(Graphics g, ScopePlot plot, boolean drawHGridLines, boolean selected) {
         if (plot.elm == null)
             return;
@@ -957,7 +941,7 @@ public class Scope {
         int ll;
         String minorDiv = "#303030";
         String majorDiv = "#A0A0A0";
-        if (sim.printableCheckItem.getState()) {
+        if (sim.topMenuBar.printableCheckItem.getState()) {
             minorDiv = "#D0D0D0";
             majorDiv = "#808080";
             curColor = "#A0A000";
@@ -1105,7 +1089,7 @@ public class Scope {
         g.setColor(CircuitElm.whiteColor);
         g.drawLine(sim.mouseCursorX, rect.y, sim.mouseCursorX, rect.y + rect.height);
         //	    g.drawLine(rect.x, sim.mouseCursorY, rect.x+rect.width, sim.mouseCursorY);
-        g.setColor(sim.printableCheckItem.getState() ? Color.white : Color.black);
+        g.setColor(sim.topMenuBar.printableCheckItem.getState() ? Color.white : Color.black);
         int bx = sim.mouseCursorX;
         if (bx < szw / 2)
             bx = szw / 2;
@@ -1367,8 +1351,6 @@ public class Scope {
             drawInfoText(g, CircuitElm.getUnitText(freq, "Hz"));
     }
 
-    int textY;
-
     void drawInfoText(Graphics g, String text) {
         if (rect.y + rect.height <= textY + 5)
             return;
@@ -1488,6 +1470,22 @@ public class Scope {
                 (showDutyCycle ? 32768 : 0) | (logSpectrum ? 65536 : 0);
         flags |= FLAG_PLOTS;
         return flags;
+    }
+
+    void setFlags(int flags) {
+        showI = (flags & 1) != 0;
+        showV = (flags & 2) != 0;
+        showMax = (flags & 4) == 0;
+        showFreq = (flags & 8) != 0;
+        lockScale = (flags & 16) != 0;
+        plotXY = (flags & 128) != 0;
+        showMin = (flags & 256) != 0;
+        showScale = (flags & 512) != 0;
+        showFFT((flags & 1024) != 0);
+        maxScale = (flags & 8192) != 0;
+        showRMS = (flags & 16384) != 0;
+        showDutyCycle = (flags & 32768) != 0;
+        logSpectrum = (flags & 65536) != 0;
     }
 
     public String dump() {
@@ -1610,22 +1608,6 @@ public class Scope {
         setFlags(flags);
     }
 
-    void setFlags(int flags) {
-        showI = (flags & 1) != 0;
-        showV = (flags & 2) != 0;
-        showMax = (flags & 4) == 0;
-        showFreq = (flags & 8) != 0;
-        lockScale = (flags & 16) != 0;
-        plotXY = (flags & 128) != 0;
-        showMin = (flags & 256) != 0;
-        showScale = (flags & 512) != 0;
-        showFFT((flags & 1024) != 0);
-        maxScale = (flags & 8192) != 0;
-        showRMS = (flags & 16384) != 0;
-        showDutyCycle = (flags & 32768) != 0;
-        logSpectrum = (flags & 65536) != 0;
-    }
-
     void saveAsDefault() {
         Storage stor = Storage.getLocalStorageIfSupported();
         if (stor == null)
@@ -1725,14 +1707,6 @@ public class Scope {
             setValue(VAL_R);
     }
 
-//    void select() {
-//    	sim.setMouseElm(elm);
-//    	if (plotXY) {
-//    		sim.plotXElm = elm;
-//    		sim.plotYElm = yElm;
-//    	}
-//    }
-
     public void selectY() {
         CircuitElm yElm = (plots.size() == 2) ? plots.get(1).elm : null;
         int e = (yElm == null) ? -1 : sim.locateElm(yElm);
@@ -1759,6 +1733,14 @@ public class Scope {
         // not reached
     }
 
+//    void select() {
+//    	sim.setMouseElm(elm);
+//    	if (plotXY) {
+//    		sim.plotXElm = elm;
+//    		sim.plotYElm = yElm;
+//    	}
+//    }
+
     public void onMouseWheel(MouseWheelEvent e) {
         wheelDeltaY += e.getDeltaY();
         if (wheelDeltaY > 5) {
@@ -1775,6 +1757,15 @@ public class Scope {
         if (selectedPlot >= 0 && visiblePlots.size() > selectedPlot)
             return visiblePlots.get(selectedPlot).elm;
         return visiblePlots.size() > 0 ? visiblePlots.get(0).elm : plots.get(0).elm;
+    }
+
+    public void setElm(CircuitElm ce) {
+        plots = new Vector<>();
+        if (ce instanceof TransistorElm)
+            setValue(VAL_VCE, ce);
+        else
+            setValue(0, ce);
+        initialize();
     }
 
     public boolean viewingWire() {

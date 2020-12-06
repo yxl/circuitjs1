@@ -28,6 +28,7 @@ import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class MemristorElm extends CircuitElm {
     double r_on, r_off, dopeWidth, totalWidth, mobility, resistance;
+    Point ps3, ps4;
 
     public MemristorElm(int xx, int yy) {
         super(xx, yy);
@@ -64,8 +65,6 @@ public class MemristorElm extends CircuitElm {
         return super.dump() + " " + r_on + " " + r_off + " " + dopeWidth + " " +
                 totalWidth + " " + mobility + " " + current;
     }
-
-    Point ps3, ps4;
 
     @Override
     public void setPoints() {

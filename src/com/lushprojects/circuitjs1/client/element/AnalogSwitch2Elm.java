@@ -24,19 +24,17 @@ import com.lushprojects.circuitjs1.client.ui.canvas.Point;
 import com.lushprojects.circuitjs1.client.util.StringTokenizer;
 
 public class AnalogSwitch2Elm extends AnalogSwitchElm {
-    public AnalogSwitch2Elm(int xx, int yy) {
-        super(xx, yy);
-    }
-
-    public AnalogSwitch2Elm(int xa, int ya, int xb, int yb, int f,
-                            StringTokenizer st) {
-        super(xa, ya, xb, yb, f, st);
-    }
-
     final int openhs = 16;
     Point[] swposts;
     Point[] swpoles;
     Point ctlPoint;
+    public AnalogSwitch2Elm(int xx, int yy) {
+        super(xx, yy);
+    }
+    public AnalogSwitch2Elm(int xa, int ya, int xb, int yb, int f,
+                            StringTokenizer st) {
+        super(xa, ya, xb, yb, f, st);
+    }
 
     @Override
     public void setPoints() {

@@ -26,6 +26,20 @@ public class DataRecorderElm extends CircuitElm {
         setDataCount(Integer.parseInt(st.nextToken()));
     }
 
+    static public final native String getBlobUrl(String data)
+        /*-{
+            var datain = [""];
+            datain[0] = data;
+            var oldblob = $doc.recorderBlob;
+            // remove old blob if any.  We should do this when dialog is dismissed, but this is easier
+            if (oldblob)
+                URL.revokeObjectURL(oldblob);
+            var blob = new Blob(datain, {type: 'text/plain'});
+            var url = URL.createObjectURL(blob);
+            $doc.recorderBlob = url;
+            return url;
+        }-*/;
+
     @Override
     public String dump() {
         return super.dump() + " " + dataCount;
@@ -97,20 +111,6 @@ public class DataRecorderElm extends CircuitElm {
         dataPtr = 0;
         dataFull = false;
     }
-
-    static public final native String getBlobUrl(String data)
-        /*-{
-            var datain = [""];
-            datain[0] = data;
-            var oldblob = $doc.recorderBlob;
-            // remove old blob if any.  We should do this when dialog is dismissed, but this is easier
-            if (oldblob)
-                URL.revokeObjectURL(oldblob);
-            var blob = new Blob(datain, {type: 'text/plain'});
-            var url = URL.createObjectURL(blob);
-            $doc.recorderBlob = url;
-            return url;
-        }-*/;
 
     @Override
     public EditInfo getEditInfo(int n) {
