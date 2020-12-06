@@ -168,23 +168,11 @@ public class circuitjs1 implements EntryPoint {
 
         Window.addResizeHandler(event -> {
             mysim.setCanvasSize();
-            mysim.setiFrameHeight();
+            mysim.setFrameHeight();
 
         });
 	    
-	    /*
-	    Window.addWindowClosingHandler(new Window.ClosingHandler() {
-
-	        public void onWindowClosing(ClosingEvent event) {
-	            event.setMessage("Are you sure?");
-	        }
-	    });
-	     */
-
         mysim.updateCircuit();
-
-
     }
-
 }
 	  

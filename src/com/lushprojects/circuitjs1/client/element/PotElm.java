@@ -360,7 +360,7 @@ public class PotElm extends CircuitElm implements Command, MouseWheelHandler {
         if (n == 1) {
             sliderText = ei.textf.getText();
             label.setText(sliderText);
-            sim.setiFrameHeight();
+            sim.setFrameHeight();
         }
         if (n == 2)
             flags = ei.changeFlag(flags, FLAG_SHOW_VALUES);

@@ -105,7 +105,7 @@ public class VarRailElm extends RailElm implements MouseWheelHandler {
         if (n == 2) {
             sliderText = ei.textf.getText();
             label.setText(CirSim.LS(sliderText));
-            sim.setiFrameHeight();
+            sim.setFrameHeight();
         }
     }
 

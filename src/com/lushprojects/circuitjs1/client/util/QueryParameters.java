@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class QueryParameters {
-    private final Map map = new HashMap();
+    private final Map<String, String> map = new HashMap<>();
 
     public QueryParameters() {
         String search = getQueryString();
@@ -46,10 +46,11 @@ public class QueryParameters {
 
     public boolean getBooleanValue(String key, boolean def) {
         String val = getValue(key);
-        if (val == null)
+        if (val == null) {
             return def;
-        else
-            return (val == "1" || val.equalsIgnoreCase("true"));
+        } else {
+            return (val.equals("1") || val.equalsIgnoreCase("true"));
+        }
     }
 
     private native String getQueryString()

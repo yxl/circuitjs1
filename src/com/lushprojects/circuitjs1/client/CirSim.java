@@ -273,12 +273,7 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         return $wnd.LZString.decompressFromEncodedURIComponent(dump);
     }-*/;
 
-//    Circuit applet;
-
     public CirSim() {
-//	super("Circuit Simulator v1.6d");
-//	applet = a;
-//	useFrame = false;
         theSim = this;
     }
 
@@ -326,6 +321,7 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
             convention = qp.getBooleanValue("conventionalCurrent",
                     getOptionFromStorage("conventionalCurrent", true));
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
         boolean euroSetting = false;
@@ -454,7 +450,7 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         showValuesCheckItem.setState(true);
         //m.add(conductanceCheckItem = getCheckItem(LS("Show Conductance")));
         m.addItem(smallGridCheckItem = new CheckboxMenuItem(LS("Small Grid"),
-                () -> setGrid()));
+                this::setGrid));
         m.addItem(crossHairCheckItem = new CheckboxMenuItem(LS("Show Cursor Cross Hairs"),
                 () -> setOptionInStorage("crossHair", crossHairCheckItem.getState())));
         crossHairCheckItem.setState(getOptionFromStorage("crossHair", false));
@@ -632,7 +628,7 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
 
         enableUndoRedo();
         enablePaste();
-        setiFrameHeight();
+        setFrameHeight();
         cv.addMouseDownHandler(this);
         cv.addMouseMoveHandler(this);
         cv.addMouseOutHandler(this);
@@ -978,7 +974,7 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         mi.setShortcut(LS("(space or Shift-drag)"));
     }
 
-    public void setiFrameHeight() {
+    public void setFrameHeight() {
         if (iFrame == null) {
             return;
         }
@@ -5031,7 +5027,7 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
         if (iFrame != null) {
             int i = verticalPanel.getWidgetIndex(iFrame);
             verticalPanel.insert(w, i);
-            setiFrameHeight();
+            setFrameHeight();
         } else {
             verticalPanel.add(w);
         }
@@ -5040,7 +5036,7 @@ public class CirSim implements MouseDownHandler, MouseMoveHandler, MouseUpHandle
     public void removeWidgetFromVerticalPanel(Widget w) {
         verticalPanel.remove(w);
         if (iFrame != null) {
-            setiFrameHeight();
+            setFrameHeight();
         }
     }
 
